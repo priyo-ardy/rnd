@@ -17,7 +17,7 @@ class SendEmailJob
         }
 
         $email = new Email();
-        $email->setFrom('no-reply@schlemmer.co.id', 'Schlemmer SPK Application');
+        $email->setFrom('no-reply@schlemmer.co.id', 'Schlemmer APQP Application');
         $email->setTo($job->to_email);
         $email->setSubject($job->subject);
         $email->setMessage($job->body);

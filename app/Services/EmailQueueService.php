@@ -25,6 +25,6 @@ class EmailQueueService
             'body' => $body,
         ];
 
-        return $this->queueModel->insert($emailData);
+        return $this->emailModel->insert($emailData);
     }
 }
