@@ -1,0 +1,186 @@
+:root {
+  --schlemmer-blue: #005baa;
+  --schlemmer-light-blue: #0077cc;
+  --schlemmer-dark-blue: #004488;
+}
+
+body {
+  background: linear-gradient(rgba(44, 62, 80, 0.85), rgba(26, 26, 26, 0.9)),
+    url("https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: "Ubuntu", sans-serif;
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-container {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 0px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+  width: 400px;
+  padding: 30px;
+  position: relative;
+  z-index: 2;
+  backdrop-filter: blur(2px);
+  -moz-backdrop-filter: blur(2px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  @supports not (backdrop-filter: blur(2px)) {
+    background-color: rgba(255, 255, 255, 0.98);
+  }
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+  position: relative;
+}
+
+.company-logo {
+  width: 300px;
+  height: auto;
+  margin-bottom: 25px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.logo-line {
+  position: relative;
+  margin: 20px 0;
+}
+
+.logo-line:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--schlemmer-blue) 20%,
+    var(--schlemmer-blue) 80%,
+    transparent 100%
+  );
+  transform: translateY(-50%);
+}
+
+.form-control {
+  height: 50px;
+  margin-bottom: 20px;
+  border: 1px solid #ced4da;
+  border-radius: 0px;
+  padding: 10px 15px;
+  font-size: 16px;
+  transition: all 0.3s;
+}
+
+.form-control:focus {
+  border-color: var(--schlemmer-blue);
+  box-shadow: 0 0 0 0.25rem rgba(0, 91, 170, 0.25);
+}
+
+.btn-login {
+  background-color: var(--schlemmer-blue);
+  color: white;
+  border: none;
+  height: 50px;
+  width: 100%;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 0px;
+  transition: all 0.3s;
+}
+
+.btn-login:hover {
+  background-color: var(--schlemmer-light-blue);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-login:disabled {
+  opacity: 0.7 !important;
+  background-color: var(--schlemmer-blue) !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+}
+
+.btn-login[disabled] {
+  opacity: 0.7 !important;
+  background-color: var(--schlemmer-blue) !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+}
+
+.forgot-password {
+  text-align: right;
+  margin-top: -15px;
+  margin-bottom: 20px;
+}
+
+.forgot-password a {
+  color: var(--schlemmer-blue);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.3s;
+}
+
+.forgot-password a:hover {
+  color: var(--schlemmer-dark-blue);
+  text-decoration: underline;
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+  font-size: 12px;
+  color: #6c757d;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* @keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+        -moz-transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+        -moz-transform: translateY(-10px);
+    }
+} */
+
+.floating {
+  animation: float 6s ease-in-out infinite;
+  -moz-animation: float 6s ease-in-out infinite;
+}
+
+/* Modal styles */
+.modal-header {
+  border-bottom: 1px solid #dee2e6;
+}
+
+.modal-footer {
+  border-top: 1px solid #dee2e6;
+}
+
+.btn-modal {
+  background-color: var(--schlemmer-blue);
+  color: white;
+}
+
+.btn-modal:hover {
+  background-color: var(--schlemmer-light-blue);
+}
