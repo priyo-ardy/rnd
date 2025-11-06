@@ -34,13 +34,14 @@
                 <input type="email" class="form-control" name="email_address" id="email_address" placeholder="Email Address" autocomplete="off">
                 <div class="invalid-feedback">Password is required</div>
             </div>
-            <div class="mb-3 text-danger text-center col-12" id="pesanLogin"></div>
+            <div class="mb-3 text-danger text-center col-12" id="error_message"></div>
+            <div class="mb-3 text-success text-center col-12" id="success_message"></div>
 
             <div class="forgot-password">
                 <a href="<?= base_url() ?>"><i class="bi bi-arrow-left"></i>&ensp;Back to login</a>
             </div>
 
-            <button type="button" id="btnAuth" class="btn btn-login"><i class="bi bi-box-arrow-in-right"></i>&ensp;Log in</button>
+            <button type="button" id="btnAuth" class="btn btn-login"><i class="bi bi-key"></i>&ensp;Reset Password</button>
         </form>
 
         <div class="login-footer">
@@ -54,7 +55,7 @@
     <!-- Sweetalert2 plugins -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Authjavascript -->
-    <script src="<?= base_url() . 'js/Auth/auth.js' ?>"></script>
+    <script src="<?= base_url() . 'js/Auth/forgot.js' ?>"></script>
     <script src="<?= base_url() . 'js/App/fetching.js' ?>"></script>
 </body>
 
