@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class EmailQueue extends Migration
+class RoutesTable extends Migration
 {
     public function up()
     {
@@ -13,37 +13,32 @@ class EmailQueue extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => 50,
                 'null' => false,
+                'unique' => true,
                 'charset' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci',
             ],
-            'to_email' => [
+            'code' => [
                 'type' => 'VARCHAR',
-                'constraint' => 255,
+                'constraint' => 20,
+                'null' => false,
+                'unique' => true,
+                'charset' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci',
+            ],
+            'name' => [
+                'type' => 'VARCHAR',
+                'constraint' => 150,
                 'null' => false,
                 'charset' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci',
             ],
-            'subject' => [
-                'type' => 'VARCHAR',
-                'constraint' => 255,
-                'null' => false,
-                'charset' => 'utf8mb4',
-                'collation' => 'utf8mb4_unicode_ci',
-            ],
-            'body' => [
+            'route' => [
                 'type' => 'TEXT',
                 'null' => false,
                 'charset' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci',
             ],
-            'status' => [
-                'type' => 'ENUM',
-                'constraint' => ['pending', 'sent', 'failed'],
-                'default' => 'pending',
-                'charset' => 'utf8mb4',
-                'collation' => 'utf8mb4_unicode_ci',
-            ],
-            'reason' => [
+            'remark' => [
                 'type' => 'TEXT',
                 'null' => true,
                 'charset' => 'utf8mb4',
@@ -51,6 +46,13 @@ class EmailQueue extends Migration
             ],
             'created_at' => [
                 'type' => 'DATETIME',
+                'null' => false,
+                'charset' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci',
+            ],
+            'created_by' => [
+                'type' => 'VARCHAR',
+                'constraint' => 100,
                 'null' => true,
                 'charset' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci',
@@ -60,18 +62,33 @@ class EmailQueue extends Migration
                 'null' => true,
                 'charset' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci',
-            ]
+            ],
+            'updated_by' => [
+                'type' => 'VARCHAR',
+                'constraint' => 100,
+                'null' => true,
+                'charset' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci',
+            ],
+            'deleted_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+                'charset' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci',
+            ],
         ]);
 
-        $this->forge->addKey('id', true);
+        $this->forge->addKey(['id', 'code'], true, true);
 
-        $this->forge->createTable('q_email_queue');
-        $this->db->query("ALTER TABLE q_email_queue ADD INDEX(id)");
-        $this->db->query("ALTER TABLE q_email_queue ADD INDEX(status)");
+        $this->forge->createTable('m_routes', true);
+
+        $this->db->query('ALTER TABLE m_routes ADD INDEX (id)');
+        $this->db->query('ALTER TABLE m_routes ADD INDEX (code)');
+        $this->db->query('ALTER TABLE m_routes ADD INDEX (route)');
     }
 
     public function down()
     {
-        $this->forge->dropTable('job_queue');
+        $this->forge->dropTable('m_routes');
     }
 }
