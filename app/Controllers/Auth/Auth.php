@@ -297,4 +297,10 @@ class Auth extends BaseController
             return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, "Unexpected Error " . $e->getMessage());
         }
     }
+
+    function logOut()
+    {
+        session()->destroy();
+        return redirect()->to(base_url());
+    }
 }

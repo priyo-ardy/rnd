@@ -28,18 +28,25 @@ class ViewDataFilter implements FilterInterface
     {
         $session = session();
 
+        // Pastikan session tersedia
         if (!$session->has('user_name')) {
             $session->set('user_name', 'Guest');
         }
 
+        // Perbaiki typo 'user_iamge' menjadi 'user_image'
         $data = [
             'app_ver'       => "1.0.0.dev",
-            'app_name'      => "APQP Application",
+            'app_name'      => "SPK Application",
             'NIK'           => $session->get('user_name') ?? '0000',
             'full_name'     => $session->get('full_name') ?? 'Unknown',
-            'user_image'    => $session->get('user_image') ?? 'default.png',
+            'user_image'    => $session->get('user_image') ?? 'default.jpg', // Typo diperbaiki
+            'tanggal'       => date("Y-m-d H:i:s")
         ];
 
+        // Cara 1: Simpan di request property
+        // $request->viewData = $data;
+
+        // Cara 2 (Lebih Direkomendasikan): Langsung set ke View Renderer
         $view = service('renderer');
         foreach ($data as $key => $value) {
             $view->setVar($key, $value);

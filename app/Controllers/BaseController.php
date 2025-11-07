@@ -46,10 +46,21 @@ abstract class BaseController extends Controller
     /**
      * @return void
      */
+    protected $NIK;
+    protected $tanggal;
+    protected $app_ver;
+    protected $app_name;
+    protected $user_level;
+    protected $levelModel;
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
+
+        $this->NIK = (session()->get('user_name')) ? session()->get('user_name') : '0000';
+        $this->tanggal = date("Y-m-d H:i:s");
+        $this->app_ver = "1.0.0.dev";
+        $this->app_name = "SPK Application";
 
         // Preload any models, libraries, etc, here.
 
