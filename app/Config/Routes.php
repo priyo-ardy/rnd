@@ -7,7 +7,8 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Auth\Auth::index');
 $routes->post('/login', 'Auth\Auth::processLogin');
-$routes->get('forgot-password', 'Auth\Auth::forgotPassword');
+$routes->get('/forgot-password', 'Auth\Auth::forgotPassword');
+$routes->post('reset', 'Auth\Auth::resetPassword');
 
 // Routes with auth filter
 $routes->group('', ['filter' => 'auth'], static function ($routes) {});

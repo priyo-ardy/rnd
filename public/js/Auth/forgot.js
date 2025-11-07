@@ -57,5 +57,20 @@ btnAuth.addEventListener("click", (e) => {
 
 function prosesForgot() {
   if (validasi()) {
+    try {
+      fetchData(baseurl + "/reset", "POST", new FormData(formAuth))
+        .then((result) => {
+          enableForm();
+          userEmail.value = "";
+          success_message.textContent = result.message;
+        })
+        .catch((err) => {
+          enableForm();
+          error_message.textContent = err.message;
+        });
+    } catch (e) {
+      enableForm();
+      error_message.textContent = e.message;
+    }
   }
 }

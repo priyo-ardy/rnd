@@ -25,4 +25,9 @@ class AuthModel extends Model
     {
         return $this->where('user_name', $user_name, true)->first();
     }
+
+    public function checkEmail($email)
+    {
+        return $this->where('email_hash', $email, true)->first();
+    }
 }

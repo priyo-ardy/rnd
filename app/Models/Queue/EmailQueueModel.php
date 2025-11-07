@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class EmailQueueModel extends Model
 {
-    protected $table            = 'job_queue';
+    protected $table            = 'q_email_queue';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = false;
     protected $returnType       = 'object';
@@ -23,7 +23,7 @@ class EmailQueueModel extends Model
 
     public function getPendingJobs()
     {
-        return $this->where('status', 'pending')->orderBy('created_at', 'asc')->limit(25)->findAll();
+        return $this->where('status', 'pending')->orWhere('status', 'failed')->orderBy('created_at', 'asc')->limit(25)->findAll();
     }
 
     public function updateJobStatus(string $id, string $status)

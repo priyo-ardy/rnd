@@ -25,6 +25,6 @@ class ProcessEmailQueue extends BaseCommand
             CLI::write("Memproses job ID: {$job->id}\n");
         }
 
-        CLI::write("Proses email queue selesai.\n");
+        CLI::write("Proses email queue selesai dengan total " . count($pendingJobs) . " data.\n");
     }
 }

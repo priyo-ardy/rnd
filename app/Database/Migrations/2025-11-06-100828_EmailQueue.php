@@ -65,7 +65,7 @@ class EmailQueue extends Migration
 
         $this->forge->addKey('id', true);
 
-        $this->forge->createTable('job_queue');
+        $this->forge->createTable('q_email_queue');
     }
 
     public function down()

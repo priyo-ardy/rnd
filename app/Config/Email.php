@@ -25,27 +25,28 @@ class Email extends BaseConfig
      * The server path to Sendmail.
      */
     public string $mailPath = '/usr/sbin/sendmail';
+    // public string $mailPath = '/etc/mail';
 
     /**
      * SMTP Server Hostname
      */
-    public string $SMTPHost = getenv('SMTP_HOST');
+    public string $SMTPHost = 'ssl://smtp.googlemail.com';
 
     /**
      * SMTP Username
      */
-    public string $SMTPUser = getenv('SMTP_USER');
+    public string $SMTPUser = 'schlemmerid.dev@gmail.com';
 
     /**
      * SMTP Password
      */
-    public string $SMTPPass = getenv('SMTP_PASS');
+    public string $SMTPPass = 'qbzwvghjeqycxkxy';
 
     /**
      * SMTP Port
      */
     // public int $SMTPPort = 25;
-    public int $SMTPPort = getenv('SMTP_PORT');
+    public int $SMTPPort = 465;
 
     /**
      * SMTP Timeout (in seconds)
@@ -65,7 +66,7 @@ class Email extends BaseConfig
      *             to the server. 'ssl' means implicit SSL. Connection on port
      *             465 should set this to ''.
      */
-    public string $SMTPCrypto = 'tls';
+    public string $SMTPCrypto = '';
 
     /**
      * Enable word-wrap
