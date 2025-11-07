@@ -31,4 +31,15 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
         $routes->get('export', 'MasterData\CommonData\Customer\Customer::exportData');
         $routes->post('table', 'MasterData\CommonData\Customer\Customer::loadTable');
     });
+
+    // Master data satuan
+    $routes->group('/satuan', static function ($routes) {
+        $routes->get('', 'MasterData\CommonData\Satuan\Satuan::index');
+        $routes->post('save', 'MasterData\CommonData\Satuan\Satuan::saveData');
+        $routes->post('get', 'MasterData\CommonData\Satuan\Satuan::getData');
+        $routes->post('update', 'MasterData\CommonData\Satuan\Satuan::updateData');
+        $routes->post('delete', 'MasterData\CommonData\Satuan\Satuan::deleteData');
+        $routes->get('export', 'MasterData\CommonData\Satuan\Satuan::exportData');
+        $routes->post('table', 'MasterData\CommonData\Satuan\Satuan::loadTable');
+    });
 });
