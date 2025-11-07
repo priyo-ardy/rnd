@@ -13,10 +13,25 @@ class SendEmailJob
         $job = $emailQueue->where('id', $jobId)->first();
 
         if (!$job) {
+            logFile(
+                'error',
+                'No pending job available',
+                [
+                    'message' => "No pending job available"
+                ],
+                'SendEmailJob::execute'
+            );
             return false;
         }
 
-        $email = new Email();
+        $email = \Config\Services::email();
+
+        $email->initialize([
+            'mailType' => 'html',
+            'charset'  => 'utf-8',
+            'protocol' => 'smtp'
+        ]);
+
         $email->setFrom('no-reply@schlemmer.co.id', 'Schlemmer APQP Application');
         $email->setTo($job->to_email);
         $email->setSubject($job->subject);

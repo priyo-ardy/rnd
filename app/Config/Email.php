@@ -6,14 +6,14 @@ use CodeIgniter\Config\BaseConfig;
 
 class Email extends BaseConfig
 {
-    public string $fromEmail  = '';
-    public string $fromName   = '';
+    public string $fromEmail  = 'schlemmerid.dev@gmail.com';
+    public string $fromName   = 'Schlemmer Indonesia System Development';
     public string $recipients = '';
 
     /**
      * The "user agent"
      */
-    public string $userAgent = 'Schlemmer Web Application';
+    public string $userAgent = 'Codeigniter';
 
     /**
      * The mail sending protocol: mail, sendmail, smtp
@@ -30,7 +30,8 @@ class Email extends BaseConfig
     /**
      * SMTP Server Hostname
      */
-    public string $SMTPHost = 'ssl://smtp.googlemail.com';
+    // public string $SMTPHost = 'ssl://smtp.googlemail.com';
+    public string $SMTPHost = 'smtp.gmail.com';
 
     /**
      * SMTP Username
@@ -46,13 +47,14 @@ class Email extends BaseConfig
      * SMTP Port
      */
     // public int $SMTPPort = 25;
-    public int $SMTPPort = 465;
+    // public int $SMTPPort = 465;
+    public int $SMTPPort = 587;
 
     /**
      * SMTP Timeout (in seconds)
      */
-    // public int $SMTPTimeout = 5;
-    public int $SMTPTimeout = 30;
+    public int $SMTPTimeout = 5;
+    // public int $SMTPTimeout = 30;
 
     /**
      * Enable persistent SMTP connections
@@ -66,7 +68,8 @@ class Email extends BaseConfig
      *             to the server. 'ssl' means implicit SSL. Connection on port
      *             465 should set this to ''.
      */
-    public string $SMTPCrypto = '';
+    // public string $SMTPCrypto = 'ssl';
+    public string $SMTPCrypto = 'tls';
 
     /**
      * Enable word-wrap

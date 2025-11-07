@@ -272,6 +272,7 @@ class Auth extends BaseController
             );
 
             $data = [
+                'full_name' => $checkEmail->full_name,
                 'new_password' => $random_password
             ];
 

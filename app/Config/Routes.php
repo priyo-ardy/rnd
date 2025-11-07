@@ -9,6 +9,8 @@ $routes->get('/', 'Auth\Auth::index');
 $routes->post('/login', 'Auth\Auth::processLogin');
 $routes->get('/forgot-password', 'Auth\Auth::forgotPassword');
 $routes->post('reset', 'Auth\Auth::resetPassword');
+$routes->get('kirim-email', 'Test\Email\Email::sendTest');
+$routes->get('test-email', 'Test\Email\Email::testConnection');
 
 // Routes with auth filter
 $routes->group('', ['filter' => 'auth'], static function ($routes) {});
