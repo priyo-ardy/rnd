@@ -92,5 +92,6 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
         $routes->get('export', 'MasterData\CommonData\Material\Material::exportData');
         $routes->post('table', 'MasterData\CommonData\Material\Material::loadTable');
         $routes->get('data-seed', 'MasterData\CommonData\Material\Material::dataSeed');
+        $routes->post('check_code', 'MasterData\CommonData\Material\Material::cekMaterialCode');
     });
 });

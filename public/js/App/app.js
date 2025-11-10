@@ -32,6 +32,8 @@ document.addEventListener("DOMContentLoaded", function () {
     dropdownCssClass: "rounded-0",
     selectionCssClass: "rounded-0",
   });
+
+  $(".summernote").summernote();
 });
 
 function pesanSukses(message) {
