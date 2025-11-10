@@ -37,7 +37,7 @@ class Material extends BaseController
         $this->validasi = Services::validation();
         $this->db = Database::connect();
 
-        $table = 'm_material';
+        $table = 'vw_material';
         $column_order = [];
         $column_search = [];
         $order = array('code' => 'ASC');
@@ -140,6 +140,192 @@ class Material extends BaseController
                     'NIK' => $this->NIK
                 ],
                 'Material::cekMaterialCode'
+            );
+
+            return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, "Unexpected error occured " . $e->getMessage());
+        }
+    }
+
+    function saveData()
+    {
+        if ($this->request->getMethod() !== 'POST') {
+            logFile(
+                'security',
+                'Request method not allowed',
+                [
+                    'route' => 'material/save',
+                    'method' => $this->request->getMethod(),
+                    'expected' => 'POST',
+                    'NIK' => $this->NIK
+                ],
+                'Material::saveData'
+            );
+
+            return pesan(ResponseInterface::HTTP_METHOD_NOT_ALLOWED, "Request not allowed");
+        }
+
+        $this->db->transStart();
+        try {
+            $rules = [
+                'data_code' => [
+                    'label' => 'Material code',
+                    'rules' => 'required|is_unique[m_material.code]|min_length[3]|max_length[100]',
+                    'errors' => [
+                        'required' => '{field} is required',
+                        'is_unique' => '{field} already registered',
+                        'min_length' => '{field} must be at least {param} characters',
+                        'max_length' => '{field} must be less than {param} characters'
+                    ]
+                ],
+                'data_name' => [
+                    'label' => 'Material name',
+                    'rules' => 'required|min_length[3]|max_length[150]',
+                    'errors' => [
+                        'required' => '{field} is required',
+                        'min_length' => '{field} must be at least {param} characters',
+                        'max_length' => '{field} must be less than {param} characters'
+                    ]
+                ],
+                'data_spesifikasi' => [
+                    'label' => 'Material specification',
+                    'rules' => 'required|min_length[3]',
+                    'errors' => [
+                        'required' => '{field} is required',
+                        'min_length' => '{field} must be at least {param} characters'
+                    ]
+                ],
+                'data_satuan' => [
+                    'label' => 'UoM',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '{field} is required'
+                    ]
+                ],
+                'data_workshop' => [
+                    'label' => 'Workshop',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '{field} is required'
+                    ]
+                ],
+            ];
+
+            $this->validasi->setRules($rules);
+
+            if (!$this->validasi->withRequest($this->request)->run()) {
+                $error_message = implode('<br>', $this->validasi->getErrors());
+
+                logFile(
+                    'error',
+                    "Validation error",
+                    [
+                        'message' => $this->validasi->getErrors(),
+                        'NIK' => $this->NIK
+                    ],
+                    'Material::saveData'
+                );
+
+                return pesan(ResponseInterface::HTTP_BAD_REQUEST, "Validation errors " . $error_message);
+            }
+
+            $id = generate_uuid();
+            $code = trim(strip_tags($this->request->getPost('data_code')));
+            $name = trim(strip_tags($this->request->getPost('data_name')));
+            $spesifikasi = trim(strip_tags($this->request->getPost('data_spesifikasi')));
+            $satuan = trim(strip_tags($this->request->getPost('data_satuan')));
+            $workshop = trim(strip_tags($this->request->getPost('data_workshop')));
+            $route = trim(strip_tags($this->request->getPost('data_route')));
+            $color = trim(strip_tags($this->request->getPost('data_color')));
+            $teori_nw = trim(strip_tags($this->request->getPost('data_teori_nw')));
+            $teori_gw = trim(strip_tags($this->request->getPost('data_teori_gw')));
+            $teori_shift_capacity = trim(strip_tags($this->request->getPost('data_teori_shift_capacity')));
+            $nw = trim(strip_tags($this->request->getPost('data_nw')));
+            $gw = trim(strip_tags($this->request->getPost('data_gw')));
+            $shift_capacity = trim(strip_tags($this->request->getPost('data_shift_capacity')));
+            $remark = trim(strip_tags($this->request->getPost('data_remark')));
+
+            if ($teori_nw > $teori_gw) {
+                return pesan(ResponseInterface::HTTP_BAD_REQUEST, "Theoritical Net Weight cannot greater than Theoritical Gross Weight");
+            }
+
+            if ($nw > $gw) {
+                return pesan(ResponseInterface::HTTP_BAD_REQUEST, "Actual Net Weight cannot greater than Actual Gross Weight");
+            }
+
+            $data = [
+                'id' => $id,
+                'code' => $code,
+                'name' => $name,
+                'spesifikasi' => $spesifikasi,
+                'satuan' => $satuan,
+                'workshop' => $workshop,
+                'route' => $route,
+                'color' => $color,
+                'teori_nw' => $teori_nw,
+                'teori_gw' => $teori_gw,
+                'teori_shift_capacity' => $teori_shift_capacity,
+                'nw' => $nw,
+                'gw' => $gw,
+                'shift_capacity' => $shift_capacity,
+                'remark' => $remark,
+                'created_by' => $this->NIK
+            ];
+
+            $insert = $this->materialModel->insert($data);
+            $this->db->transCommit();
+            $this->db->transComplete();
+
+            if ($this->db->transStatus() === false) {
+                $this->db->transRollback();
+
+                logFile(
+                    'error',
+                    'Insert transaction failed',
+                    [
+                        'error' => $this->db->error(),
+                        'NIK' => $this->NIK
+                    ],
+                    'Material::saveData'
+                );
+            }
+
+            if (!$insert) {
+                logFile(
+                    'error',
+                    'Failed to save a new material data',
+                    [
+                        'message' => $this->materialModel->errors(),
+                        'NIK' => $this->NIK
+                    ],
+                    'Material::saveData'
+                );
+
+                throw new \Exception("Failed to save a new material data");
+            }
+
+            logFile(
+                'audit',
+                'Successfully saved a new material data',
+                [
+                    'material_id' => $id,
+                    'material_code' => $code,
+                    'NIK' => $this->NIK
+                ],
+            );
+
+            return pesan(ResponseInterface::HTTP_OK, "Successfully saved a new material data");
+        } catch (\Exception $e) {
+            logFile(
+                'error',
+                'Unexpected error',
+                [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'message' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(),
+                    'NIK' => $this->NIK
+                ],
+                'Material::saveData'
             );
 
             return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, "Unexpected error occured " . $e->getMessage());

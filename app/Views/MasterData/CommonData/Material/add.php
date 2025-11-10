@@ -93,15 +93,17 @@
                                     </div>
                                     <div class="form-group col-xl-2 col-lg-2 col-md-6 col-sm-12 mb-3 clearfix">
                                         <label class="form-label" for="data_color">Product Color</label>
-                                        <input type="text" name="data_color" id="data-color" class="form-control rounded-0" placeholder="Product Color" maxlength="50">
+                                        <input type="text" name="data_color" id="data_color" class="form-control rounded-0" placeholder="Product Color" maxlength="50">
                                     </div>
                                     <div class="form-group col-xl-2 col-lg-2 col-md-6 col-sm-12 mb-3 clearfix">
                                         <label class="form-label" for="data_teori_nw">Theoritical Net Weight</label>
                                         <input type="number" name="data_teori_nw" id="data_teori_nw" class="form-control rounded-0" placeholder="Theoritical Net Weight" min="0" step="0.0001" autocomplete="off">
+                                        <div class="invalid-feedback"></div>
                                     </div>
                                     <div class="form-group col-xl-2 col-lg-2 col-md-6 col-sm-12 mb-3 clearfix">
                                         <label class="form-label" for="data_teori_gw">Theoritical Gross Weight</label>
                                         <input type="number" name="data_teori_gw" id="data_teori_gw" class="form-control rounded-0" placeholder="Theoritical Gross Weight" min="0" step="0.0001" autocomplete="off">
+                                        <div class="invalid-feedback"></div>
                                     </div>
                                     <div class="form-group col-xl-2 col-lg-2 col-md-6 col-sm-12 mb-3 clearfix">
                                         <label class="form-label" for="data_teori_shift_capacity">Theoritical Shift Capacity</label>
@@ -109,11 +111,13 @@
                                     </div>
                                     <div class="form-group col-xl-2 col-lg-2 col-md-6 col-sm-12 mb-3 clearfix">
                                         <label class="form-label" for="data_nw">Net Weight</label>
-                                        <input type="number" name="data_nw" id="data_nw" class="form-control rounded-0" placeholder="Theoritical Net Weight" min="0" step="0.0001" autocomplete="off">
+                                        <input type="number" name="data_nw" id="data_nw" class="form-control rounded-0" placeholder="Actual Net Weight" min="0" step="0.0001" autocomplete="off">
+                                        <div class="invalid-feedback"></div>
                                     </div>
                                     <div class="form-group col-xl-2 col-lg-2 col-md-6 col-sm-12 mb-3 clearfix">
                                         <label class="form-label" for="data_gw">Gross Weight</label>
-                                        <input type="number" name="data_gw" id="data_gw" class="form-control rounded-0" placeholder="Theoritical Gross Weight" min="0" step="0.0001" autocomplete="off">
+                                        <input type="number" name="data_gw" id="data_gw" class="form-control rounded-0" placeholder="Actual Gross Weight" min="0" step="0.0001" autocomplete="off">
+                                        <div class="invalid-feedback"></div>
                                     </div>
                                     <div class="form-group col-xl-2 col-lg-2 col-md-6 col-sm-12 mb-3 clearfix">
                                         <label class="form-label" for="data_shift_capacity">Shift Capacity</label>

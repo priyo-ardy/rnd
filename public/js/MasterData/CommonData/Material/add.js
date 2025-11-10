@@ -12,6 +12,10 @@ const inputForm = {
   spesifikasi: document.getElementById("data_spesifikasi"),
   satuan: document.getElementById("data_satuan"),
   workshop: document.getElementById("data_workshop"),
+  teori_nw: document.getElementById("data_teori_nw"),
+  teori_gw: document.getElementById("data_teori_gw"),
+  nw: document.getElementById("data_nw"),
+  gw: document.getElementById("data_gw"),
 };
 
 inputForm.code.addEventListener("keypress", (e) => {
@@ -41,6 +45,60 @@ function validasi() {
         element.classList.remove("is-invalid");
       }
     });
+  }
+
+  if (inputForm.teori_nw.value !== "" || inputForm.teori_gw.value !== "") {
+    if (
+      parseFloat(inputForm.teori_nw.value.trim()) >
+      parseFloat(inputForm.teori_gw.value.trim())
+    ) {
+      inputForm.teori_nw.classList.add("is-invalid");
+      inputForm.teori_gw.classList.add("is-invalid");
+
+      inputForm.teori_nw.parentNode.querySelector(
+        ".invalid-feedback"
+      ).textContent = "Net weight cannot greather than gross weight";
+      inputForm.teori_gw.parentNode.querySelector(
+        ".invalid-feedback"
+      ).textContent = "Net weight cannot greather than gross weight";
+      isValid = false;
+    } else {
+      inputForm.teori_nw.classList.remove("is-invalid");
+      inputForm.teori_gw.classList.remove("is-invalid");
+      inputForm.teori_nw.parentNode.querySelector(
+        ".invalid-feedback"
+      ).textContent = "";
+      inputForm.teori_gw.parentNode.querySelector(
+        ".invalid-feedback"
+      ).textContent = "";
+    }
+  }
+
+  if (inputForm.nw.value.trim() !== "" || inputForm.gw.value.trim() !== "") {
+    if (
+      parseFloat(inputForm.nw.value.trim()) >
+      parseFloat(inputForm.gw.value.trim())
+    ) {
+      inputForm.nw.classList.add("is-invalid");
+      inputForm.gw.classList.add("is-invalid");
+
+      inputForm.nw.parentNode.querySelector(".invalid-feedback").textContent =
+        "Net weight cannot greather than gross weight";
+      inputForm.gw.parentNode.querySelector(".invalid-feedback").textContent =
+        "Net weight cannot greather than gross weight";
+      isValid = false;
+
+      console.log("SALAH");
+    } else {
+      //   console.log("BENAR");
+      inputForm.nw.classList.remove("is-invalid");
+      inputForm.gw.classList.remove("is-invalid");
+
+      inputForm.nw.parentNode.querySelector(".invalid-feedback").textContent =
+        "";
+      inputForm.gw.parentNode.querySelector(".invalid-feedback").textContent =
+        "";
+    }
   }
 
   if (!cekMaterialCode()) {
@@ -119,6 +177,22 @@ function clearForm() {
 
 buttons.save.addEventListener("click", (e) => {
   if (validasi()) {
+    try {
+      loading();
+      fetchData(baseurl + "/material/save", "POST", new FormData(formData))
+        .then((result) => {
+          pesanSukses(result.message);
+          hideLoading();
+          clearForm();
+        })
+        .catch((err) => {
+          pesanError(err.message);
+          hideLoading();
+        });
+    } catch (e) {
+      pesanError(e.message);
+      hideLoading();
+    }
   }
 });
 
