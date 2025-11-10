@@ -80,4 +80,17 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
         $routes->post('table', 'MasterData\CommonData\Workshop\Workshop::loadTable');
         $routes->get('data-seed', 'MasterData\CommonData\Workshop\Workshop::dataSeed');
     });
+
+    // Material
+    $routes->group('/material', static function ($routes) {
+        $routes->get('', 'MasterData\CommonData\Material\Material::index');
+        $routes->get('add', 'MasterData\CommonData\Material\Material::addData');
+        $routes->post('save', 'MasterData\CommonData\Material\Material::saveData');
+        $routes->post('show/(:any)', 'MasterData\CommonData\Material\Material::getData/$1');
+        $routes->post('update', 'MasterData\CommonData\Material\Material::updateData');
+        $routes->post('delete', 'MasterData\CommonData\Material\Material::deleteData');
+        $routes->get('export', 'MasterData\CommonData\Material\Material::exportData');
+        $routes->post('table', 'MasterData\CommonData\Material\Material::loadTable');
+        $routes->get('data-seed', 'MasterData\CommonData\Material\Material::dataSeed');
+    });
 });
