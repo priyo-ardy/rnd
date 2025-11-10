@@ -1,34 +1,35 @@
 <?php
 
-namespace App\Controllers\MasterData\CommonData\Satuan;
+namespace App\Controllers\MasterData\CommonData\MaterialCategory;
 
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
+use App\Models\MasterData\CommonData\MaterialCategory\MaterialCategoryModel;
 use App\Models\Master\MasterModel;
-use App\Models\MasterData\CommonData\Satuan\SatuanModel;
 use App\Models\DataTable\DataTableModel;
 use Config\Services;
 use Config\Database;
 
-class Satuan extends BaseController
+class MaterialCategory extends BaseController
 {
+    protected $categoryModel;
     protected $masterModel;
-    protected $satuanModel;
     protected $dataTable;
     protected $validasi;
     protected $db;
 
     public function __construct()
     {
+        $this->categoryModel = new MaterialCategoryModel();
         $this->masterModel = new MasterModel();
-        $this->satuanModel = new SatuanModel();
-        $this->db = Database::connect();
         $this->validasi = Services::validation();
+        $this->db = Database::connect();
 
-        $table = 'm_satuan';
-        $column_order = ['code', 'name', 'simbol', 'remark'];
-        $column_search = ['code', 'name', 'simbol', 'remark'];
+        $table = 'm_material_category';
+        $column_order = ['code', 'name', 'remark'];
+        $column_search = ['code', 'name', 'remark'];
         $order = array('code' => 'asc');
+
         $this->dataTable = new DataTableModel(services::request(), $table, $column_order, $column_search, $order);
     }
 
@@ -37,23 +38,24 @@ class Satuan extends BaseController
         $lists = $this->dataTable->get_datatables();
         $data = [];
 
-        foreach ($lists as $list) {
+        foreach ($lists as $item) {
             $row = [];
+
             $row[] = '
-                <a href="#" class="nav-link text-decoration-none text-primary fw-bolder" title="Edit" onclick="editData(' . "'" . enkripsi($list->id) . "'" . ')">
-                ' . $list->code . '
+                <a href="#" class="nav-link text-decoration-none text-primary fw-bolder" title="Edit" onclick="editData(' . "'" . enkripsi($item->id) . "'" . ')">
+                ' . $item->code . '
                 </a>
             ';
-            $row[] = $list->name;
-            $row[] = $list->simbol;
-            $row[] = $list->remark;
+            $row[] = $item->name;
+            $row[] = $item->remark;
             $row[] = '
-                <button type="button" title="Click to delete this data" class="text-danger btn text-danger shadow-none btn-sm rounded-0 fw-bolder" onclick="deleteData(`' . enkripsi($list->id) . '`)">
+                <button type="button" title="Click to delete this data" class="text-danger btn text-danger shadow-none btn-sm rounded-0 fw-bolder" onclick="deleteData(`' . enkripsi($item->id) . '`)">
                     <i class="bi bi-x"></i>
                 </button>';
 
             $data[] = $row;
         }
+
 
         $output = [
             "draw" => $_POST['draw'],
@@ -68,15 +70,13 @@ class Satuan extends BaseController
     public function index()
     {
         $data = [
-            'title' => 'UoM',
+            'title' => 'List of Material Category',
             'footer' => [
-                '<script src="' . base_url() . 'js/MasterData/CommonData/Satuan/satuan.js' . '"></script>',
-                '<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>',
-                '<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment-with-locales.min.js"></script>'
+                '<script src="' . base_url('js/MasterData/CommonData/MaterialCategory/material_category.js') . '"></script>'
             ]
         ];
 
-        return view('MasterData/CommonData/Satuan/index', $data);
+        return view('MasterData/CommonData/MaterialCategory/index', $data);
     }
 
     function saveData()
@@ -91,7 +91,7 @@ class Satuan extends BaseController
                     'expected' => 'POST',
                     'NIK' => session('user_name')
                 ],
-                'Satuan::saveData',
+                'MaterialCategory::saveData',
             );
 
             return pesan(ResponseInterface::HTTP_METHOD_NOT_ALLOWED, 'Request method not allowed');
@@ -101,17 +101,8 @@ class Satuan extends BaseController
         try {
             $this->validasi->setRules([
                 'data_name' => [
-                    'label' => 'UoM Name',
+                    'label' => 'MaterialCategory Name',
                     'rules' => 'required|min_length[3]|max_length[150]',
-                    'errors' => [
-                        'required' => '{field} is required',
-                        'min_length' => '{field} must have minimum {param} characters',
-                        'max_length' => '{field} cannot exceed {param} characters'
-                    ]
-                ],
-                'data_simbol' => [
-                    'label' => 'UoM Symbol',
-                    'rules' => 'required|min_length[1]|max_length[20]',
                     'errors' => [
                         'required' => '{field} is required',
                         'min_length' => '{field} must have minimum {param} characters',
@@ -124,33 +115,31 @@ class Satuan extends BaseController
                 $error_message = implode('<br>', $this->validasi->getErrors());
                 logFile(
                     'error',
-                    'Error saat validasi data',
+                    'Validation error',
                     [
-                        'error' => $error_message,
+                        'message' => $this->validasi->getErrors(),
                         'NIK' => $this->NIK
                     ],
-                    'Satuan::saveData',
+                    'MaterialCategory::saveData',
                 );
 
                 return pesan(ResponseInterface::HTTP_BAD_REQUEST, $error_message);
             }
 
             $id = generate_uuid();
-            $code = $this->masterModel->generateCode('m_satuan', 'code', 'UOM-', 6);
+            $code = $this->masterModel->generateCode('m_material_category', 'code', 'CTM-', 6);
             $name = trim(strip_tags($this->request->getPost('data_name')));
-            $simbol = trim(strip_tags($this->request->getPost('data_simbol')));
             $remark = trim(strip_tags($this->request->getPost('data_remark')));
 
             $data = [
                 'id' => $id,
                 'code' => $code,
                 'name' => $name,
-                'simbol' => $simbol,
                 'remark' => $remark,
                 'created_by' => $this->NIK,
             ];
 
-            $insert = $this->satuanModel->insert($data);
+            $insert = $this->categoryModel->insert($data);
 
             $this->db->transCommit();
 
@@ -159,31 +148,31 @@ class Satuan extends BaseController
                     'error',
                     'Save error',
                     [
-                        'message' => $this->db->error(),
+                        'message' => $this->categoryModel->errors(),
                         'NIK' => $this->NIK
                     ],
-                    'Satuan::saveData',
+                    'MaterialCategory::saveData',
                 );
 
-                return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Failed to save a new UoM data');
+                return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Failed to save a new material category data');
             }
 
             logFile(
                 'audit',
-                'UoM data saved successfully',
+                'Material category data saved successfully',
                 [
-                    'uom_id' => $id,
+                    'routes_id' => $id,
                     'NIK' => $this->NIK
                 ],
-                'Satuan::saveData',
+                'MaterialCategory::saveData',
             );
 
-            return pesan(ResponseInterface::HTTP_OK, 'UoM data has been saved');
+            return pesan(ResponseInterface::HTTP_OK, 'Material category data has been saved');
         } catch (\Exception $e) {
             $this->db->transRollback();
             logFile(
                 'error',
-                'Error saat simpan data',
+                'Error while saving new material category data',
                 [
                     'file' => $e->getFile(),
                     'line' => $e->getLine(),
@@ -191,7 +180,7 @@ class Satuan extends BaseController
                     'trace' => $e->getTraceAsString(),
                     'NIK' => $this->NIK
                 ],
-                'Satuan::saveData',
+                'MaterialCategory::saveData',
             );
 
             return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Unexpected error occured' . $e->getMessage());
@@ -210,7 +199,7 @@ class Satuan extends BaseController
                     'expected' => 'POST',
                     'NIK' => session('user_name')
                 ],
-                'Satuan::getData',
+                'MaterialCategory::getData',
             );
 
             return pesan(ResponseInterface::HTTP_METHOD_NOT_ALLOWED, 'Request method not allowed');
@@ -224,32 +213,31 @@ class Satuan extends BaseController
             }
 
             if (!isset($json_data['token'])) {
-                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'UoM token is not available in JSON data');
+                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Material category token is not available in JSON data');
             }
 
             $token = $json_data['token'];
             $id = dekripsi($token);
 
-            $getData = $this->satuanModel->where('id', $id)->first();
-
+            $getData = $this->categoryModel->where('id', $id)->first();
             if (!$getData) {
                 logFile(
                     'error',
-                    'UoM data not found',
+                    'Material category data not found',
                     [
-                        'uom_id' => $id,
+                        'id' => $id,
                         'NIK' => $this->NIK
                     ],
-                    'Satuan::getData',
+                    'MaterialCategory::getData',
                 );
-                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'UoM data not found');
+
+                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Material category data not found');
             }
 
             $data = [
                 'token' => enkripsi($id),
                 'code' => $getData->code,
                 'name' => $getData->name,
-                'simbol' => $getData->simbol,
                 'remark' => $getData->remark
             ];
 
@@ -257,7 +245,7 @@ class Satuan extends BaseController
         } catch (\Exception $e) {
             logFile(
                 'error',
-                'Error saat ambil data',
+                'Error while getting material category data',
                 [
                     'file' => $e->getFile(),
                     'line' => $e->getLine(),
@@ -265,7 +253,7 @@ class Satuan extends BaseController
                     'trace' => $e->getTraceAsString(),
                     'NIK' => $this->NIK
                 ],
-                'Satuan::getData',
+                'MaterialCategory::getData',
             );
 
             return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Unexpected error occured' . $e->getMessage());
@@ -284,7 +272,7 @@ class Satuan extends BaseController
                     'expected' => 'POST',
                     'NIK' => session('user_name')
                 ],
-                'Satuan::updateData',
+                'MaterialCategory::updateData',
             );
 
             return pesan(ResponseInterface::HTTP_METHOD_NOT_ALLOWED, 'Request method not allowed');
@@ -295,14 +283,14 @@ class Satuan extends BaseController
         try {
             $this->validasi->setRules([
                 'data_token' => [
-                    'label' => 'UoM Token',
+                    'label' => 'MaterialCategory token',
                     'rules' => 'required',
                     'errors' => [
                         'required' => '{field} is required',
                     ]
                 ],
                 'data_code' => [
-                    'label' => 'UoM Code',
+                    'label' => 'MaterialCategory code',
                     'rules' => 'required|min_length[3]|max_length[20]',
                     'errors' => [
                         'required' => '{field} is required',
@@ -311,7 +299,7 @@ class Satuan extends BaseController
                     ]
                 ],
                 'data_name' => [
-                    'label' => 'UoM Name',
+                    'label' => 'MaterialCategory name',
                     'rules' => 'required|min_length[3]|max_length[150]',
                     'errors' => [
                         'required' => '{field} is required',
@@ -319,15 +307,6 @@ class Satuan extends BaseController
                         'max_length' => '{field} cannot exceed {param} characters'
                     ]
                 ],
-                'data_simbol' => [
-                    'label' => 'UoM Symbol',
-                    'rules' => 'required|min_length[1]|max_length[20]',
-                    'errors' => [
-                        'required' => '{field} is required',
-                        'min_length' => '{field} must have minimum {param} characters',
-                        'max_length' => '{field} cannot exceed {param} characters'
-                    ]
-                ]
             ]);
 
             if ($this->validasi->withRequest($this->request)->run() === false) {
@@ -347,17 +326,15 @@ class Satuan extends BaseController
             $id = dekripsi($token);
             $code = trim($this->request->getPost('data_code'));
             $name = trim($this->request->getPost('data_name'));
-            $simbol = trim($this->request->getPost('data_simbol'));
             $remark = trim($this->request->getPost('data_remark'));
 
             $data = [
                 'name' => $name,
-                'simbol' => $simbol,
                 'remark' => $remark,
                 'updated_by' => $this->NIK
             ];
 
-            $update = $this->satuanModel->update($id, $data);
+            $update = $this->categoryModel->update($id, $data);
             $this->db->transCommit();
 
             if ($this->db->transStatus() === false) {
@@ -365,45 +342,45 @@ class Satuan extends BaseController
 
                 logFile(
                     'error',
-                    'Error while updating UoM data',
+                    'Error while updating material category data',
                     [
                         'error' => $this->db->error(),
                         'NIK' => $this->NIK
                     ],
-                    'Satuan::updateData',
+                    'MaterialCategory::updateData',
                 );
 
                 return pesan(
                     ResponseInterface::HTTP_INTERNAL_SERVER_ERROR,
-                    'Error while updating UoM data',
+                    'Error while updating material category data',
                 );
             }
 
             if (!$update) {
                 logFile(
                     'error',
-                    'Error while updating UoM data',
+                    'Error while updating material category data',
                     [
-                        'error' => $this->satuanModel->errors(),
+                        'error' => $this->categoryModel->errors(),
                         'NIK' => $this->NIK
                     ],
-                    'Satuan::updateData',
+                    'MaterialCategory::updateData',
                 );
 
-                return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Error while updating UoM data');
+                return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Error while updating material category data');
             }
 
             logFile(
                 'audit',
-                'Updated UoM data was successfully',
+                'Updated material category data was successfully',
                 [
                     'id' => $id,
                     'NIK' => $this->NIK
                 ],
-                'Satuan::updateData',
+                'MaterialCategory::updateData',
             );
 
-            return pesan(ResponseInterface::HTTP_OK, 'UoM data was successfully updated');
+            return pesan(ResponseInterface::HTTP_OK, 'Material category data was successfully updated');
         } catch (\Exception $e) {
 
             logFile(
@@ -416,7 +393,7 @@ class Satuan extends BaseController
                     'trace' => $e->getTraceAsString(),
                     'NIK' => $this->NIK
                 ],
-                'Satuan::updateData',
+                'MaterialCategory::updateData',
             );
 
             return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Unexpected error occured' . $e->getMessage());
@@ -435,7 +412,7 @@ class Satuan extends BaseController
                     'expected' => 'POST',
                     'NIK' => session('user_name')
                 ],
-                'Satuan::deleteData',
+                'MaterialCategory::deleteData',
             );
 
             return pesan(ResponseInterface::HTTP_METHOD_NOT_ALLOWED, 'Request method not allowed');
@@ -450,13 +427,13 @@ class Satuan extends BaseController
             }
 
             if (!isset($json_data['token'])) {
-                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'UoM token is not available in JSON data');
+                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Material category token is not available in JSON data');
             }
 
             $token = trim($json_data['token']);
             $id = dekripsi($token);
 
-            $deleteData = $this->satuanModel->delete($id);
+            $deleteData = $this->categoryModel->delete($id);
             $this->db->transCommit();
 
             if ($this->db->transStatus() === false) {
@@ -464,44 +441,44 @@ class Satuan extends BaseController
 
                 logFile(
                     'error',
-                    'Error while deleting UoM data',
+                    'Error while deleting material category data',
                     [
                         'error' => $this->db->error(),
                         'NIK' => $this->NIK
                     ],
-                    'Satuan::deleteData',
+                    'MaterialCategory::deleteData',
                 );
             }
 
             if (!$deleteData) {
                 logFile(
                     'error',
-                    'Error while deleting UoM data',
+                    'Error while deleting material category data',
                     [
-                        'error' => $this->satuanModel->errors(),
+                        'error' => $this->categoryModel->errors(),
                         'NIK' => $this->NIK
                     ],
-                    'Satuan::deleteData',
+                    'MaterialCategory::deleteData',
                 );
 
-                return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Error while deleting UoM data');
+                return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Error while deleting material category data');
             }
 
             logFile(
                 'audit',
-                'Deleted UoM data was successfully',
+                'Deleted material category data was successfully',
                 [
                     'id' => $id,
                     'NIK' => $this->NIK
                 ],
-                'Satuan::deleteData',
+                'MaterialCategory::deleteData',
             );
 
-            return pesan(ResponseInterface::HTTP_OK, 'UoM data was successfully deleted');
+            return pesan(ResponseInterface::HTTP_OK, 'Material category data was successfully deleted');
         } catch (\Exception $e) {
             logFile(
                 'error',
-                'Error during deleting UoM data',
+                'Error during deleting material category data',
                 [
                     'file' => $e->getFile(),
                     'line' => $e->getLine(),
@@ -509,8 +486,11 @@ class Satuan extends BaseController
                     'trace' => $e->getTraceAsString(),
                     'NIK' => $this->NIK
                 ],
-                'Satuan::deleteData',
+                'MaterialCategory::deleteData',
             );
+
+
+            return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Unexpected error occured' . $e->getMessage());
         }
     }
 
@@ -528,23 +508,20 @@ class Satuan extends BaseController
                 ],
                 'Satuan::exportData',
             );
-
-            return pesan(ResponseInterface::HTTP_METHOD_NOT_ALLOWED, 'Request method not allowed');
         }
 
         try {
-            $fileName = 'UoM Data ' . date('Y-m-d H:i:s');
+            $fileName = 'Material Category Data ' . date('Y-m-d H:i:s');
 
             $headers = [
                 'code',
                 'name',
-                'symbol',
                 'remark'
             ];
 
             $dataCallback = function ($offset, $limit) {
-                $column = 'code, name, simbol, remark';
-                return $this->masterModel->getChunkedData('m_satuan', $offset, $limit, 'code', $column);
+                $column = 'code, name, remark';
+                return $this->masterModel->getChunkedData('m_material_category', $offset, $limit, 'code', $column);
             };
 
             return export_to_excel($fileName, $headers, $dataCallback);
@@ -568,8 +545,8 @@ class Satuan extends BaseController
 
     function dataSeed()
     {
-        $get = $this->satuanModel->orderBy('code', 'asc')->findAll();
+        $getData = $this->categoryModel->orderBy('code', 'asc')->findAll();
 
-        return pesan(ResponseInterface::HTTP_OK, 'Data was successfully seeded', $get);
+        return pesan(ResponseInterface::HTTP_OK, 'Data was successfully seeded', $getData);
     }
 }

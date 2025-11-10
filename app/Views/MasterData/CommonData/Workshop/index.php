@@ -14,7 +14,7 @@
                         <li class="breadcrumb-item"><a href="<?= base_url() . 'dashboard' ?>" onclick="loading()">Dashboard</a></li>
                         <li class="breadcrumb-item">Master Data</li>
                         <li class="breadcrumb-item">Common Data</li>
-                        <li class="breadcrumb-item active">List of UoM</li>
+                        <li class="breadcrumb-item active">List of Workshop</li>
                     </ol>
                 </div>
             </div>
@@ -37,17 +37,12 @@
                                     <input type="text" name="data_token" id="data_token" class="form-control rounded-0 bg-secondary-subtle" readonly>
                                 </div>
                                 <div class="form-group mb-3">
-                                    <label class="form-label">UoM Code</label>
-                                    <input type="text" name="data_code" id="data_code" class="form-control rounded-0 bg-secondary-subtle" readonly placeholder="UoM Code" readonly>
+                                    <label class="form-label">Code</label>
+                                    <input type="text" name="data_code" id="data_code" class="form-control rounded-0 bg-secondary-subtle" readonly placeholder="Workshop Code" readonly>
                                 </div>
                                 <div class="form-group mb-3">
-                                    <label class="form-label">UoM Name <strong class="text-danger">*</strong></label>
-                                    <input type="text" name="data_name" id="data_name" class="form-control rounded-0" required maxlength="150" autofocus autocomplete="off" placeholder="UoM Name">
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label class="form-label">UoM Symbol <strong class="text-danger">*</strong></label>
-                                    <input type="text" name="data_simbol" id="data_simbol" class="form-control rounded-0" required maxlength="150" autofocus autocomplete="off" placeholder="UoM Symbol">
+                                    <label class="form-label">Name <strong class="text-danger">*</strong></label>
+                                    <input type="text" name="data_name" id="data_name" class="form-control rounded-0" required maxlength="150" autofocus autocomplete="off" placeholder="Workshop Name">
                                     <div class="invalid-feedback"></div>
                                 </div>
                                 <div class="form-group mb-3">
@@ -75,7 +70,7 @@
                 <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 mb3 clearfix">
                     <div class="card card-primary card-outline rounded-0">
                         <div class="card-header rounded-0">
-                            <h5 class="card-title"><i class="bi bi-list-ul"></i>&ensp;UoM List</h5>
+                            <h5 class="card-title"><i class="bi bi-list-ul"></i>&ensp;Workshop List</h5>
                             <div class="card-tools">
                                 <button type="button" id="btnRefresh" class="btn btn-tool text-black fw-bold" title="Refresh"><i class="bi bi-arrow-repeat"></i></button>
                                 <button type="button" id="btnExport" class="btn btn-tool text-black fw-bold" title="Export Data"><i class="bi bi-download"></i></button>
@@ -88,7 +83,6 @@
                                         <tr>
                                             <th class="text-center align-middle bg-secondary-subtle">Code</th>
                                             <th class="text-center align-middle bg-secondary-subtle">Name</th>
-                                            <th class="text-center align-middle bg-secondary-subtle">Symbol</th>
                                             <th class="text-center align-middle bg-secondary-subtle">Remark</th>
                                             <th class="text-center align-middle bg-secondary-subtle">Action</th>
                                         </tr>

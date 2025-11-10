@@ -30,16 +30,54 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
         $routes->post('next', 'MasterData\CommonData\Customer\Customer::nextData');
         $routes->get('export', 'MasterData\CommonData\Customer\Customer::exportData');
         $routes->post('table', 'MasterData\CommonData\Customer\Customer::loadTable');
+        $routes->get('data-seed', 'MasterData\CommonData\Customer\Customer::dataSeed');
     });
 
     // Master data satuan
     $routes->group('/satuan', static function ($routes) {
         $routes->get('', 'MasterData\CommonData\Satuan\Satuan::index');
         $routes->post('save', 'MasterData\CommonData\Satuan\Satuan::saveData');
-        $routes->post('get', 'MasterData\CommonData\Satuan\Satuan::getData');
+        $routes->post('edit', 'MasterData\CommonData\Satuan\Satuan::getData');
         $routes->post('update', 'MasterData\CommonData\Satuan\Satuan::updateData');
         $routes->post('delete', 'MasterData\CommonData\Satuan\Satuan::deleteData');
         $routes->get('export', 'MasterData\CommonData\Satuan\Satuan::exportData');
         $routes->post('table', 'MasterData\CommonData\Satuan\Satuan::loadTable');
+        $routes->get('data-seed', 'MasterData\CommonData\Satuan\Satuan::dataSeed');
+    });
+
+    // Production routes
+    $routes->group('/routes', static function ($routes) {
+        $routes->get('', 'MasterData\CommonData\ProductionRoutes\ProductionRoutes::index');
+        $routes->post('save', 'MasterData\CommonData\ProductionRoutes\ProductionRoutes::saveData');
+        $routes->post('edit', 'MasterData\CommonData\ProductionRoutes\ProductionRoutes::getData');
+        $routes->post('update', 'MasterData\CommonData\ProductionRoutes\ProductionRoutes::updateData');
+        $routes->post('delete', 'MasterData\CommonData\ProductionRoutes\ProductionRoutes::deleteData');
+        $routes->get('export', 'MasterData\CommonData\ProductionRoutes\ProductionRoutes::exportData');
+        $routes->post('table', 'MasterData\CommonData\ProductionRoutes\ProductionRoutes::loadTable');
+        $routes->get('data-seed', 'MasterData\CommonData\ProductionRoutes\ProductionRoutes::dataSeed');
+    });
+
+    // Material Category
+    $routes->group('/material_category', static function ($routes) {
+        $routes->get('', 'MasterData\CommonData\MaterialCategory\MaterialCategory::index');
+        $routes->post('save', 'MasterData\CommonData\MaterialCategory\MaterialCategory::saveData');
+        $routes->post('edit', 'MasterData\CommonData\MaterialCategory\MaterialCategory::getData');
+        $routes->post('update', 'MasterData\CommonData\MaterialCategory\MaterialCategory::updateData');
+        $routes->post('delete', 'MasterData\CommonData\MaterialCategory\MaterialCategory::deleteData');
+        $routes->get('export', 'MasterData\CommonData\MaterialCategory\MaterialCategory::exportData');
+        $routes->post('table', 'MasterData\CommonData\MaterialCategory\MaterialCategory::loadTable');
+        $routes->get('data-seed', 'MasterData\CommonData\MaterialCategory\MaterialCategory::dataSeed');
+    });
+
+    // Workshop
+    $routes->group('/workshop', static function ($routes) {
+        $routes->get('', 'MasterData\CommonData\Workshop\Workshop::index');
+        $routes->post('save', 'MasterData\CommonData\Workshop\Workshop::saveData');
+        $routes->post('edit', 'MasterData\CommonData\Workshop\Workshop::getData');
+        $routes->post('update', 'MasterData\CommonData\Workshop\Workshop::updateData');
+        $routes->post('delete', 'MasterData\CommonData\Workshop\Workshop::deleteData');
+        $routes->get('export', 'MasterData\CommonData\Workshop\Workshop::exportData');
+        $routes->post('table', 'MasterData\CommonData\Workshop\Workshop::loadTable');
+        $routes->get('data-seed', 'MasterData\CommonData\Workshop\Workshop::dataSeed');
     });
 });

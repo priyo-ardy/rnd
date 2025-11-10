@@ -58,6 +58,38 @@
                                 </p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="<?= base_url('satuan') ?>" class="nav-link" onclick="loading()">
+                                <i class="nav-icon bi bi-arrow-right-circle"></i>
+                                <p>
+                                    List of UoM
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?= base_url('routes') ?>" class="nav-link" onclick="loading()">
+                                <i class="nav-icon bi bi-arrow-right-circle"></i>
+                                <p>
+                                    List of Routes
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?= base_url('material_category') ?>" class="nav-link" onclick="loading()">
+                                <i class="nav-icon bi bi-arrow-right-circle"></i>
+                                <p>
+                                    Material Category List
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?= base_url('workshop') ?>" class="nav-link" onclick="loading()">
+                                <i class="nav-icon bi bi-arrow-right-circle"></i>
+                                <p>
+                                    List of Workshop
+                                </p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-item">

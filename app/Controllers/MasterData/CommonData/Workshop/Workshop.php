@@ -1,34 +1,35 @@
 <?php
 
-namespace App\Controllers\MasterData\CommonData\Satuan;
+namespace App\Controllers\MasterData\CommonData\Workshop;
 
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
+use App\Models\MasterData\CommonData\Workshop\WorkshopModel;
 use App\Models\Master\MasterModel;
-use App\Models\MasterData\CommonData\Satuan\SatuanModel;
 use App\Models\DataTable\DataTableModel;
 use Config\Services;
 use Config\Database;
 
-class Satuan extends BaseController
+class Workshop extends BaseController
 {
+    protected $workshopModel;
     protected $masterModel;
-    protected $satuanModel;
     protected $dataTable;
     protected $validasi;
     protected $db;
 
     public function __construct()
     {
+        $this->workshopModel = new WorkshopModel();
         $this->masterModel = new MasterModel();
-        $this->satuanModel = new SatuanModel();
-        $this->db = Database::connect();
         $this->validasi = Services::validation();
+        $this->db = Database::connect();
 
-        $table = 'm_satuan';
-        $column_order = ['code', 'name', 'simbol', 'remark'];
-        $column_search = ['code', 'name', 'simbol', 'remark'];
-        $order = array('code' => 'asc');
+        $table = 'm_workshop';
+        $column_order = ['code', 'name', 'remark'];
+        $column_search = ['code', 'name', 'remark'];
+        $order = ['code' => 'asc'];
+
         $this->dataTable = new DataTableModel(services::request(), $table, $column_order, $column_search, $order);
     }
 
@@ -37,20 +38,23 @@ class Satuan extends BaseController
         $lists = $this->dataTable->get_datatables();
         $data = [];
 
-        foreach ($lists as $list) {
+        foreach ($lists as $item) {
             $row = [];
+
             $row[] = '
-                <a href="#" class="nav-link text-decoration-none text-primary fw-bolder" title="Edit" onclick="editData(' . "'" . enkripsi($list->id) . "'" . ')">
-                ' . $list->code . '
+                <a href="#" class="nav-link text-decoration-none text-primary fw-bolder" title="Edit" onclick="editData(' . "'" . enkripsi($item->id) . "'" . ')">
+                ' . $item->code . '
                 </a>
             ';
-            $row[] = $list->name;
-            $row[] = $list->simbol;
-            $row[] = $list->remark;
+
+            $row[] = $item->name;
+            $row[] = $item->remark;
+
             $row[] = '
-                <button type="button" title="Click to delete this data" class="text-danger btn text-danger shadow-none btn-sm rounded-0 fw-bolder" onclick="deleteData(`' . enkripsi($list->id) . '`)">
+                <button type="button" title="Click to delete this data" class="text-danger btn text-danger shadow-none btn-sm rounded-0 fw-bolder" onclick="deleteData(`' . enkripsi($item->id) . '`)">
                     <i class="bi bi-x"></i>
-                </button>';
+                </button>
+            ';
 
             $data[] = $row;
         }
@@ -67,16 +71,14 @@ class Satuan extends BaseController
 
     public function index()
     {
-        $data = [
-            'title' => 'UoM',
+        $dara = [
+            'title' => 'Workshop List',
             'footer' => [
-                '<script src="' . base_url() . 'js/MasterData/CommonData/Satuan/satuan.js' . '"></script>',
-                '<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>',
-                '<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment-with-locales.min.js"></script>'
+                '<script src="' . base_url('js/MasterData/CommonData/Workshop/workshop.js') . '"></script>'
             ]
         ];
 
-        return view('MasterData/CommonData/Satuan/index', $data);
+        return view('MasterData/CommonData/Workshop/index', $dara);
     }
 
     function saveData()
@@ -86,12 +88,12 @@ class Satuan extends BaseController
                 'security',
                 'Request method not allowed',
                 [
-                    'route' => '/satuan/save-data',
+                    'route' => '/satuan/save',
                     'method' => $this->request->getMethod(),
                     'expected' => 'POST',
                     'NIK' => session('user_name')
                 ],
-                'Satuan::saveData',
+                'Workshop::saveData',
             );
 
             return pesan(ResponseInterface::HTTP_METHOD_NOT_ALLOWED, 'Request method not allowed');
@@ -101,17 +103,8 @@ class Satuan extends BaseController
         try {
             $this->validasi->setRules([
                 'data_name' => [
-                    'label' => 'UoM Name',
+                    'label' => 'MaterialCategory Name',
                     'rules' => 'required|min_length[3]|max_length[150]',
-                    'errors' => [
-                        'required' => '{field} is required',
-                        'min_length' => '{field} must have minimum {param} characters',
-                        'max_length' => '{field} cannot exceed {param} characters'
-                    ]
-                ],
-                'data_simbol' => [
-                    'label' => 'UoM Symbol',
-                    'rules' => 'required|min_length[1]|max_length[20]',
                     'errors' => [
                         'required' => '{field} is required',
                         'min_length' => '{field} must have minimum {param} characters',
@@ -124,33 +117,31 @@ class Satuan extends BaseController
                 $error_message = implode('<br>', $this->validasi->getErrors());
                 logFile(
                     'error',
-                    'Error saat validasi data',
+                    'Validation error',
                     [
-                        'error' => $error_message,
+                        'message' => $this->validasi->getErrors(),
                         'NIK' => $this->NIK
                     ],
-                    'Satuan::saveData',
+                    'Workshop::saveData',
                 );
 
                 return pesan(ResponseInterface::HTTP_BAD_REQUEST, $error_message);
             }
 
             $id = generate_uuid();
-            $code = $this->masterModel->generateCode('m_satuan', 'code', 'UOM-', 6);
+            $code = $this->masterModel->generateCode('m_workshop', 'code', 'WRS-', 6);
             $name = trim(strip_tags($this->request->getPost('data_name')));
-            $simbol = trim(strip_tags($this->request->getPost('data_simbol')));
             $remark = trim(strip_tags($this->request->getPost('data_remark')));
 
             $data = [
                 'id' => $id,
                 'code' => $code,
                 'name' => $name,
-                'simbol' => $simbol,
                 'remark' => $remark,
                 'created_by' => $this->NIK,
             ];
 
-            $insert = $this->satuanModel->insert($data);
+            $insert = $this->workshopModel->insert($data);
 
             $this->db->transCommit();
 
@@ -159,31 +150,31 @@ class Satuan extends BaseController
                     'error',
                     'Save error',
                     [
-                        'message' => $this->db->error(),
+                        'message' => $this->workshopModel->errors(),
                         'NIK' => $this->NIK
                     ],
-                    'Satuan::saveData',
+                    'Workshop::saveData',
                 );
 
-                return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Failed to save a new UoM data');
+                return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Failed to save a new workshop data');
             }
 
             logFile(
                 'audit',
-                'UoM data saved successfully',
+                'Workshop data saved successfully',
                 [
-                    'uom_id' => $id,
+                    'routes_id' => $id,
                     'NIK' => $this->NIK
                 ],
-                'Satuan::saveData',
+                'Workshop::saveData',
             );
 
-            return pesan(ResponseInterface::HTTP_OK, 'UoM data has been saved');
+            return pesan(ResponseInterface::HTTP_OK, 'Workshop data has been saved');
         } catch (\Exception $e) {
             $this->db->transRollback();
             logFile(
                 'error',
-                'Error saat simpan data',
+                'Error while saving new workshop data',
                 [
                     'file' => $e->getFile(),
                     'line' => $e->getLine(),
@@ -191,7 +182,7 @@ class Satuan extends BaseController
                     'trace' => $e->getTraceAsString(),
                     'NIK' => $this->NIK
                 ],
-                'Satuan::saveData',
+                'Workshop::saveData',
             );
 
             return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Unexpected error occured' . $e->getMessage());
@@ -205,12 +196,12 @@ class Satuan extends BaseController
                 'security',
                 'Request method not allowed',
                 [
-                    'route' => '/satuan/get-data',
+                    'route' => '/satuan/get',
                     'method' => $this->request->getMethod(),
                     'expected' => 'POST',
                     'NIK' => session('user_name')
                 ],
-                'Satuan::getData',
+                'Workshop::getData',
             );
 
             return pesan(ResponseInterface::HTTP_METHOD_NOT_ALLOWED, 'Request method not allowed');
@@ -224,32 +215,31 @@ class Satuan extends BaseController
             }
 
             if (!isset($json_data['token'])) {
-                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'UoM token is not available in JSON data');
+                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Workshop token is not available in JSON data');
             }
 
             $token = $json_data['token'];
             $id = dekripsi($token);
 
-            $getData = $this->satuanModel->where('id', $id)->first();
-
+            $getData = $this->workshopModel->where('id', $id)->first();
             if (!$getData) {
                 logFile(
                     'error',
-                    'UoM data not found',
+                    'Workshop data not found',
                     [
-                        'uom_id' => $id,
+                        'id' => $id,
                         'NIK' => $this->NIK
                     ],
-                    'Satuan::getData',
+                    'Workshop::getData',
                 );
-                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'UoM data not found');
+
+                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Workshop data not found');
             }
 
             $data = [
                 'token' => enkripsi($id),
                 'code' => $getData->code,
                 'name' => $getData->name,
-                'simbol' => $getData->simbol,
                 'remark' => $getData->remark
             ];
 
@@ -257,7 +247,7 @@ class Satuan extends BaseController
         } catch (\Exception $e) {
             logFile(
                 'error',
-                'Error saat ambil data',
+                'Error while getting workshop data',
                 [
                     'file' => $e->getFile(),
                     'line' => $e->getLine(),
@@ -265,7 +255,7 @@ class Satuan extends BaseController
                     'trace' => $e->getTraceAsString(),
                     'NIK' => $this->NIK
                 ],
-                'Satuan::getData',
+                'Workshop::getData',
             );
 
             return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Unexpected error occured' . $e->getMessage());
@@ -279,12 +269,12 @@ class Satuan extends BaseController
                 'security',
                 'Request method not allowed',
                 [
-                    'route' => '/satuan/update-data',
+                    'route' => '/satuan/update',
                     'method' => $this->request->getMethod(),
                     'expected' => 'POST',
                     'NIK' => session('user_name')
                 ],
-                'Satuan::updateData',
+                'Workshop::updateData',
             );
 
             return pesan(ResponseInterface::HTTP_METHOD_NOT_ALLOWED, 'Request method not allowed');
@@ -295,14 +285,14 @@ class Satuan extends BaseController
         try {
             $this->validasi->setRules([
                 'data_token' => [
-                    'label' => 'UoM Token',
+                    'label' => 'Workshop token',
                     'rules' => 'required',
                     'errors' => [
                         'required' => '{field} is required',
                     ]
                 ],
                 'data_code' => [
-                    'label' => 'UoM Code',
+                    'label' => 'Workshop code',
                     'rules' => 'required|min_length[3]|max_length[20]',
                     'errors' => [
                         'required' => '{field} is required',
@@ -311,7 +301,7 @@ class Satuan extends BaseController
                     ]
                 ],
                 'data_name' => [
-                    'label' => 'UoM Name',
+                    'label' => 'Workshop name',
                     'rules' => 'required|min_length[3]|max_length[150]',
                     'errors' => [
                         'required' => '{field} is required',
@@ -319,15 +309,6 @@ class Satuan extends BaseController
                         'max_length' => '{field} cannot exceed {param} characters'
                     ]
                 ],
-                'data_simbol' => [
-                    'label' => 'UoM Symbol',
-                    'rules' => 'required|min_length[1]|max_length[20]',
-                    'errors' => [
-                        'required' => '{field} is required',
-                        'min_length' => '{field} must have minimum {param} characters',
-                        'max_length' => '{field} cannot exceed {param} characters'
-                    ]
-                ]
             ]);
 
             if ($this->validasi->withRequest($this->request)->run() === false) {
@@ -347,17 +328,15 @@ class Satuan extends BaseController
             $id = dekripsi($token);
             $code = trim($this->request->getPost('data_code'));
             $name = trim($this->request->getPost('data_name'));
-            $simbol = trim($this->request->getPost('data_simbol'));
             $remark = trim($this->request->getPost('data_remark'));
 
             $data = [
                 'name' => $name,
-                'simbol' => $simbol,
                 'remark' => $remark,
                 'updated_by' => $this->NIK
             ];
 
-            $update = $this->satuanModel->update($id, $data);
+            $update = $this->workshopModel->update($id, $data);
             $this->db->transCommit();
 
             if ($this->db->transStatus() === false) {
@@ -365,45 +344,45 @@ class Satuan extends BaseController
 
                 logFile(
                     'error',
-                    'Error while updating UoM data',
+                    'Error while updating workshop data',
                     [
                         'error' => $this->db->error(),
                         'NIK' => $this->NIK
                     ],
-                    'Satuan::updateData',
+                    'Workshop::updateData',
                 );
 
                 return pesan(
                     ResponseInterface::HTTP_INTERNAL_SERVER_ERROR,
-                    'Error while updating UoM data',
+                    'Error while updating workshop data',
                 );
             }
 
             if (!$update) {
                 logFile(
                     'error',
-                    'Error while updating UoM data',
+                    'Error while updating workshop data',
                     [
-                        'error' => $this->satuanModel->errors(),
+                        'error' => $this->workshopModel->errors(),
                         'NIK' => $this->NIK
                     ],
-                    'Satuan::updateData',
+                    'Workshop::updateData',
                 );
 
-                return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Error while updating UoM data');
+                return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Error while updating workshop data');
             }
 
             logFile(
                 'audit',
-                'Updated UoM data was successfully',
+                'Updated workshop data was successfully',
                 [
                     'id' => $id,
                     'NIK' => $this->NIK
                 ],
-                'Satuan::updateData',
+                'Workshop::updateData',
             );
 
-            return pesan(ResponseInterface::HTTP_OK, 'UoM data was successfully updated');
+            return pesan(ResponseInterface::HTTP_OK, 'Workshop data was successfully updated');
         } catch (\Exception $e) {
 
             logFile(
@@ -416,7 +395,7 @@ class Satuan extends BaseController
                     'trace' => $e->getTraceAsString(),
                     'NIK' => $this->NIK
                 ],
-                'Satuan::updateData',
+                'Workshop::updateData',
             );
 
             return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Unexpected error occured' . $e->getMessage());
@@ -430,12 +409,12 @@ class Satuan extends BaseController
                 'security',
                 'Request method not allowed',
                 [
-                    'route' => '/satuan/delete-data',
+                    'route' => '/satuan/delete',
                     'method' => $this->request->getMethod(),
                     'expected' => 'POST',
                     'NIK' => session('user_name')
                 ],
-                'Satuan::deleteData',
+                'Workshop::deleteData',
             );
 
             return pesan(ResponseInterface::HTTP_METHOD_NOT_ALLOWED, 'Request method not allowed');
@@ -450,13 +429,13 @@ class Satuan extends BaseController
             }
 
             if (!isset($json_data['token'])) {
-                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'UoM token is not available in JSON data');
+                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Workshop token is not available in JSON data');
             }
 
             $token = trim($json_data['token']);
             $id = dekripsi($token);
 
-            $deleteData = $this->satuanModel->delete($id);
+            $deleteData = $this->workshopModel->delete($id);
             $this->db->transCommit();
 
             if ($this->db->transStatus() === false) {
@@ -464,44 +443,44 @@ class Satuan extends BaseController
 
                 logFile(
                     'error',
-                    'Error while deleting UoM data',
+                    'Error while deleting workshop data',
                     [
                         'error' => $this->db->error(),
                         'NIK' => $this->NIK
                     ],
-                    'Satuan::deleteData',
+                    'Workshop::deleteData',
                 );
             }
 
             if (!$deleteData) {
                 logFile(
                     'error',
-                    'Error while deleting UoM data',
+                    'Error while deleting workshop data',
                     [
-                        'error' => $this->satuanModel->errors(),
+                        'error' => $this->workshopModel->errors(),
                         'NIK' => $this->NIK
                     ],
-                    'Satuan::deleteData',
+                    'Workshop::deleteData',
                 );
 
-                return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Error while deleting UoM data');
+                return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Error while deleting workshop data');
             }
 
             logFile(
                 'audit',
-                'Deleted UoM data was successfully',
+                'Deleted workshop data was successfully',
                 [
                     'id' => $id,
                     'NIK' => $this->NIK
                 ],
-                'Satuan::deleteData',
+                'Workshop::deleteData',
             );
 
-            return pesan(ResponseInterface::HTTP_OK, 'UoM data was successfully deleted');
+            return pesan(ResponseInterface::HTTP_OK, 'Workshop data was successfully deleted');
         } catch (\Exception $e) {
             logFile(
                 'error',
-                'Error during deleting UoM data',
+                'Error during deleting workshop data',
                 [
                     'file' => $e->getFile(),
                     'line' => $e->getLine(),
@@ -509,8 +488,11 @@ class Satuan extends BaseController
                     'trace' => $e->getTraceAsString(),
                     'NIK' => $this->NIK
                 ],
-                'Satuan::deleteData',
+                'Workshop::deleteData',
             );
+
+
+            return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Unexpected error occured' . $e->getMessage());
         }
     }
 
@@ -526,25 +508,22 @@ class Satuan extends BaseController
                     'expected' => 'GET',
                     'NIK' => session('user_name')
                 ],
-                'Satuan::exportData',
+                'Workshop::exportData',
             );
-
-            return pesan(ResponseInterface::HTTP_METHOD_NOT_ALLOWED, 'Request method not allowed');
         }
 
         try {
-            $fileName = 'UoM Data ' . date('Y-m-d H:i:s');
+            $fileName = 'Workshop Data ' . date('Y-m-d H:i:s');
 
             $headers = [
                 'code',
                 'name',
-                'symbol',
                 'remark'
             ];
 
             $dataCallback = function ($offset, $limit) {
-                $column = 'code, name, simbol, remark';
-                return $this->masterModel->getChunkedData('m_satuan', $offset, $limit, 'code', $column);
+                $column = 'code, name, remark';
+                return $this->masterModel->getChunkedData('m_workshop', $offset, $limit, 'code', $column);
             };
 
             return export_to_excel($fileName, $headers, $dataCallback);
@@ -559,7 +538,7 @@ class Satuan extends BaseController
                     'trace' => $e->getTraceAsString(),
                     'NIK' => $this->NIK
                 ],
-                'Satuan::exportData',
+                'Workshop::exportData',
             );
 
             return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Unexpected error occured' . $e->getMessage());
@@ -568,8 +547,8 @@ class Satuan extends BaseController
 
     function dataSeed()
     {
-        $get = $this->satuanModel->orderBy('code', 'asc')->findAll();
+        $getData = $this->workshopModel->orderBy('code', 'asc')->findAll();
 
-        return pesan(ResponseInterface::HTTP_OK, 'Data was successfully seeded', $get);
+        return pesan(ResponseInterface::HTTP_OK, 'Data was successfully seeded', $getData);
     }
 }

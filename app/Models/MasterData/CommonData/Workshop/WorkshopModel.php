@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Models\MasterData\CommonData\Satuan;
+namespace App\Models\MasterData\CommonData\Workshop;
 
 use CodeIgniter\Model;
 
-class SatuanModel extends Model
+class WorkshopModel extends Model
 {
-    protected $table            = 'm_satuan';
+    protected $table            = 'm_workshop';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = false;
     protected $returnType       = 'object';

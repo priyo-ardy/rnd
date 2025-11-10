@@ -189,6 +189,8 @@
     <!-- My App Custom JS -->
     <script src="<?= base_url() . 'js/App/app.js' ?>"></script>
     <script src="<?= base_url() . 'js/App/fetching.js' ?>"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment-with-locales.min.js"></script>
 
     <!-- Module JS -->
     <?php foreach ($footer as $ft): ?>

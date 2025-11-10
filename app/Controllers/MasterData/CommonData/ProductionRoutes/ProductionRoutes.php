@@ -1,33 +1,33 @@
 <?php
 
-namespace App\Controllers\MasterData\CommonData\Satuan;
+namespace App\Controllers\MasterData\CommonData\ProductionRoutes;
 
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\Master\MasterModel;
-use App\Models\MasterData\CommonData\Satuan\SatuanModel;
 use App\Models\DataTable\DataTableModel;
+use App\Models\MasterData\CommonData\ProductionRoutes\ProductionRoutesModel;
 use Config\Services;
 use Config\Database;
 
-class Satuan extends BaseController
+class ProductionRoutes extends BaseController
 {
+    protected $routesModel;
     protected $masterModel;
-    protected $satuanModel;
     protected $dataTable;
     protected $validasi;
     protected $db;
 
     public function __construct()
     {
+        $this->routesModel = new ProductionRoutesModel();
         $this->masterModel = new MasterModel();
-        $this->satuanModel = new SatuanModel();
         $this->db = Database::connect();
         $this->validasi = Services::validation();
 
-        $table = 'm_satuan';
-        $column_order = ['code', 'name', 'simbol', 'remark'];
-        $column_search = ['code', 'name', 'simbol', 'remark'];
+        $table = 'm_routes';
+        $column_order = ['code', 'name', 'route', 'remark'];
+        $column_search = ['code', 'name', 'route', 'remark'];
         $order = array('code' => 'asc');
         $this->dataTable = new DataTableModel(services::request(), $table, $column_order, $column_search, $order);
     }
@@ -37,18 +37,19 @@ class Satuan extends BaseController
         $lists = $this->dataTable->get_datatables();
         $data = [];
 
-        foreach ($lists as $list) {
+        foreach ($lists as $item) {
             $row = [];
+
             $row[] = '
-                <a href="#" class="nav-link text-decoration-none text-primary fw-bolder" title="Edit" onclick="editData(' . "'" . enkripsi($list->id) . "'" . ')">
-                ' . $list->code . '
+                <a href="#" onclick="editData(`' . enkripsi($item->id) . '`)" class="text-decoration-none text-primary fw-bolder">
+                    ' . $item->code . '
                 </a>
             ';
-            $row[] = $list->name;
-            $row[] = $list->simbol;
-            $row[] = $list->remark;
+            $row[] = $item->name;
+            $row[] = $item->route;
+            $row[] = $item->remark;
             $row[] = '
-                <button type="button" title="Click to delete this data" class="text-danger btn text-danger shadow-none btn-sm rounded-0 fw-bolder" onclick="deleteData(`' . enkripsi($list->id) . '`)">
+                <button type="button" title="Click to delete this data" class="text-danger btn text-danger shadow-none btn-sm rounded-0 fw-bolder" onclick="deleteData(`' . enkripsi($item->id) . '`)">
                     <i class="bi bi-x"></i>
                 </button>';
 
@@ -56,7 +57,7 @@ class Satuan extends BaseController
         }
 
         $output = [
-            "draw" => $_POST['draw'],
+            "draw" => $this->request->getPost('draw'),
             "recordsTotal" => $this->dataTable->count_all(),
             "recordsFiltered" => $this->dataTable->count_filtered(),
             "data" => $data
@@ -68,16 +69,17 @@ class Satuan extends BaseController
     public function index()
     {
         $data = [
-            'title' => 'UoM',
+            'title' => 'List of Production Routes',
             'footer' => [
-                '<script src="' . base_url() . 'js/MasterData/CommonData/Satuan/satuan.js' . '"></script>',
+                '<script src="' . base_url('js/MasterData/CommonData/ProductionRoutes/routes.js') . '"></script>',
                 '<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>',
                 '<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment-with-locales.min.js"></script>'
             ]
         ];
 
-        return view('MasterData/CommonData/Satuan/index', $data);
+        return view('MasterData/CommonData/ProductionRoutes/index', $data);
     }
+
 
     function saveData()
     {
@@ -91,7 +93,7 @@ class Satuan extends BaseController
                     'expected' => 'POST',
                     'NIK' => session('user_name')
                 ],
-                'Satuan::saveData',
+                'ProductionRoutes::saveData',
             );
 
             return pesan(ResponseInterface::HTTP_METHOD_NOT_ALLOWED, 'Request method not allowed');
@@ -101,7 +103,7 @@ class Satuan extends BaseController
         try {
             $this->validasi->setRules([
                 'data_name' => [
-                    'label' => 'UoM Name',
+                    'label' => 'Production Routes Name',
                     'rules' => 'required|min_length[3]|max_length[150]',
                     'errors' => [
                         'required' => '{field} is required',
@@ -110,12 +112,11 @@ class Satuan extends BaseController
                     ]
                 ],
                 'data_simbol' => [
-                    'label' => 'UoM Symbol',
-                    'rules' => 'required|min_length[1]|max_length[20]',
+                    'label' => 'Production Routes',
+                    'rules' => 'required|min_length[1]',
                     'errors' => [
                         'required' => '{field} is required',
                         'min_length' => '{field} must have minimum {param} characters',
-                        'max_length' => '{field} cannot exceed {param} characters'
                     ]
                 ]
             ]);
@@ -124,33 +125,33 @@ class Satuan extends BaseController
                 $error_message = implode('<br>', $this->validasi->getErrors());
                 logFile(
                     'error',
-                    'Error saat validasi data',
+                    'Validation error',
                     [
-                        'error' => $error_message,
+                        'message' => $this->validasi->getErrors(),
                         'NIK' => $this->NIK
                     ],
-                    'Satuan::saveData',
+                    'ProductionRoutes::saveData',
                 );
 
                 return pesan(ResponseInterface::HTTP_BAD_REQUEST, $error_message);
             }
 
             $id = generate_uuid();
-            $code = $this->masterModel->generateCode('m_satuan', 'code', 'UOM-', 6);
+            $code = $this->masterModel->generateCode('m_routes', 'code', 'RTS-', 6);
             $name = trim(strip_tags($this->request->getPost('data_name')));
-            $simbol = trim(strip_tags($this->request->getPost('data_simbol')));
+            $route = trim(strip_tags($this->request->getPost('data_simbol')));
             $remark = trim(strip_tags($this->request->getPost('data_remark')));
 
             $data = [
                 'id' => $id,
                 'code' => $code,
                 'name' => $name,
-                'simbol' => $simbol,
+                'route' => $route,
                 'remark' => $remark,
                 'created_by' => $this->NIK,
             ];
 
-            $insert = $this->satuanModel->insert($data);
+            $insert = $this->routesModel->insert($data);
 
             $this->db->transCommit();
 
@@ -162,28 +163,28 @@ class Satuan extends BaseController
                         'message' => $this->db->error(),
                         'NIK' => $this->NIK
                     ],
-                    'Satuan::saveData',
+                    'ProductionRoutes::saveData',
                 );
 
-                return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Failed to save a new UoM data');
+                return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Failed to save a new production routes data');
             }
 
             logFile(
                 'audit',
-                'UoM data saved successfully',
+                'Production routes data saved successfully',
                 [
-                    'uom_id' => $id,
+                    'routes_id' => $id,
                     'NIK' => $this->NIK
                 ],
-                'Satuan::saveData',
+                'ProductionRoutes::saveData',
             );
 
-            return pesan(ResponseInterface::HTTP_OK, 'UoM data has been saved');
+            return pesan(ResponseInterface::HTTP_OK, 'Production routes data has been saved');
         } catch (\Exception $e) {
             $this->db->transRollback();
             logFile(
                 'error',
-                'Error saat simpan data',
+                'Error while saving new production routes data',
                 [
                     'file' => $e->getFile(),
                     'line' => $e->getLine(),
@@ -191,7 +192,7 @@ class Satuan extends BaseController
                     'trace' => $e->getTraceAsString(),
                     'NIK' => $this->NIK
                 ],
-                'Satuan::saveData',
+                'ProductionRoutes::saveData',
             );
 
             return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Unexpected error occured' . $e->getMessage());
@@ -210,7 +211,7 @@ class Satuan extends BaseController
                     'expected' => 'POST',
                     'NIK' => session('user_name')
                 ],
-                'Satuan::getData',
+                'ProductionRoutes::getData',
             );
 
             return pesan(ResponseInterface::HTTP_METHOD_NOT_ALLOWED, 'Request method not allowed');
@@ -224,32 +225,32 @@ class Satuan extends BaseController
             }
 
             if (!isset($json_data['token'])) {
-                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'UoM token is not available in JSON data');
+                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Production routes token is not available in JSON data');
             }
 
             $token = $json_data['token'];
             $id = dekripsi($token);
 
-            $getData = $this->satuanModel->where('id', $id)->first();
-
+            $getData = $this->routesModel->where('id', $id)->first();
             if (!$getData) {
                 logFile(
                     'error',
-                    'UoM data not found',
+                    'Production routes data not found',
                     [
-                        'uom_id' => $id,
+                        'id' => $id,
                         'NIK' => $this->NIK
                     ],
-                    'Satuan::getData',
+                    'ProductionRoutes::getData',
                 );
-                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'UoM data not found');
+
+                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Production routes data not found');
             }
 
             $data = [
                 'token' => enkripsi($id),
                 'code' => $getData->code,
                 'name' => $getData->name,
-                'simbol' => $getData->simbol,
+                'route' => $getData->route,
                 'remark' => $getData->remark
             ];
 
@@ -257,7 +258,7 @@ class Satuan extends BaseController
         } catch (\Exception $e) {
             logFile(
                 'error',
-                'Error saat ambil data',
+                'Error while getting production routes data',
                 [
                     'file' => $e->getFile(),
                     'line' => $e->getLine(),
@@ -265,7 +266,7 @@ class Satuan extends BaseController
                     'trace' => $e->getTraceAsString(),
                     'NIK' => $this->NIK
                 ],
-                'Satuan::getData',
+                'ProductionRoutes::getData',
             );
 
             return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Unexpected error occured' . $e->getMessage());
@@ -284,7 +285,7 @@ class Satuan extends BaseController
                     'expected' => 'POST',
                     'NIK' => session('user_name')
                 ],
-                'Satuan::updateData',
+                'ProductionRoutes::updateData',
             );
 
             return pesan(ResponseInterface::HTTP_METHOD_NOT_ALLOWED, 'Request method not allowed');
@@ -295,14 +296,14 @@ class Satuan extends BaseController
         try {
             $this->validasi->setRules([
                 'data_token' => [
-                    'label' => 'UoM Token',
+                    'label' => 'Production routes token',
                     'rules' => 'required',
                     'errors' => [
                         'required' => '{field} is required',
                     ]
                 ],
                 'data_code' => [
-                    'label' => 'UoM Code',
+                    'label' => 'Production routes code',
                     'rules' => 'required|min_length[3]|max_length[20]',
                     'errors' => [
                         'required' => '{field} is required',
@@ -311,7 +312,7 @@ class Satuan extends BaseController
                     ]
                 ],
                 'data_name' => [
-                    'label' => 'UoM Name',
+                    'label' => 'Production routes name',
                     'rules' => 'required|min_length[3]|max_length[150]',
                     'errors' => [
                         'required' => '{field} is required',
@@ -320,12 +321,11 @@ class Satuan extends BaseController
                     ]
                 ],
                 'data_simbol' => [
-                    'label' => 'UoM Symbol',
-                    'rules' => 'required|min_length[1]|max_length[20]',
+                    'label' => 'Production routes',
+                    'rules' => 'required|min_length[1]',
                     'errors' => [
                         'required' => '{field} is required',
                         'min_length' => '{field} must have minimum {param} characters',
-                        'max_length' => '{field} cannot exceed {param} characters'
                     ]
                 ]
             ]);
@@ -347,17 +347,17 @@ class Satuan extends BaseController
             $id = dekripsi($token);
             $code = trim($this->request->getPost('data_code'));
             $name = trim($this->request->getPost('data_name'));
-            $simbol = trim($this->request->getPost('data_simbol'));
+            $route = trim($this->request->getPost('data_simbol'));
             $remark = trim($this->request->getPost('data_remark'));
 
             $data = [
                 'name' => $name,
-                'simbol' => $simbol,
+                'route' => $route,
                 'remark' => $remark,
                 'updated_by' => $this->NIK
             ];
 
-            $update = $this->satuanModel->update($id, $data);
+            $update = $this->routesModel->update($id, $data);
             $this->db->transCommit();
 
             if ($this->db->transStatus() === false) {
@@ -365,45 +365,45 @@ class Satuan extends BaseController
 
                 logFile(
                     'error',
-                    'Error while updating UoM data',
+                    'Error while updating production routes data',
                     [
                         'error' => $this->db->error(),
                         'NIK' => $this->NIK
                     ],
-                    'Satuan::updateData',
+                    'ProductionRoutes::updateData',
                 );
 
                 return pesan(
                     ResponseInterface::HTTP_INTERNAL_SERVER_ERROR,
-                    'Error while updating UoM data',
+                    'Error while updating production routes data',
                 );
             }
 
             if (!$update) {
                 logFile(
                     'error',
-                    'Error while updating UoM data',
+                    'Error while updating production routes data',
                     [
-                        'error' => $this->satuanModel->errors(),
+                        'error' => $this->routesModel->errors(),
                         'NIK' => $this->NIK
                     ],
-                    'Satuan::updateData',
+                    'ProductionRoutes::updateData',
                 );
 
-                return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Error while updating UoM data');
+                return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Error while updating production routes data');
             }
 
             logFile(
                 'audit',
-                'Updated UoM data was successfully',
+                'Updated production routes data was successfully',
                 [
                     'id' => $id,
                     'NIK' => $this->NIK
                 ],
-                'Satuan::updateData',
+                'ProductionRoutes::updateData',
             );
 
-            return pesan(ResponseInterface::HTTP_OK, 'UoM data was successfully updated');
+            return pesan(ResponseInterface::HTTP_OK, 'Production routes data was successfully updated');
         } catch (\Exception $e) {
 
             logFile(
@@ -416,7 +416,7 @@ class Satuan extends BaseController
                     'trace' => $e->getTraceAsString(),
                     'NIK' => $this->NIK
                 ],
-                'Satuan::updateData',
+                'ProductionRoutes::updateData',
             );
 
             return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Unexpected error occured' . $e->getMessage());
@@ -430,12 +430,12 @@ class Satuan extends BaseController
                 'security',
                 'Request method not allowed',
                 [
-                    'route' => '/satuan/delete-data',
+                    'route' => '/satuan/delete',
                     'method' => $this->request->getMethod(),
                     'expected' => 'POST',
                     'NIK' => session('user_name')
                 ],
-                'Satuan::deleteData',
+                'ProductionRoutes::deleteData',
             );
 
             return pesan(ResponseInterface::HTTP_METHOD_NOT_ALLOWED, 'Request method not allowed');
@@ -450,13 +450,13 @@ class Satuan extends BaseController
             }
 
             if (!isset($json_data['token'])) {
-                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'UoM token is not available in JSON data');
+                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Production routes token is not available in JSON data');
             }
 
             $token = trim($json_data['token']);
             $id = dekripsi($token);
 
-            $deleteData = $this->satuanModel->delete($id);
+            $deleteData = $this->routesModel->delete($id);
             $this->db->transCommit();
 
             if ($this->db->transStatus() === false) {
@@ -464,44 +464,44 @@ class Satuan extends BaseController
 
                 logFile(
                     'error',
-                    'Error while deleting UoM data',
+                    'Error while deleting production routes data',
                     [
                         'error' => $this->db->error(),
                         'NIK' => $this->NIK
                     ],
-                    'Satuan::deleteData',
+                    'ProductionRoutes::deleteData',
                 );
             }
 
             if (!$deleteData) {
                 logFile(
                     'error',
-                    'Error while deleting UoM data',
+                    'Error while deleting production routes data',
                     [
-                        'error' => $this->satuanModel->errors(),
+                        'error' => $this->routesModel->errors(),
                         'NIK' => $this->NIK
                     ],
-                    'Satuan::deleteData',
+                    'ProductionRoutes::deleteData',
                 );
 
-                return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Error while deleting UoM data');
+                return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Error while deleting production routes data');
             }
 
             logFile(
                 'audit',
-                'Deleted UoM data was successfully',
+                'Deleted Production routes data was successfully',
                 [
                     'id' => $id,
                     'NIK' => $this->NIK
                 ],
-                'Satuan::deleteData',
+                'ProductionRoutes::deleteData',
             );
 
-            return pesan(ResponseInterface::HTTP_OK, 'UoM data was successfully deleted');
+            return pesan(ResponseInterface::HTTP_OK, 'Production routes data was successfully deleted');
         } catch (\Exception $e) {
             logFile(
                 'error',
-                'Error during deleting UoM data',
+                'Error during deleting Production routes data',
                 [
                     'file' => $e->getFile(),
                     'line' => $e->getLine(),
@@ -509,8 +509,10 @@ class Satuan extends BaseController
                     'trace' => $e->getTraceAsString(),
                     'NIK' => $this->NIK
                 ],
-                'Satuan::deleteData',
+                'ProductionRoutes::deleteData',
             );
+
+            return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Unexpected error occured' . $e->getMessage());
         }
     }
 
@@ -528,8 +530,6 @@ class Satuan extends BaseController
                 ],
                 'Satuan::exportData',
             );
-
-            return pesan(ResponseInterface::HTTP_METHOD_NOT_ALLOWED, 'Request method not allowed');
         }
 
         try {
@@ -538,13 +538,13 @@ class Satuan extends BaseController
             $headers = [
                 'code',
                 'name',
-                'symbol',
+                'route',
                 'remark'
             ];
 
             $dataCallback = function ($offset, $limit) {
-                $column = 'code, name, simbol, remark';
-                return $this->masterModel->getChunkedData('m_satuan', $offset, $limit, 'code', $column);
+                $column = 'code, name, route, remark';
+                return $this->masterModel->getChunkedData('m_routes', $offset, $limit, 'code', $column);
             };
 
             return export_to_excel($fileName, $headers, $dataCallback);
@@ -568,8 +568,8 @@ class Satuan extends BaseController
 
     function dataSeed()
     {
-        $get = $this->satuanModel->orderBy('code', 'asc')->findAll();
+        $data = $this->routesModel->orderBy('code', 'asc')->findAll();
 
-        return pesan(ResponseInterface::HTTP_OK, 'Data was successfully seeded', $get);
+        return pesan(ResponseInterface::HTTP_OK, 'Data was successfully seeded', $data);
     }
 }

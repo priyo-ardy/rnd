@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Models\MasterData\CommonData\Satuan;
+namespace App\Models\MasterData\CommonData\MaterialCategory;
 
 use CodeIgniter\Model;
 
-class SatuanModel extends Model
+class MaterialCategoryModel extends Model
 {
-    protected $table            = 'm_satuan';
+    protected $table            = 'm_material_category';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = false;
     protected $returnType       = 'object';

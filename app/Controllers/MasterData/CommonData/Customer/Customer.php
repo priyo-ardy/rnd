@@ -652,4 +652,11 @@ class Customer extends BaseController
             return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Unexpected error' . $e->getMessage());
         }
     }
+
+    function dataSeed()
+    {
+        $get = $this->customerModel->orderBy('code', 'asc')->findAll();
+
+        return pesan(ResponseInterface::HTTP_OK, 'Data was successfully seeded', $get);
+    }
 }

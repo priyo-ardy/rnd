@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Models\MasterData\CommonData\Satuan;
+namespace App\Models\MasterData\CommonData\ProductionRoutes;
 
 use CodeIgniter\Model;
 
-class SatuanModel extends Model
+class ProductionRoutesModel extends Model
 {
-    protected $table            = 'm_satuan';
+    protected $table            = 'm_routes';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = false;
     protected $returnType       = 'object';

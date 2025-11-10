@@ -9,7 +9,7 @@ const inputForm = {
     token: document.getElementById('data_token'),
     code: document.getElementById('data_code'),
     name: document.getElementById('data_name'),
-    simbol: document.getElementById('data_simbol'),
+    route: document.getElementById('data_simbol'),
     remark: document.getElementById('data_remark'),
 };
 
@@ -49,7 +49,7 @@ buttons.save.addEventListener("click", () => {
     if (validasi()) {
         try {
             loading();
-            fetchData(baseurl + '/satuan/save', 'POST', new FormData(dataForm))
+            fetchData(baseurl + '/routes/save', 'POST', new FormData(dataForm))
                 .then((result) => {
                     pesanSukses(result.message);
                     hideLoading();
@@ -81,7 +81,7 @@ function loadTable() {
         },
         order: [],
         ajax: {
-            url: baseurl + "/satuan/table",
+            url: baseurl + "/routes/table",
             type: "POST",
             data: "raw",
             action: "calls",
@@ -103,12 +103,12 @@ function refreshTable() {
 function editData(token) {
     try {
         loading();
-        fetchData(baseurl + '/satuan/edit', 'POST', JSON.stringify({ token: token }))
+        fetchData(baseurl + '/routes/edit', 'POST', JSON.stringify({ token: token }))
             .then(result => {
                 inputForm.token.value = result.data.token;
                 inputForm.code.value = result.data.code;
                 inputForm.name.value = result.data.name;
-                inputForm.simbol.value = result.data.simbol;
+                inputForm.route.value = result.data.route;
                 inputForm.remark.value = result.data.remark;
                 inputForm.name.focus();
                 buttons.update.removeAttribute('hidden');
@@ -150,7 +150,7 @@ buttons.update.addEventListener('click', (e) => {
     if (validasiUpdate) {
         try {
             loading();
-            fetchData(baseurl + '/satuan/update', 'POST', new FormData(dataForm))
+            fetchData(baseurl + '/routes/update', 'POST', new FormData(dataForm))
                 .then((result) => {
                     pesanSukses(result.message);
                     hideLoading();
@@ -169,7 +169,7 @@ buttons.update.addEventListener('click', (e) => {
 
 function deleteData(token) {
     try {
-        hapusData("/satuan/delete", token);
+        hapusData("/routes/delete", token);
     } catch (e) {
         pesanError(e.message);
     }
@@ -185,7 +185,7 @@ buttons.export.addEventListener('click', async () => {
 
         // Lakukan fetch dengan streaming
 
-        const response = await fetch(baseurl + "/satuan/export", {
+        const response = await fetch(baseurl + "/routes/export", {
             method: "GET",
             signal: controller.signal,
         });
@@ -212,7 +212,7 @@ buttons.export.addEventListener('click', async () => {
         a.style.display = "none";
         a.href = url;
         a.download =
-            "uom_list_" + moment().format("YYYYMMDD_HHMMSS") + ".xlsx";
+            "production_routes_list_" + moment().format("YYYYMMDD_HHMMSS") + ".xlsx";
         document.body.appendChild(a);
         a.click();
 
