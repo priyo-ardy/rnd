@@ -16,6 +16,13 @@ class MaterialTable extends Migration
                 'charset' => 'utf8',
                 'collation' => 'utf8_unicode_ci',
             ],
+            'kategori' => [
+                'type' => "VARCHAR",
+                'constraint' => 50,
+                'null' => false,
+                'charset' => 'utf8',
+                'collation' => 'utf8_unicode_ci'
+            ],
             'code' => [
                 'type' => "VARCHAR",
                 'constraint' => 100,

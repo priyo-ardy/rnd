@@ -86,12 +86,15 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
         $routes->get('', 'MasterData\CommonData\Material\Material::index');
         $routes->get('add', 'MasterData\CommonData\Material\Material::addData');
         $routes->post('save', 'MasterData\CommonData\Material\Material::saveData');
-        $routes->post('show/(:any)', 'MasterData\CommonData\Material\Material::getData/$1');
+        $routes->get('show/(:any)', 'MasterData\CommonData\Material\Material::getData/$1');
         $routes->post('update', 'MasterData\CommonData\Material\Material::updateData');
         $routes->post('delete', 'MasterData\CommonData\Material\Material::deleteData');
         $routes->get('export', 'MasterData\CommonData\Material\Material::exportData');
         $routes->post('table', 'MasterData\CommonData\Material\Material::loadTable');
         $routes->get('data-seed', 'MasterData\CommonData\Material\Material::dataSeed');
         $routes->post('check_code', 'MasterData\CommonData\Material\Material::cekMaterialCode');
+        $routes->post('update_code', 'MasterData\CommonData\Material\Material::changeMaterialCode');
+        $routes->post('prev', 'MasterData\CommonData\Material\Material::prevData');
+        $routes->post('next', 'MasterData\CommonData\Material\Material::nextData');
     });
 });

@@ -40,6 +40,13 @@
     <link
         rel="stylesheet"
         href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css" />
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer" />
     <!-- AdminLTE CSS -->
     <link
         rel="stylesheet"
@@ -179,6 +186,12 @@
     <!-- Datatable -->
     <script
         src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
+    <!-- Font awesome -->
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/js/all.min.js"
+        integrity="sha512-6BTOlkauINO65nLhXhthZMtepgJSghyimIalb+crKRPhvhmsCdnIuGcVbR5/aQY2A+260iC1OPy1oCdB6pSSwQ=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"></script>
     <!-- AdminLTE JS -->
     <script
         src="<?= base_url() . 'admin/js/adminlte.js'; ?>"></script>

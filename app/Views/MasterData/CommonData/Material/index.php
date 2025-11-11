@@ -48,6 +48,7 @@
                     <div class="table-responsive">
                         <table class="table table-striped table-hover table-primary" id="dataTable">
                             <thead>
+                                <th class="text-center bg-secondary-subtle align-middle">Category</th>
                                 <th class="text-center bg-secondary-subtle align-middle">Code</th>
                                 <th class="text-center bg-secondary-subtle align-middle">Name</th>
                                 <th class="text-center bg-secondary-subtle align-middle">Specification</th>
@@ -61,6 +62,8 @@
                                 <th class="text-center bg-secondary-subtle align-middle">Actual Net Weight</th>
                                 <th class="text-center bg-secondary-subtle align-middle">Actual Gross Weight</th>
                                 <th class="text-center bg-secondary-subtle align-middle">Shift Capacity</th>
+                                <th class="text-center bg-secondary-subtle align-middle">Remark</th>
+                                <th class="text-center bg-secondary-subtle align-middle">#</th>
                             </thead>
                         </table>
                     </div>

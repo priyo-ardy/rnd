@@ -1,9 +1,15 @@
-const formData = document.getElementById("formData");
+window.onload = () => {
+  $(".summernote").summernote("disable");
+};
 
 const buttons = {
   back: document.getElementById("btnBack"),
-  save: document.getElementById("btnSave"),
+  add: document.getElementById("btnAdd"),
+  edit: document.getElementById("btnEdit"),
+  update: document.getElementById("btnUpdate"),
   cancel: document.getElementById("btnCancel"),
+  prev: document.getElementById("btnPrev"),
+  next: document.getElementById("btnNext"),
 };
 
 const inputForm = {
@@ -17,6 +23,63 @@ const inputForm = {
   nw: document.getElementById("data_nw"),
   gw: document.getElementById("data_gw"),
 };
+
+buttons.back.addEventListener("click", () => {
+  loading();
+  window.location.replace(baseurl + "/material");
+});
+
+buttons.add.addEventListener("click", () => {
+  loading();
+  window.location.replace(baseurl + "/material/add");
+});
+
+buttons.cancel.addEventListener("click", () => {
+  loading();
+  window.location.reload();
+});
+
+function bukaForm() {
+  const inputElement = document.querySelectorAll("input");
+  const selectElement = document.querySelectorAll("select");
+  const textElement = document.querySelectorAll("textarea");
+
+  if (inputElement.length > 0) {
+    inputElement.forEach((element) => {
+      element.removeAttribute("readonly");
+      element.classList.remove("bg-secondary-subtle");
+    });
+  }
+
+  if (selectElement.length > 0) {
+    selectElement.forEach((element) => {
+      element.removeAttribute("disabled");
+    });
+  }
+
+  if (textElement.length > 0) {
+    textElement.forEach((element) => {
+      element.removeAttribute("readonly");
+      element.classList.remove("bg-secondary-subtle");
+    });
+  }
+
+  $(".summernote").summernote("enable");
+  document.getElementById("data_token").setAttribute("readonly", true);
+  document.getElementById("data_token").classList.add("bg-secondary-subtle");
+
+  buttons.back.setAttribute("hidden", true);
+  buttons.add.setAttribute("hidden", true);
+  buttons.edit.setAttribute("hidden", true);
+  buttons.update.removeAttribute("hidden");
+  buttons.cancel.removeAttribute("hidden");
+  buttons.prev.setAttribute("hidden", true);
+  buttons.next.setAttribute("hidden", true);
+}
+
+buttons.edit.addEventListener("click", () => {
+  bukaForm();
+});
 
 inputForm.code.addEventListener("keypress", (e) => {
   if (e.key === "Enter") {
@@ -113,9 +176,12 @@ function cekMaterialCode() {
   if (inputForm.code.value !== "") {
     try {
       fetchData(
-        baseurl + "/material/check_code",
+        baseurl + "/material/update_code",
         "POST",
-        JSON.stringify({ code: inputForm.code.value })
+        JSON.stringify({
+          token: document.getElementById("data_token").value,
+          code: inputForm.code.value,
+        })
       )
         .then((result) => {
           inputForm.code.classList.remove("is-invalid");
@@ -145,45 +211,16 @@ function cekMaterialCode() {
   return isValid;
 }
 
-function clearForm() {
-  formData.reset();
-
-  const selectElement = document.querySelectorAll(".select2");
-  if (selectElement.length > 0) {
-    selectElement.forEach((element) => {
-      element.value = "";
-      $(element).trigger("change");
-    });
-  }
-
-  const validElement = document.querySelectorAll(".is-valid");
-  if (validElement.length > 0) {
-    validElement.forEach((element) => {
-      element.classList.remove("is-valid");
-    });
-  }
-
-  const invalidElement = document.querySelectorAll(".is-invalid");
-  if (invalidElement.length > 0) {
-    invalidElement.forEach((element) => {
-      element.classList.remove("is-invalid");
-      element.parentNode.querySelector(".invalid-feedback").textContent = "";
-    });
-  }
-
-  $(".summernote").summernote("code", "");
-  inputForm.code.focus();
-}
-
-buttons.save.addEventListener("click", (e) => {
+buttons.update.addEventListener("click", (e) => {
   if (validasi()) {
     try {
       loading();
-      fetchData(baseurl + "/material/save", "POST", new FormData(formData))
+      fetchData(baseurl + "/material/update", "POST", new FormData(formData))
         .then((result) => {
           pesanSukses(result.message);
-          hideLoading();
-          clearForm();
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
         })
         .catch((err) => {
           pesanError(err.message);
@@ -191,16 +228,52 @@ buttons.save.addEventListener("click", (e) => {
         });
     } catch (e) {
       pesanError(e.message);
-      hideLoading();
     }
   }
 });
 
-buttons.cancel.addEventListener("click", (e) => {
-  clearForm();
+buttons.prev.addEventListener("click", () => {
+  try {
+    loading();
+    fetchData(
+      baseurl + "/material/prev",
+      "POST",
+      JSON.stringify({ code: inputForm.code.value })
+    )
+      .then((result) => {
+        window.location.replace(
+          baseurl + "/material/show/" + result.data.token
+        );
+      })
+      .catch((err) => {
+        pesanError(err.message);
+        hideLoading();
+      });
+  } catch (e) {
+    pesanError(e.message);
+    hideLoading();
+  }
 });
 
-buttons.back.addEventListener("click", () => {
-  loading();
-  window.location.replace(baseurl + "/material");
+buttons.next.addEventListener("click", (e) => {
+  try {
+    loading();
+    fetchData(
+      baseurl + "/material/next",
+      "POST",
+      JSON.stringify({ code: inputForm.code.value })
+    )
+      .then((result) => {
+        window.location.replace(
+          baseurl + "/material/show/" + result.data.token
+        );
+      })
+      .catch((err) => {
+        pesanError(err.message);
+        hideLoading();
+      });
+  } catch (e) {
+    pesanError(e.message);
+    hideLoading();
+  }
 });

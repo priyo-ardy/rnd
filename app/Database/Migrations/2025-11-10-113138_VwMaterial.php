@@ -16,11 +16,13 @@ class VwMaterial extends Migration
                 B.name AS nama_satuan,
                 C.name AS nama_workshop,
                 D.name AS name_route,
-                D.route AS production_route
+                D.route AS production_route,
+                E.name AS nama_kategori
             FROM m_material as A
                 LEFT JOIN m_satuan AS B ON A.satuan = B.id
                 LEFT JOIN m_workshop AS C ON A.workshop = C.id
                 LEFT JOIN m_routes AS D ON A.route = D.id
+                lEFT JOIN m_material_category AS E ON A.kategori = E.id
             WHERE
                 A.deleted_at IS NULL
             ORDER BY A.code ASC;
