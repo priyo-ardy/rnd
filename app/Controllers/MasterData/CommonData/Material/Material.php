@@ -529,7 +529,17 @@ class Material extends BaseController
 
             $this->validasi->setRules($rules);
             if (!$this->validasi->withRequest($this->request)->run()) {
-                return pesan(ResponseInterface::HTTP_BAD_REQUEST, $this->validasi->getErrors());
+                $error_message = implode('<br>', $this->validasi->getErrors());
+                logFile(
+                    'error',
+                    'Validation error',
+                    [
+                        'error' => $error_message,
+                        'NIK' => $this->NIK
+                    ],
+                    'Material::updateData'
+                );
+                return pesan(ResponseInterface::HTTP_BAD_REQUEST, $error_message);
             }
 
             $token = $this->request->getPost('data_token');
@@ -760,7 +770,7 @@ class Material extends BaseController
             $fileName = 'UoM Data ' . date('Y-m-d H:i:s');
 
             $headers = [
-                'Caetegory',
+                'Category',
                 'Code',
                 'Name',
                 'Specification',

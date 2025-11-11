@@ -5,7 +5,7 @@ namespace App\Filters;
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
-use Config\Services;
+use PhpOffice\PhpSpreadsheet\Calculation\Web\Service;
 
 class ViewDataFilter implements FilterInterface
 {
@@ -26,11 +26,12 @@ class ViewDataFilter implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
-        $session = session();
+        $session = Service('session');
 
         // Pastikan session tersedia
         if (!$session->has('user_name')) {
             $session->set('user_name', 'Guest');
+            // return redirect()->to(base_url());
         }
 
         // Perbaiki typo 'user_iamge' menjadi 'user_image'
@@ -44,7 +45,7 @@ class ViewDataFilter implements FilterInterface
         ];
 
         // Cara 1: Simpan di request property
-        // $request->viewData = $data;
+        $request->viewData = $data;
 
         // Cara 2 (Lebih Direkomendasikan): Langsung set ke View Renderer
         $view = service('renderer');

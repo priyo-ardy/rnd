@@ -104,112 +104,24 @@
                     <a href="#" class="nav-link">
                         <i class="nav-icon bi bi-gear"></i>
                         <p>
-                            Common Data
+                            APQP Setup
                             <i class="nav-arrow bi bi-chevron-right"></i>
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="<?= base_url('workshop') ?>" class="nav-link" onclick="loading()">
+                            <a href="<?= base_url('apqp_level') ?>" class="nav-link" onclick="loading()">
                                 <i class="bi bi-arrow-right-circle"></i>
                                 <p>
-                                    Workshop
+                                    APQP Level
                                 </p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?= base_url('tonnage') ?>" class="nav-link" onclick="loading()">
+                            <a href="<?= base_url('apqp_document') ?>" class="nav-link" onclick="loading()">
                                 <i class="bi bi-arrow-right-circle"></i>
                                 <p>
-                                    Tonnage
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?= base_url('machine') ?>" class="nav-link" onclick="loading()">
-                                <i class="bi bi-arrow-right-circle"></i>
-                                <p>
-                                    Machine
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?= base_url('defect') ?>" class="nav-link" onclick="loading()">
-                                <i class="bi bi-arrow-right-circle"></i>
-                                <p>
-                                    Defect
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?= base_url('sub_defect') ?>" class="nav-link" onclick="loading()">
-                                <i class="bi bi-arrow-right-circle"></i>
-                                <p>
-                                    Sub Defect
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?= base_url('posisi_defect') ?>" class="nav-link" onclick="loading()">
-                                <i class="bi bi-arrow-right-circle"></i>
-                                <p>
-                                    Defect Position
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?= base_url('repair_reason') ?>" class="nav-link" onclick="loading()">
-                                <i class="bi bi-arrow-right-circle"></i>
-                                <p>
-                                    Repair Reason
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?= base_url('satuan') ?>" class="nav-link" onclick="loading()">
-                                <i class="bi bi-arrow-right-circle"></i>
-                                <p>
-                                    Unit
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?= base_url('departemen') ?>" class="nav-link" onclick="loading()">
-                                <i class="bi bi-arrow-right-circle"></i>
-                                <p>
-                                    Department
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?= base_url('leader') ?>" class="nav-link" onclick="loading()">
-                                <i class="bi bi-arrow-right-circle"></i>
-                                <p>
-                                    Leader
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?= base_url('karyawan') ?>" class="nav-link" onclick="loading()">
-                                <i class="bi bi-arrow-right-circle"></i>
-                                <p>
-                                    Employee
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?= base_url('lokasi') ?>" class="nav-link" onclick="loading()">
-                                <i class="bi bi-arrow-right-circle"></i>
-                                <p>
-                                    Location
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?= base_url('supplier') ?>" class="nav-link" onclick="loading()">
-                                <i class="bi bi-arrow-right-circle"></i>
-                                <p>
-                                    Supplier
+                                    APQP Document
                                 </p>
                             </a>
                         </li>

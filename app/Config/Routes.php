@@ -97,4 +97,22 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
         $routes->post('prev', 'MasterData\CommonData\Material\Material::prevData');
         $routes->post('next', 'MasterData\CommonData\Material\Material::nextData');
     });
+
+    // APQP Level
+    $routes->group('/apqp_level', static function ($routes) {
+        $routes->get('', 'MasterData\APQPSetup\APQPLevel\APQPLevel::index');
+        $routes->post('table', 'MasterData\APQPSetup\APQPLevel\APQPLevel::loadTable');
+        $routes->post('level_check', 'MasterData\APQPSetup\APQPLevel\APQPLevel::cekLevel');
+        $routes->post('save', 'MasterData\APQPSetup\APQPLevel\APQPLevel::saveData');
+        $routes->post('get_data', 'MasterData\APQPSetup\APQPLevel\APQPLevel::getData');
+        $routes->post('update', 'MasterData\APQPSetup\APQPLevel\APQPLevel::updateData');
+        $routes->post('delete', 'MasterData\APQPSetup\APQPLevel\APQPLevel::deleteData');
+        $routes->get('export', 'MasterData\APQPSetup\APQPLevel\APQPLevel::exportData');
+    });
+
+    // APQP Approver
+    $routes->group('/apqp_approver', static function ($routes) {
+        $routes->get('', 'MasterData\APQPSetup\APQPApprover\APQPApprover::index');
+        $routes->post('load_approver', 'MasterData\APQPSetup\APQPApprover\APQPApprover::loadApprover');
+    });
 });
