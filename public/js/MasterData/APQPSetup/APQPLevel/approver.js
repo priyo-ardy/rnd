@@ -33,7 +33,7 @@ function approvalList(approver) {
     const row = `
       <tr>
         <td></td>
-        <td></td>
+        <td class="text-center align-middle></td>
       </tr>
     `;
 
@@ -51,7 +51,7 @@ function firstRow() {
                 <option value="">-- Choose --</option>
             </select>
         </td>
-        <td>
+        <td class="text-center align-middle">
             <button type="button" class="btn btn-sm btn-primary rounded-0" onclick="saveRow(this)"><i class="bi bi-floppy"></i></button>
             <button type="button" class="btn btn-sm btn-success rounded-0" onclick="addRow()"><i class="bi bi-plus-circle"></i></button>
         </td>
@@ -77,7 +77,7 @@ function addRow() {
                 <option value="">-- Choose --</option>
             </select>
         </td>
-        <td>
+        <td class="text-center align-middle">
             <button type="button" class="btn btn-sm btn-primary rounded-0" onclick="saveRow(this)"><i class="bi bi-floppy align-middle"></i></button>
             <button type="button" class="btn btn-sm btn-success rounded-0" onclick="addRow()"><i class="bi bi-plus-circle align-middle"></i></button>
             <button type="button" class="btn btn-sm btn-danger rounded-0" onclick="removeRow(this)"><i class="bi bi-dash-circle align-middle"></i></button>
