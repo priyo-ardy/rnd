@@ -114,5 +114,6 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->group('/apqp_approver', static function ($routes) {
         $routes->get('', 'MasterData\APQPSetup\APQPApprover\APQPApprover::index');
         $routes->post('load_approver', 'MasterData\APQPSetup\APQPApprover\APQPApprover::loadApprover');
+        $routes->post('save_approver', 'MasterData\APQPSetup\APQPApprover\APQPApprover::saveApprover');
     });
 });

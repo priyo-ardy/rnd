@@ -83,4 +83,55 @@ class APQPApprover extends BaseController
             return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Unexpected error occured');
         }
     }
+
+    function saveApprover()
+    {
+        if ($this->request->getMethod() !== 'POST') {
+            logFile(
+                'security',
+                'Request method not allowed',
+                [
+                    'route' => '/apqp-approver/save_approver',
+                    'method' => $this->request->getMethod(),
+                    'expected' => 'POST',
+                    'NIK' => session('user_name')
+                ],
+                'APQPApprover::saveApprover'
+            );
+
+            return pesan(ResponseInterface::HTTP_METHOD_NOT_ALLOWED, 'Request method not allowed');
+        }
+
+        $this->db->transStart();
+        try {
+            $json_data = $this->request->getJSON(true);
+
+            if (!is_array($json_data)) {
+                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Invalid JSON data');
+            }
+
+            if (!isset($json_data['token']) || !isset($json_data['approver'])) {
+                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'APQP Token or Approver is not available in JSON data');
+            }
+
+            $token = trim($json_data['token']);
+            $approver = trim($json_data['approver']);
+            $id_apqp = dekripsi($token);
+        } catch (\Exception $e) {
+            logFile(
+                'error',
+                'Unexpected error occured',
+                [
+                    'message' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                    'NIK' => session('user_name')
+                ],
+                'APQPApprover::saveApprover'
+            );
+
+            return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Unexpected error occured' . $e->getMessage());
+        }
+    }
 }

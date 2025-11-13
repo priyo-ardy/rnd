@@ -6,6 +6,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearModel()"></button>
             </div>
             <div class="modal-body">
+                <div class="row mb-3">
+                    <div class="form-group col-12">
+                        <input type="text" name="apqp_token" id="apqp_token" class="form-control rounded-0 bg-secondary-subtle" readonly>
+                    </div>
+                </div>
                 <div class="table-responsive">
                     <table class="table table-striped table-hover table-primary" id="tableApprover">
                         <thead>

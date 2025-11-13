@@ -1,5 +1,9 @@
 // window.onload = () => {};
 
+const inputModal = {
+  token: document.getElementById("apqp_token"),
+};
+
 function showApprover(token) {
   try {
     loading();
@@ -14,6 +18,7 @@ function showApprover(token) {
         } else {
           firstRow();
         }
+        inputModal.token.value = token;
         $("#modalApprover").modal("show");
         hideLoading();
       })
@@ -98,6 +103,7 @@ function addRow() {
 function clearModel() {
   const tableBody = document.getElementById("listApprover");
   tableBody.innerHTML = "";
+  inputModal.token.value = "";
 }
 
 function removeRow(btn) {
@@ -111,6 +117,22 @@ function removeRow(btn) {
 
 function saveRow(btn) {
   const row = btn.closest("tr");
-  const token = document.getElementById("modal_token").value;
   const approver = row.querySelector('select[name="approver"]').value;
+  fetchData(baseurl + "/apqp_approver/save_approver", {
+    method: "POST",
+    body: JSON.stringify({ approver: approver, token: inputModal.token.value }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      const select = row.querySelector('select[name="approver"]');
+      select.value = data.approver_id;
+      select.disabled = true;
+      select.innerHTML = `<option value="${data.approver_id}">${data.approver_name}</option>`;
+    })
+    .catch((err) => {
+      console.error(err);
+    });
 }
