@@ -20,4 +20,14 @@ class APQPApproverModel extends Model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
     protected $deletedField  = 'deleted_at';
+
+    public function loadApprover($id_apqp)
+    {
+        return
+            $this->select('m_apqp_approver.*, m_user_auth.user_name as NIK, m_user_auth.full_name as approver_name')
+            ->orderBy('baris', 'asc')
+            ->where('id_apqp', $id_apqp)
+            ->join('m_user_auth', 'm_apqp_approver.approver = m_user_auth.user_id', 'left')
+            ->findAll();
+    }
 }

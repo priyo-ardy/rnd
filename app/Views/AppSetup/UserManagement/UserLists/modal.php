@@ -50,7 +50,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer justify-content-center">
                     <button id="btnCancel" type="button" class="btn btn-secondary rounded-0" title="Cancel" data-bs-dismiss="modal" aria-label="Close" onclick="resetForm()"><i class="fa-solid fa-xmark"></i>&ensp;Cancel</button>
                     <button id="btnSave" type="button" class="btn btn-primary rounded-0" title="Save"><i class="fa-solid fa-floppy-disk"></i>&ensp;Save</button>
                     <button id="btnUpdate" hidden type="button" class="btn btn-primary rounded-0" title="Update"><i class="fa-solid fa-floppy-disk"></i>&ensp;Update</button>
@@ -78,7 +78,7 @@
                         <div class="invalid-feedback"></div>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer justify-content-center">
                     <button type="button" id="cancelPassword" class="btn btn-secondary rounded-0" title="Cancel" onclick="clearModal()" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i>&ensp;Cancel</button>
                     <button type="button" id="changePassword" class="btn btn-primary rounded-0" title="Change"><i class="fa-solid fa-floppy-disk"></i>&ensp;Change</button>
                 </div>

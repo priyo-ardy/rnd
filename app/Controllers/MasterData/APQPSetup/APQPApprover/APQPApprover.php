@@ -62,9 +62,9 @@ class APQPApprover extends BaseController
             }
 
             $token = trim($json_data['apqp_level']);
-            $apqp_level = dekripsi($token);
+            $id_apqp = dekripsi($token);
 
-            $get_approver = $this->approverModel->where('id_apqp', $apqp_level)->first();
+            $get_approver = $this->approverModel->loadApprover($id_apqp);
             return pesan(ResponseInterface::HTTP_OK, 'Success', $get_approver);
         } catch (\Exception $e) {
             logFile(
@@ -102,29 +102,60 @@ class APQPApprover extends BaseController
             return pesan(ResponseInterface::HTTP_METHOD_NOT_ALLOWED, 'Request method not allowed');
         }
 
-        $this->db->transStart();
+        // $this->db->transStart();
         try {
-            $json_data = $this->request->getJSON(true);
-
-            if (!is_array($json_data)) {
-                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Invalid JSON data');
-            }
-
-            if (!isset($json_data['token']) || !isset($json_data['approver'])) {
-                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'APQP Token or Approver is not available in JSON data');
-            }
-
-            $token = trim($json_data['token']);
-            $approver = trim($json_data['approver']);
+            $token = trim($this->request->getPost('apqp_token'));
+            $approver = $this->request->getPost('approver');
             $id_apqp = dekripsi($token);
 
-            $data = [
-                'id' => generate_uuid(),
-                'id_apqp' => $id_apqp,
-                'approver' => $approver
-            ];
+            if (count($approver) == 0) {
+                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Approver is empty, save failed');
+            }
 
-            return pesan(ResponseInterface::HTTP_OK, 'Success', $data);
+            $total_approver = count($approver);
+            $data = [];
+            $baris = 1;
+
+            for ($i = 0; $i < $total_approver; $i++) {
+                $data[] = [
+                    'id' => generate_uuid(),
+                    'id_apqp' => $id_apqp,
+                    'baris' => $baris,
+                    'approver' => $approver[$i],
+                    'created_by' => $this->NIK
+                ];
+
+                $baris++;
+            }
+
+            $insert = $this->approverModel->insertBatch($data);
+            if (!$insert) {
+                // $this->db->transRollback();
+
+                logFile(
+                    'error',
+                    'Save failed',
+                    [
+                        'message' => $this->approverModel->errors(),
+                        'NIK' => session('user_name')
+                    ],
+                    'APQPApprover::saveApprover'
+                );
+
+                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Save failed');
+            }
+
+            logFile(
+                'audit',
+                'Successfully saved approver data',
+                [
+                    'message' => $data,
+                    'NIK' => $this->NIK
+                ],
+                'APQPApprover::saveApprover'
+            );
+
+            return pesan(ResponseInterface::HTTP_OK, 'Saved success', $data);
         } catch (\Exception $e) {
             logFile(
                 'error',
