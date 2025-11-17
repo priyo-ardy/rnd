@@ -54,6 +54,7 @@ function firstRow() {
         <td>
             <select name="approver[]" class="form-control select2 select2bs5" required>
                 <option value="">-- Choose --</option>
+                ${document.getElementById("listUsers").innerHTML}
             </select>
         </td>
         <td class="text-center align-middle">
@@ -80,6 +81,7 @@ function addRow() {
         <td>
             <select name="approver[]" class="form-control select2 select2bs5" required>
                 <option value="">-- Choose --</option>
+                ${document.getElementById("listUsers").innerHTML}
             </select>
         </td>
         <td class="text-center align-middle">
@@ -116,23 +118,17 @@ function removeRow(btn) {
 }
 
 function saveRow(btn) {
-  const row = btn.closest("tr");
-  const approver = row.querySelector('select[name="approver"]').value;
-  fetchData(baseurl + "/apqp_approver/save_approver", {
-    method: "POST",
-    body: JSON.stringify({ approver: approver, token: inputModal.token.value }),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      const select = row.querySelector('select[name="approver"]');
-      select.value = data.approver_id;
-      select.disabled = true;
-      select.innerHTML = `<option value="${data.approver_id}">${data.approver_name}</option>`;
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+  try {
+    const row = btn.closest("tr");
+    const approver = row.querySelector('select[name="approver[]"]').value;
+    fetchData(
+      baseurl + "/apqp_approver/save_approver",
+      "POST",
+      JSON.stringify({ approver: approver, token: inputModal.token.value })
+    )
+      .then((result) => {})
+      .catch((err) => {});
+  } catch (e) {
+    pesanError(e.message);
+  }
 }

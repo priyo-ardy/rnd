@@ -30,4 +30,9 @@ class AuthModel extends Model
     {
         return $this->where('email_hash', $email, true)->first();
     }
+
+    function getUsers()
+    {
+        return $this->orderBy('user_name', 'asc')->findAll();
+    }
 }

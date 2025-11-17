@@ -117,6 +117,14 @@ class APQPApprover extends BaseController
             $token = trim($json_data['token']);
             $approver = trim($json_data['approver']);
             $id_apqp = dekripsi($token);
+
+            $data = [
+                'id' => generate_uuid(),
+                'id_apqp' => $id_apqp,
+                'approver' => $approver
+            ];
+
+            return pesan(ResponseInterface::HTTP_OK, 'Success', $data);
         } catch (\Exception $e) {
             logFile(
                 'error',

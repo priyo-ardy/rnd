@@ -294,3 +294,29 @@ function sensor_email($email)
 
     return $maskedUsername . '@' . $maskedDomainName . '.' . $tld;
 }
+
+function sensor_phone_number($phone_number)
+{
+    if (empty($phone_number)) {
+        return '*** *** ***';
+    }
+
+    $phone_number = preg_replace('/[^0-9]/', '', $phone_number);
+    $phone_number_length = strlen($phone_number);
+
+    if ($phone_number_length <= 3) {
+        $masked_phone_number = str_repeat('*', $phone_number_length);
+    } else if ($phone_number_length <= 6) {
+        $first_chars = substr($phone_number, 0, 3);
+        $last_chars = substr($phone_number, -3);
+        $masked_part = str_repeat('*', $phone_number_length - 6);
+        $masked_phone_number = $first_chars . $masked_part . $last_chars;
+    } else {
+        $first_chars = substr($phone_number, 0, 3);
+        $last_chars = substr($phone_number, -3);
+        $masked_part = str_repeat('*', $phone_number_length - 6);
+        $masked_phone_number = $first_chars . ' *** ' . $last_chars;
+    }
+
+    return $masked_phone_number;
+}

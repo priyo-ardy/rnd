@@ -116,4 +116,17 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
         $routes->post('load_approver', 'MasterData\APQPSetup\APQPApprover\APQPApprover::loadApprover');
         $routes->post('save_approver', 'MasterData\APQPSetup\APQPApprover\APQPApprover::saveApprover');
     });
+
+    // User management
+    $routes->group('/users', static function ($routes) {
+        $routes->get('', 'AppSetup\UserManagement\UserLists::index');
+        $routes->post('table', 'AppSetup\UserManagement\UserLists::loadTable');
+        $routes->post('save', 'AppSetup\UserManagement\UserLists::saveData');
+        $routes->post('get', 'AppSetup\UserManagement\UserLists::getData');
+        $routes->post('update', 'AppSetup\UserManagement\UserLists::updateData');
+        $routes->post('delete', 'AppSetup\UserManagement\UserLists::deleteData');
+        $routes->get('export', 'AppSetup\UserManagement\UserLists::exportData');
+        $routes->post('update_password', 'AppSetup\UserManagement\UserLists::changePassword');
+        $routes->get('seeder', 'AppSetup\UserManagement\UserLists::dataSeeder');
+    });
 });

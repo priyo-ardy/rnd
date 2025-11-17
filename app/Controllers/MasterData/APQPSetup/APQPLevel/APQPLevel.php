@@ -7,6 +7,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\MasterData\APQPSetup\APQPLevel\APQPLevelModel;
 use App\Models\Master\MasterModel;
 use App\Models\DataTable\DataTableModel;
+use App\Models\Auth\AuthModel;
 use Config\Services;
 use Config\Database;
 
@@ -16,12 +17,14 @@ class APQPLevel extends BaseController
     protected $masterModel;
     protected $dataTable;
     protected $validasi;
+    protected $authModel;
     protected $db;
 
     public function __construct()
     {
         $this->levelModel = new APQPLevelModel();
         $this->masterModel = new MasterModel();
+        $this->authModel = new AuthModel();
         $this->validasi = Services::validation();
         $this->db = Database::connect();
 
@@ -77,6 +80,7 @@ class APQPLevel extends BaseController
     {
         $data = [
             'title' => 'Setup APQP Level',
+            'users' => $this->authModel->getUsers(),
             'footer' => [
                 '<script src="' . base_url() . 'js/MasterData/APQPSetup/APQPLevel/level.js' . '"></script>',
                 '<script src="' . base_url() . 'js/MasterData/APQPSetup/APQPLevel/approver.js' . '"></script>'
