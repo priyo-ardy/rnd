@@ -16,5 +16,6 @@ class RestoreData extends Seeder
         $this->call('WorkshopData');
         $this->call('ApqpLevel');
         $this->call('ApqpApprover');
+        $this->call('ApqpDocument');
     }
 }
