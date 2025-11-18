@@ -108,6 +108,7 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
         $routes->post('update', 'MasterData\APQPSetup\APQPLevel\APQPLevel::updateData');
         $routes->post('delete', 'MasterData\APQPSetup\APQPLevel\APQPLevel::deleteData');
         $routes->get('export', 'MasterData\APQPSetup\APQPLevel\APQPLevel::exportData');
+        $routes->get('seed', 'MasterData\APQPSetup\APQPLevel\APQPLevel::seedData');
     });
 
     // APQP Approver
@@ -118,6 +119,7 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
         $routes->post('update_approver', 'MasterData\APQPSetup\APQPApprover\APQPApprover::updateApprover');
         $routes->post('add_approver', 'MasterData\APQPSetup\APQPApprover\APQPApprover::addApprover');
         $routes->post('delete_approver', 'MasterData\APQPSetup\APQPApprover\APQPApprover::deleteApprover');
+        $routes->get('seed', 'MasterData\APQPSetup\APQPApprover\APQPApprover::seedData');
     });
 
     // APQP Document
@@ -126,6 +128,7 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
         $routes->post('save_document_list', 'MasterData\APQPSetup\APQPDocument\APQPDocument::saveDocumentList');
         $routes->post('delete_document', 'MasterData\APQPSetup\APQPDocument\APQPDocument::deleteDocument');
         $routes->post('update_document', 'MasterData\APQPSetup\APQPDocument\APQPDocument::updateDocument');
+        $routes->get('seed', 'MasterData\APQPSetup\APQPDocument\APQPDocument::seedData');
     });
 
     // User management

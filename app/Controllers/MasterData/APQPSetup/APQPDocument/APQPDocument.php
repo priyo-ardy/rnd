@@ -117,6 +117,13 @@ class APQPDocument extends BaseController
                     'errors' => [
                         'required' => '{field} is required'
                     ]
+                ],
+                'document_level.*' => [
+                    'label' => 'Document level',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '{field} is required'
+                    ]
                 ]
             ];
 
@@ -141,6 +148,7 @@ class APQPDocument extends BaseController
             $id_apqp = dekripsi($token);
             $nama_dokumen = $this->request->getPost('nama_dokumen');
             $uploader = $this->request->getPost('uploader');
+            $document_level = $this->request->getPost('document_level');
 
             if (count($nama_dokumen) == 0 || count($uploader) == 0) {
                 return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Data is not available');
@@ -154,7 +162,8 @@ class APQPDocument extends BaseController
                     'id' => generate_uuid(),
                     'id_apqp' => $id_apqp,
                     'baris' => $baris,
-                    'nama_dokumen' => $nama_dokumen[$i],
+                    'nama_dokumen' => trim($nama_dokumen[$i]),
+                    'level_dokumen' => $document_level[$i],
                     'uploader' => $uploader[$i],
                     'created_by' => $this->NIK
                 ];
@@ -309,17 +318,19 @@ class APQPDocument extends BaseController
                 return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Invalid JSON data');
             }
 
-            if (!isset($json_data['token']) || !isset($json_data['nama_dokumen']) || !isset($json_data['nama_dokumen']) || !isset($json_data['uploader'])) {
+            if (!isset($json_data['token']) || !isset($json_data['nama_dokumen']) || !isset($json_data['nama_dokumen']) || !isset($json_data['uploader']) || !isset($json_data['level'])) {
                 return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Token, document name and uploader is not available in JSON data');
             }
 
             $id = trim($json_data['token']);
             $nama_dokumen = trim($json_data['nama_dokumen']);
             $uploader = trim($json_data['uploader']);
+            $level = trim($json_data['level']);
 
             $data = [
-                'nama_dokumen' => $nama_dokumen,
-                'uploader' => $uploader,
+                'nama_dokumen' => trim($nama_dokumen),
+                'uploader' => trim($uploader),
+                'level_dokumen' => trim($level),
                 'updated_by' => $this->NIK,
             ];
 
@@ -366,5 +377,12 @@ class APQPDocument extends BaseController
 
             return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Unexpected error' . $e->getMessage());
         }
+    }
+
+    function seedData()
+    {
+        $get = $this->documentModel->orderBy('id_apqp', 'asc')->orderBy('baris', 'asc')->findAll();
+
+        return pesan(ResponseInterface::HTTP_OK, 'Data was successfully seeded', $get);
     }
 }

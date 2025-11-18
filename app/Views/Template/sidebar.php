@@ -113,15 +113,7 @@
                             <a href="<?= base_url('apqp_level') ?>" class="nav-link" onclick="loading()">
                                 <i class="bi bi-arrow-right-circle"></i>
                                 <p>
-                                    APQP Level
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?= base_url('apqp_document') ?>" class="nav-link" onclick="loading()">
-                                <i class="bi bi-arrow-right-circle"></i>
-                                <p>
-                                    APQP Document
+                                    APQP Setup
                                 </p>
                             </a>
                         </li>

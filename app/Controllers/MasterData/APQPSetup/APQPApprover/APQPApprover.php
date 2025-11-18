@@ -403,4 +403,11 @@ class APQPApprover extends BaseController
             return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Unexpected error occured' . $e->getMessage());
         }
     }
+
+    function seedData()
+    {
+        $get = $this->approverModel->orderBy('baris', 'asc')->findAll();
+
+        return pesan(ResponseInterface::HTTP_OK, 'Data was successfully seeded', $get);
+    }
 }

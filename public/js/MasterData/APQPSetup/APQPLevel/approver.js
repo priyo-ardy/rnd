@@ -240,12 +240,18 @@ function editBaris(button) {
   row.setAttribute("data-original-value", originalValue.join("|||"));
 
   editableCell.forEach((cell, index) => {
-    cell.innerHTML = "";
-
     const currentValue = cell.textContent.trim();
+    cell.innerHTML = "";
     const selectElement = document.createElement("select");
     selectElement.className = "form-control select2 select2bs5";
     selectElement.innerHTML = document.getElementById("listUsers").innerHTML;
+
+    for (let i = 0; i < selectElement.options.length; i++) {
+      if (selectElement.options[i].text.trim() === currentValue) {
+        selectElement.options[i].selected = true;
+        break; // Berhenti loop jika sudah ketemu (Best Practice)
+      }
+    }
 
     cell.appendChild(selectElement);
   });

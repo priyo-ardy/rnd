@@ -10,8 +10,8 @@ const documentButton = {
   save: document.getElementById("btnSaveDocument"),
 };
 
-function showDocument(token) {
-  documentInput.title.innerHTML = "Document List";
+function showDocument(token, name) {
+  documentInput.title.innerHTML = "Document List | " + name;
   documentInput.token.value = token;
   try {
     fetchData(
@@ -48,6 +48,9 @@ function documentList(data) {
             <td class="editableUploader">
                 ${item.NIK} - ${item.uploader_name}
             </td>
+            <td class="editableLevel text-center align-middle">
+                ${item.level_dokumen}
+            </td>
             <td>
                 <button type="button" class="btn btn-add btn-success rounded-0 btn-sm" onclick="addRow(this)"><i class="bi bi-plus-circle"></i>&ensp;Add</button>
                 <button type="button" class="btn btn-edit btn-warning rounded-0 btn-sm" onclick="editDocument(this)"><i class="bi bi-pencil-square"></i>&ensp;Edit</button>
@@ -74,6 +77,16 @@ function firstRow() {
             <select name="uploader[]" class="form-control select2 select2bs5" required>
                 <option value="">-- Choose Uploader --</option>
                 ${document.getElementById("listUsers").innerHTML}
+            </select>
+            <div class="invalid-feedback"></div>
+        </td>
+        <td>
+            <select name="document_level[]" class="form-control select2 select2bs5" required>
+                <option value="">-- Choose --</option>
+                <option value="1">Level 1</option>
+                <option value="2">Level 2</option>
+                <option value="3">Level 3</option>
+                <option value="4">Level 4</option>
             </select>
             <div class="invalid-feedback"></div>
         </td>
@@ -105,6 +118,16 @@ function addRow() {
             <select name="uploader[]" class="form-control select2 select2bs5" required>
                 <option value="">-- Choose Uploader --</option>
                 ${document.getElementById("listUsers").innerHTML}
+            </select>
+            <div class="invalid-feedback"></div>
+        </td>
+        <td>
+            <select name="document_level[]" class="form-control select2 select2bs5" required>   
+                <option value="">-- Choose --</option>
+                <option value="1">Level 1</option>
+                <option value="2">Level 2</option>
+                <option value="3">Level 3</option>
+                <option value="4">Level 4</option>
             </select>
             <div class="invalid-feedback"></div>
         </td>
@@ -227,9 +250,11 @@ function editDocument(button) {
   const row = button.closest("tr");
   const namaDocument = row.querySelectorAll(".editableDocument");
   const namaUploader = row.querySelectorAll(".editableUploader");
+  const levelDokumen = row.querySelectorAll(".editableLevel");
 
   let namaDokumenOriginal = [];
   let namaUploaderOriginal = [];
+  let levelDokumenOriginal = [];
 
   namaDocument.forEach((cell) => {
     namaDokumenOriginal.push(cell.textContent.trim());
@@ -237,6 +262,10 @@ function editDocument(button) {
 
   namaUploader.forEach((cell) => {
     namaUploaderOriginal.push(cell.textContent.trim());
+  });
+
+  levelDokumen.forEach((cell) => {
+    levelDokumenOriginal.push(cell.textContent.trim());
   });
 
   row.setAttribute(
@@ -247,6 +276,11 @@ function editDocument(button) {
   row.setAttribute(
     "data-original-uploader-value",
     `${namaUploaderOriginal.join("|||")}`
+  );
+
+  row.setAttribute(
+    "data-original-level-value",
+    `${levelDokumenOriginal.join("|||")}`
   );
 
   namaDocument.forEach((cell) => {
@@ -274,6 +308,33 @@ function editDocument(button) {
     }
 
     cell.appendChild(selectElement);
+  });
+
+  levelDokumen.forEach((cell) => {
+    const currentValue = cell.textContent.trim();
+    cell.innerHTML = "";
+
+    cell.innerHTML = `
+        <select class="form-control select2 select2bs5" name="document_level[]" required>
+            <option value="">-- Choose --</option>
+            <option value="1" ${
+              currentValue === "1" ? "selected" : ""
+            }>Level 1</option>
+            <option value="2" ${
+              currentValue === "2" ? "selected" : ""
+            }>Level 2</option>
+            <option value="3" ${
+              currentValue === "3" ? "selected" : ""
+            }>Level 3</option>
+            <option value="4" ${
+              currentValue === "4" ? "selected" : ""
+            }>Level 4</option>
+        </select>
+    `;
+
+    cell.value = currentValue;
+    $(cell).trigger("change");
+    console.log(currentValue);
   });
 
   $(".select2bs5").select2({
@@ -304,13 +365,17 @@ function updateDocument(button, token) {
   const row = button.closest("tr");
   const namaDocument = row.querySelector("input[name='nama_dokumen[]']");
   const namaUploader = row.querySelector("select[name='uploader[]']");
+  const levelDokumen = row.querySelector("select[name='document_level[]']");
   const editableDocument = row.querySelectorAll(".editableDocument");
   const editableUploader = row.querySelectorAll(".editableUploader");
+  const editableLevel = row.querySelectorAll(".editableLevel");
 
   if (namaDocument.value == "") {
     namaDocument.classList.add("is-invalid");
   } else if (namaUploader.value == "") {
     namaUploader.classList.add("is-invalid");
+  } else if (levelDokumen.value == "") {
+    levelDokumen.classList.add("is-invalid");
   } else {
     namaDocument.classList.remove("is-invalid");
     namaUploader.classList.remove("is-invalid");
@@ -324,6 +389,7 @@ function updateDocument(button, token) {
           token: token,
           nama_dokumen: namaDocument.value,
           uploader: namaUploader.value,
+          level: levelDokumen.value,
         })
       )
         .then((result) => {
@@ -336,6 +402,10 @@ function updateDocument(button, token) {
           editableUploader.forEach((cell) => {
             cell.innerHTML =
               result.data.NIK + " - " + result.data.uploader_name;
+          });
+
+          editableLevel.forEach((cell) => {
+            cell.innerHTML = result.data.level_dokumen;
           });
 
           row.querySelectorAll(".btn-edit").forEach((btn) => {
@@ -372,13 +442,16 @@ function cancelDocument(btn) {
   const row = btn.closest("tr");
   const namaDokumen = row.querySelectorAll(".editableDocument");
   const namaUploader = row.querySelectorAll(".editableUploader");
+  const levelDokumen = row.querySelectorAll(".editableLevel");
   const originalDocument = row.getAttribute("data-original-document-value");
   const originalUploader = row.getAttribute("data-original-uploader-value");
+  const originalLevelDokumen = row.getAttribute("data-original-level-value");
 
-  if (!originalDocument || !originalUploader) return;
+  if (!originalDocument || !originalUploader || !originalLevelDokumen) return;
 
   const originalDocumentValue = originalDocument.split("|||");
   const originalUploaderValue = originalUploader.split("|||");
+  const originalLevelValue = originalLevelDokumen.split("|||");
 
   namaDokumen.forEach((cell, index) => {
     cell.innerHTML = originalDocumentValue[index]; // Kembalikan ke teks asli
@@ -386,6 +459,10 @@ function cancelDocument(btn) {
 
   namaUploader.forEach((cell, index) => {
     cell.innerHTML = originalUploaderValue[index]; // Kembalikan ke teks asli
+  });
+
+  levelDokumen.forEach((cell, index) => {
+    cell.innerHTML = originalLevelValue[index]; // Kembalikan ke teks asli
   });
 
   row.querySelectorAll(".btn-edit").forEach((btn) => {

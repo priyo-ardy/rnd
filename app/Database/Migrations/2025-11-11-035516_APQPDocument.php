@@ -45,6 +45,13 @@ class APQPDocument extends Migration
                 'charset' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci'
             ],
+            'level_dokumen' => [
+                'type' => 'VARCHAR',
+                'constraint' => 1,
+                'null' => false,
+                'charset' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ],
             'created_at' => [
                 'type' => 'DATETIME',
                 'null' => false,
@@ -60,20 +67,23 @@ class APQPDocument extends Migration
             ],
             'updated_at' => [
                 'type' => 'DATETIME',
-                'null' => false,
+                'null' => true,
+                'default' => null,
                 'charset' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci'
             ],
             'updated_by' => [
                 'type' => 'VARCHAR',
                 'constraint' => 100,
-                'null' => false,
+                'null' => true,
+                'default' => null,
                 'charset' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci'
             ],
             'deleted_at' => [
                 'type' => 'DATETIME',
-                'null' => false,
+                'null' => true,
+                'default' => null,
                 'charset' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci'
             ]

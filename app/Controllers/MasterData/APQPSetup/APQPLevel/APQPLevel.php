@@ -54,7 +54,7 @@ class APQPLevel extends BaseController
                 <button type="button" class="btn btn-primary rounded-0 btn-sm w-100 d-block" onclick="showApprover(`' . enkripsi($item->id) . '`)"><i class="fa-solid fa-file-signature"></i>&ensp;Show Approver</button>
             ';
             $row[] = '
-                <button type="button" class="btn btn-primary rounded-0 btn-sm w-100 d-block" onclick="showDocument(`' . enkripsi($item->id) . '`)"><i class="fa-solid fa-file"></i>&ensp;Show Document List</button>
+                <button type="button" class="btn btn-primary rounded-0 btn-sm w-100 d-block" onclick="showDocument(`' . enkripsi($item->id) . '`, `' . $item->name . '`)"><i class="fa-solid fa-file"></i>&ensp;Show Document List</button>
             ';
             $row[] = $item->remark;
             $row[] = '
@@ -595,5 +595,12 @@ class APQPLevel extends BaseController
 
             return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Unexpected error occured' . $e->getMessage());
         }
+    }
+
+    function seedData()
+    {
+        $get = $this->levelModel->orderBy('level', 'asc')->findAll();
+
+        return pesan(ResponseInterface::HTTP_OK, 'Data was successfully seeded', $get);
     }
 }
