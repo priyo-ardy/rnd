@@ -101,6 +101,7 @@
 
 <?= $this->include('MasterData/APQPSetup/APQPLevel/modal') ?>
 <div id="listUsers" style="display: none;">
+    <option value="">-- Choose --</option>
     <?php foreach ($users as $user) : ?>
         <option value="<?= $user->user_id ?>"><?= "$user->user_name - $user->full_name" ?></option>
     <?php endforeach; ?>

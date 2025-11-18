@@ -173,4 +173,234 @@ class APQPApprover extends BaseController
             return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Unexpected error occured' . $e->getMessage());
         }
     }
+
+    function updateApprover()
+    {
+        if ($this->request->getMethod() !== 'POST') {
+            logFile(
+                'security',
+                'Request method not allowed',
+                [
+                    'route' => '/apqp-approver/update_approver',
+                    'method' => $this->request->getMethod(),
+                    'expected' => 'POST',
+                    'NIK' => session('user_name')
+                ],
+                'APQPApprover::updateApprover'
+            );
+
+            return pesan(ResponseInterface::HTTP_METHOD_NOT_ALLOWED, 'Request method not allowed');
+        }
+
+        try {
+            $json_data = $this->request->getJSON(true);
+
+            if (!is_array($json_data)) {
+                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Invalid JSON data');
+            }
+
+            if (!isset($json_data['token']) || !isset($json_data['approver'])) {
+                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Token & Approver is not available in JSON data');
+            }
+
+            $id = $json_data['token'];
+            $approver = $json_data['approver'];
+
+            $data = [
+                'approver' => $approver,
+                'updated_by' => $this->NIK
+            ];
+
+            $update = $this->approverModel->update($id, $data);
+            if (!$update) {
+                logFile(
+                    'error',
+                    'Update failed',
+                    [
+                        'message' => $this->approverModel->errors(),
+                        'NIK' => session('user_name')
+                    ],
+                    'APQPApprover::updateApprover'
+                );
+            }
+
+
+            $get = $this->approverModel->getApproverData($id);
+
+            logFile(
+                'audit',
+                'Successfully updated approver data',
+                [
+                    'message' => $get,
+                    'NIK' => $this->NIK
+                ],
+                'APQPApprover::updateApprover'
+            );
+
+            return pesan(ResponseInterface::HTTP_OK, 'Updated success', $get);
+        } catch (\Exception $e) {
+            logFile(
+                'error',
+                'Unexpected error occured',
+                [
+                    'message' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                    'NIK' => session('user_name')
+                ],
+                'APQPApprover::updateApprover'
+            );
+
+            return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Unexpected error occured' . $e->getMessage());
+        }
+    }
+
+    function addApprover()
+    {
+        if ($this->request->getMethod() !== 'POST') {
+            logFile(
+                'security',
+                'Request method not allowed',
+                [
+                    'route' => '/apqp-approver/add_approver',
+                    'method' => $this->request->getMethod(),
+                    'expected' => 'POST',
+                    'NIK' => session('user_name')
+                ],
+                'APQPApprover::addApprover'
+            );
+
+            return pesan(ResponseInterface::HTTP_METHOD_NOT_ALLOWED, 'Request method not allowed');
+        }
+
+        try {
+            $json_data = $this->request->getJSON(true);
+
+            if (!is_array($json_data)) {
+                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Invalid JSON data');
+            }
+
+            if (!isset($json_data['token']) || !isset($json_data['approver'])) {
+                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Token & Approver is not available in JSON data');
+            }
+
+            $token = $json_data['token'];
+            $id_apqp = dekripsi($token);
+            $approver = $json_data['approver'];
+
+            $getLastRow = $this->approverModel->getLastRow($id_apqp);
+
+            $data = [
+                'id' => generate_uuid(),
+                'id_apqp' => $id_apqp,
+                'baris' => $getLastRow,
+                'approver' => $approver,
+                'created_by' => $this->NIK,
+            ];
+
+            $insert = $this->approverModel->insert($data);
+            if (!$insert) {
+                logFile(
+                    'error',
+                    'Insert failed',
+                    [
+                        'message' => $this->approverModel->errors(),
+                        'NIK' => session('user_name')
+                    ],
+                    'APQPApprover::addApprover'
+                );
+            }
+        } catch (\Exception $e) {
+            logFile(
+                'error',
+                'Unexpected error occured',
+                [
+                    'message' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                    'NIK' => session('user_name')
+                ],
+                'APQPApprover::addApprover'
+            );
+
+            return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Unexpected error occured' . $e->getMessage());
+        }
+    }
+
+    function deleteApprover()
+    {
+        if ($this->request->getMethod() !== 'POST') {
+            logFile(
+                'security',
+                'Request method not allowed',
+                [
+                    'route' => '/apqp-approver/delete_approver',
+                    'method' => $this->request->getMethod(),
+                    'expected' => 'POST',
+                    'NIK' => session('user_name')
+                ],
+                'APQPApprover::deleteApprover'
+            );
+
+            return pesan(ResponseInterface::HTTP_METHOD_NOT_ALLOWED, 'Request method not allowed');
+        }
+
+        try {
+            $json_data = $this->request->getJSON(true);
+
+            if (!is_array($json_data)) {
+                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Invalid JSON data');
+            }
+
+            if (!isset($json_data['token'])) {
+                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Token is not available in JSON data');
+            }
+
+            $id = $json_data['token'];
+            $delete = $this->approverModel->delete($id, true);
+
+            if (!$delete) {
+                logFile(
+                    'error',
+                    'Delete failed',
+                    [
+                        'message' => $this->approverModel->errors(),
+                        'NIK' => session('user_name')
+                    ],
+                    'APQPApprover::deleteApprover'
+                );
+
+                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Delete failed');
+            }
+
+            logFile(
+                'audit',
+                'Successfully deleted approver data',
+                [
+                    'id_approver' => $id,
+                    'NIK' => $this->NIK
+                ],
+                'APQPApprover::deleteApprover'
+            );
+
+            return pesan(ResponseInterface::HTTP_OK, 'Successfully deleted approver data');
+        } catch (\Exception $e) {
+            logFile(
+                'error',
+                'Unexpected error occured',
+                [
+                    'message' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                    'NIK' => session('user_name')
+                ],
+                'APQPApprover::deleteApprover'
+            );
+
+            return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Unexpected error occured' . $e->getMessage());
+        }
+    }
 }

@@ -70,7 +70,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group mb-3">
-                        <input type="text" name="user_token" id="user_token" class="form-control rounded-0 bg-secondary-subtle" readonly>
+                        <input type="hidden" name="user_token" id="user_token" class="form-control rounded-0 bg-secondary-subtle" readonly>
                     </div>
                     <div class="form-group">
                         <label class="form-label">New Password <strong class="text-danger fw-bolder">*</strong></label>

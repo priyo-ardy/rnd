@@ -30,4 +30,25 @@ class APQPApproverModel extends Model
             ->join('m_user_auth', 'm_apqp_approver.approver = m_user_auth.user_id', 'left')
             ->findAll();
     }
+
+    public function getApproverData($id)
+    {
+        return $this->select('m_apqp_approver.*, m_user_auth.user_name as NIK, m_user_auth.full_name as approver_name')
+            ->where('id', $id)
+            ->join('m_user_auth', 'm_apqp_approver.approver = m_user_auth.user_id', 'left')
+            ->first();
+    }
+
+    function getLastRow($id_apqp)
+    {
+        $query = $this->where('id_apqp', $id_apqp)
+            ->orderBy('baris', 'desc')
+            ->first();
+
+        if ($query) {
+            return $query->baris + 1;
+        } else {
+            return 1;
+        }
+    }
 }

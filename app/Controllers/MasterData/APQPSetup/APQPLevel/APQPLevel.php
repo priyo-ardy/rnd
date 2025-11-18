@@ -54,7 +54,7 @@ class APQPLevel extends BaseController
                 <button type="button" class="btn btn-primary rounded-0 btn-sm w-100 d-block" onclick="showApprover(`' . enkripsi($item->id) . '`)"><i class="fa-solid fa-file-signature"></i>&ensp;Show Approver</button>
             ';
             $row[] = '
-                <button type="button" class="btn btn-primary rounded-0 btn-sm w-100 d-block" onclick="showDetail(`' . enkripsi($item->id) . '`)"><i class="fa-solid fa-file"></i>&ensp;Show Document List</button>
+                <button type="button" class="btn btn-primary rounded-0 btn-sm w-100 d-block" onclick="showDocument(`' . enkripsi($item->id) . '`)"><i class="fa-solid fa-file"></i>&ensp;Show Document List</button>
             ';
             $row[] = $item->remark;
             $row[] = '
@@ -83,7 +83,8 @@ class APQPLevel extends BaseController
             'users' => $this->authModel->getUsers(),
             'footer' => [
                 '<script src="' . base_url() . 'js/MasterData/APQPSetup/APQPLevel/level.js' . '"></script>',
-                '<script src="' . base_url() . 'js/MasterData/APQPSetup/APQPLevel/approver.js' . '"></script>'
+                '<script src="' . base_url() . 'js/MasterData/APQPSetup/APQPLevel/approver.js' . '"></script>',
+                '<script src="' . base_url() . 'js/MasterData/APQPSetup/APQPLevel/document.js' . '"></script>'
             ]
         ];
 

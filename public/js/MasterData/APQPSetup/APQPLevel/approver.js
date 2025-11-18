@@ -44,11 +44,13 @@ function approvalList(approver) {
   approver.forEach((item) => {
     const row = `
       <tr>
-        <td>${item.NIK} - ${item.approver_name}</td>
+        <td class="editable">${item.NIK} - ${item.approver_name}</td>
         <td class="text-center align-middle">
-          <button type="button" class="btn btn-sm btn-success rounded-0" onclick="addRow()"><i class="bi bi-plus-circle"></i></button>
-          <button type="button" class="btn btn-sm btn-warning rounded-0" onclick="editRow(this)"><i class="bi bi-pencil-square"></i></button>
-          <button type="button" class="btn btn-sm btn-danger rounded-0" onclick="deleteRow(this)"><i class="bi bi-dash-circle"></i></button>
+          <button type="button" class="btn btn-add btn-success rounded-0 btn-sm" onclick="addEditableRow(this)"><i class="bi bi-plus-circle"></i>&ensp;Add</button>
+          <button type="button" class="btn btn-edit btn-warning rounded-0 btn-sm" onclick="editBaris(this)"><i class="bi bi-pencil-square"></i>&ensp;Edit</button>
+          <button type="button" class="btn btn-delete btn-danger rounded-0 btn-sm" onclick="hapusApprover(this, '${item.id}')"><i class="bi bi-x"></i>&ensp;Delete</button>
+          <button hidden type="button" class="btn btn-update btn-primary rounded-0 btn-sm" onclick="updateRow(this, '${item.id}')"><i class="bi bi-floppy"></i>&ensp;Update</button>
+          <button hidden type="button" class="btn btn-cancel btn-warning rounded-0 btn-sm" onclick="cancelUpdate(this)"><i class="bi bi-arrow-counterclockwise"></i>&ensp;Cancel</button>
         </td>
       </tr>
     `;
@@ -225,3 +227,195 @@ btns.save_approver.addEventListener("click", (e) => {
     }
   }
 });
+
+function editBaris(button) {
+  const row = button.closest("tr");
+  const editableCell = row.querySelectorAll(".editable");
+
+  let originalValue = [];
+  editableCell.forEach((cell) => {
+    originalValue.push(cell.textContent);
+  });
+
+  row.setAttribute("data-original-value", originalValue.join("|||"));
+
+  editableCell.forEach((cell, index) => {
+    cell.innerHTML = "";
+
+    const currentValue = cell.textContent.trim();
+    const selectElement = document.createElement("select");
+    selectElement.className = "form-control select2 select2bs5";
+    selectElement.innerHTML = document.getElementById("listUsers").innerHTML;
+
+    cell.appendChild(selectElement);
+  });
+
+  $(".select2bs5").select2({
+    dropdownParent: $("#modalApprover"),
+    theme: "bootstrap-5",
+    dropdownCssClass: "rounded-0",
+    selectionCssClass: "rounded-0",
+  });
+
+  row.querySelectorAll(".btn-edit").forEach((btn) => {
+    btn.setAttribute("hidden", true);
+  });
+  row.querySelectorAll(".btn-add").forEach((btn) => {
+    btn.setAttribute("hidden", true);
+  });
+  row.querySelectorAll(".btn-delete").forEach((btn) => {
+    btn.setAttribute("hidden", true);
+  });
+  row.querySelectorAll(".btn-update").forEach((btn) => {
+    btn.removeAttribute("hidden");
+  });
+  row.querySelectorAll(".btn-cancel").forEach((btn) => {
+    btn.removeAttribute("hidden");
+  });
+}
+
+function cancelUpdate(btn) {
+  const row = btn.closest("tr");
+  const editableCells = row.querySelectorAll(".editable");
+  const originalValuesString = row.getAttribute("data-original-value");
+
+  if (!originalValuesString) return;
+
+  const originalValues = originalValuesString.split("|||");
+
+  editableCells.forEach((cell, index) => {
+    cell.innerHTML = originalValues[index]; // Kembalikan ke teks asli
+  });
+
+  row.querySelectorAll(".btn-edit").forEach((btn) => {
+    btn.removeAttribute("hidden");
+  });
+  row.querySelectorAll(".btn-add").forEach((btn) => {
+    btn.removeAttribute("hidden");
+  });
+  row.querySelectorAll(".btn-delete").forEach((btn) => {
+    btn.removeAttribute("hidden");
+  });
+  row.querySelectorAll(".btn-update").forEach((btn) => {
+    btn.setAttribute("hidden", true);
+  });
+  row.querySelectorAll(".btn-cancel").forEach((btn) => {
+    btn.setAttribute("hidden", true);
+  });
+
+  row.removeAttribute("data-original-values");
+}
+
+function updateRow(btn, token) {
+  const row = btn.closest("tr");
+  const editableCells = row.querySelectorAll(".editable");
+
+  editableCells.forEach((cell) => {
+    const selectElement = cell.querySelectorAll(".select2bs5");
+    if (selectElement.length > 0) {
+      row.removeAttribute("data-original-values");
+      try {
+        loading();
+        fetchData(
+          baseurl + "/apqp_approver/update_approver/",
+          "POST",
+          JSON.stringify({ token: token, approver: selectElement[0].value })
+        )
+          .then((result) => {
+            cell.innerHTML =
+              result.data.NIK + " - " + result.data.approver_name;
+            row.querySelectorAll(".btn-edit").forEach((btn) => {
+              btn.removeAttribute("hidden");
+            });
+            row.querySelectorAll(".btn-add").forEach((btn) => {
+              btn.removeAttribute("hidden");
+            });
+            row.querySelectorAll(".btn-delete").forEach((btn) => {
+              btn.removeAttribute("hidden");
+            });
+            row.querySelectorAll(".btn-update").forEach((btn) => {
+              btn.setAttribute("hidden", true);
+            });
+            row.querySelectorAll(".btn-cancel").forEach((btn) => {
+              btn.setAttribute("hidden", true);
+            });
+
+            hideLoading();
+          })
+          .catch((err) => {
+            pesanError(err.message);
+            hideLoading();
+          });
+      } catch (e) {
+        pesanError(e.message);
+        hideLoading();
+      }
+    }
+  });
+}
+
+function addEditableRow() {
+  const tbody = document.getElementById("listApprover");
+
+  const newRow = `
+    <tr>
+        <td>
+            <select name="approver[]" class="form-control select2 select2bs5" required>
+                ${document.getElementById("listUsers").innerHTML}
+            </select>
+            <div class="invalid-feedback"></div>
+        </td>
+        <td class="col-2 align-middle text-center">
+            <button type="button" class="btn btn-primary rounded-0 btn-sm" onclick="saveRow(this)" title="add"><i class="bi bi-floppy"></i>&ensp;Save</button>
+            <button type="button" class="btn btn-danger rounded-0 btn-sm" onclick="removeRow(this)" title="cancel"><i class="bi bi-x-circle"></i>&ensp;Remove</button>
+        </td>
+    </tr>
+  `;
+  tbody.insertAdjacentHTML("beforeend", newRow);
+
+  $(".select2bs5").select2({
+    dropdownParent: $("#modalApprover"),
+    theme: "bootstrap-5",
+    dropdownCssClass: "rounded-0",
+    selectionCssClass: "rounded-0",
+  });
+}
+
+function saveRow(btn) {
+  const row = btn.closest("tr");
+  const token = document.getElementById("apqp_token").value;
+  const approver = row.querySelector('select[name="approver[]"]').value;
+
+  if (approver.value !== "") {
+    try {
+      loading();
+      fetchData(
+        baseurl + "/apqp_approver/add_approver",
+        "POST",
+        JSON.stringify({ token: token, approver: approver })
+      )
+        .then((result) => {
+          pesanSukses();
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
+        })
+        .catch((err) => {
+          pesanError(err.message);
+          hideLoading();
+        });
+    } catch (e) {
+      pesanError(e.message);
+      hideLoading();
+    }
+  }
+}
+
+function hapusApprover(btn, token) {
+  const row = btn.closest("tr");
+  try {
+    hapusData("/apqp_approver/delete_approver", token);
+  } catch (e) {
+    pesanError(e.message);
+  }
+}

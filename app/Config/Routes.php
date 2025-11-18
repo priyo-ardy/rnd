@@ -115,6 +115,17 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
         $routes->get('', 'MasterData\APQPSetup\APQPApprover\APQPApprover::index');
         $routes->post('load_approver', 'MasterData\APQPSetup\APQPApprover\APQPApprover::loadApprover');
         $routes->post('save_approver', 'MasterData\APQPSetup\APQPApprover\APQPApprover::saveApprover');
+        $routes->post('update_approver', 'MasterData\APQPSetup\APQPApprover\APQPApprover::updateApprover');
+        $routes->post('add_approver', 'MasterData\APQPSetup\APQPApprover\APQPApprover::addApprover');
+        $routes->post('delete_approver', 'MasterData\APQPSetup\APQPApprover\APQPApprover::deleteApprover');
+    });
+
+    // APQP Document
+    $routes->group('/apqp_document', static function ($routes) {
+        $routes->post('get_document_list', 'MasterData\APQPSetup\APQPDocument\APQPDocument::getDocumentList');
+        $routes->post('save_document_list', 'MasterData\APQPSetup\APQPDocument\APQPDocument::saveDocumentList');
+        $routes->post('delete_document', 'MasterData\APQPSetup\APQPDocument\APQPDocument::deleteDocument');
+        $routes->post('update_document', 'MasterData\APQPSetup\APQPDocument\APQPDocument::updateDocument');
     });
 
     // User management
