@@ -46,6 +46,7 @@ function loadTable() {
     serverSide: true,
     responsive: true,
     bDestroy: true,
+    pageLength: 25,
     search: {
       return: true,
     },
