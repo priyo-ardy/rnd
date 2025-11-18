@@ -72,6 +72,15 @@ class UserAuth extends Migration
                 'charset' => 'utf8',
                 'collation' => 'utf8_unicode_ci'
             ],
+            'user_level' => [
+                'type' => "VARCHAR",
+                'constraint' => 1,
+                'null' => false,
+                'default' => '2',
+                'comment' => '0 = Super Admin, 1 = Admin, 2 = User',
+                'charset' => 'utf8',
+                'collation' => 'utf8_unicode_ci'
+            ],
             'user_image' => [
                 'type' => "VARCHAR",
                 'constraint' => 255,

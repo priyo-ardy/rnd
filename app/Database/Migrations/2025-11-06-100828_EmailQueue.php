@@ -72,6 +72,6 @@ class EmailQueue extends Migration
 
     public function down()
     {
-        $this->forge->dropTable('job_queue');
+        $this->forge->dropTable('q_email_queue');
     }
 }
