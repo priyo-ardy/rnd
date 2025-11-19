@@ -63,6 +63,22 @@ class MaterialTable extends Migration
                 'charset' => 'utf8',
                 'collation' => 'utf8_unicode_ci',
             ],
+            'spq' => [
+                'type' => 'INT',
+                'constraint' => 11,
+                'null' => true,
+                'default' => 1,
+                'charset' => 'utf8',
+                'collation' => 'utf8_unicode_ci',
+            ],
+            'qty_bag' => [
+                'type' => 'INT',
+                'constraint' => 11,
+                'null' => true,
+                'default' => 0,
+                'charset' => 'utf8',
+                'collation' => 'utf8_unicode_ci',
+            ],
             'color' => [
                 'type' => "VARCHAR",
                 'constraint' => 50,
@@ -114,6 +130,8 @@ class MaterialTable extends Migration
             ],
             'remark' => [
                 'type' => 'TEXT',
+                'null' => true,
+                'default' => null,
                 'charset' => 'utf8',
                 'collation' => 'utf8_unicode_ci',
             ],

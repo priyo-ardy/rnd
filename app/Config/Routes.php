@@ -143,4 +143,11 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
         $routes->post('update_password', 'AppSetup\UserManagement\UserLists::changePassword');
         $routes->get('seeder', 'AppSetup\UserManagement\UserLists::dataSeeder');
     });
+
+    // Project List
+    $routes->group('/project', static function ($routes) {
+        $routes->get('', 'MasterData\ProjectSetup\Project\Project::index');
+        $routes->get('add', 'MasterData\ProjectSetup\Project\Project::addData');
+        $routes->post('save', 'MasterData\ProjectSetup\Project\Project::saveData');
+    });
 });

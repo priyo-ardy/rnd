@@ -119,6 +119,25 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="bi bi-bezier2 nav-icon"></i>
+                        <p>
+                            Project Management
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav-treeview">
+                        <li class="nav-item">
+                            <a href="<?= base_url() . 'project'  ?>" class="nav-link">
+                                <i class="bi bi-arrow-right-circle"></i>
+                                <p>
+                                    Project List
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="nav-header">APP SETUP</li>
                 <li class="nav-item">
                     <a href="#" class="nav-link">
