@@ -920,4 +920,12 @@ class Material extends BaseController
             return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, "Unexpected error occured " . $e->getMessage());
         }
     }
+
+    function dataSeed()
+    {
+        $get = $this->materialModel->orderBy('code', 'asc')->findAll();
+
+
+        return pesan(ResponseInterface::HTTP_OK, 'Data was successfully seeded', $get);
+    }
 }

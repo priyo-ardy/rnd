@@ -11,6 +11,7 @@ class RestoreData extends Seeder
         $this->call('AuthData');
         $this->call('CustomerData');
         $this->call('MaterialCategoryData');
+        $this->call('MaterialData');
         $this->call('RoutesData');
         $this->call('SatuanData');
         $this->call('WorkshopData');

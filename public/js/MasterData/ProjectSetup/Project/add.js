@@ -220,5 +220,24 @@ buttons.set_date.addEventListener("click", () => {
 
 buttons.save.addEventListener("click", () => {
   if (validasi()) {
+    try {
+      loading();
+      fetchData(baseurl + "/project/save", "POST", new FormData(formData))
+        .then((result) => {
+          pesanSukses(result.message);
+          setTimeout(() => {
+            window.location.replace(
+              baseurl + "/project/show/" + result.data.token
+            );
+          }, 1500);
+        })
+        .catch((err) => {
+          pesanError(err.message);
+          hideLoading();
+        });
+    } catch (e) {
+      pesanError(e.message);
+      hideLoading();
+    }
   }
 });

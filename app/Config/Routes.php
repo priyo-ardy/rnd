@@ -96,6 +96,7 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
         $routes->post('update_code', 'MasterData\CommonData\Material\Material::changeMaterialCode');
         $routes->post('prev', 'MasterData\CommonData\Material\Material::prevData');
         $routes->post('next', 'MasterData\CommonData\Material\Material::nextData');
+        $routes->get('seed', 'MasterData\CommonData\Material\Material::dataSeed');
     });
 
     // APQP Level
@@ -149,5 +150,6 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
         $routes->get('', 'MasterData\ProjectSetup\Project\Project::index');
         $routes->get('add', 'MasterData\ProjectSetup\Project\Project::addData');
         $routes->post('save', 'MasterData\ProjectSetup\Project\Project::saveData');
+        $routes->get('show/(:any)', 'MasterData\ProjectSetup\Project\Project::showData/$1');
     });
 });
