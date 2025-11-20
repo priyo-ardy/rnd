@@ -107,10 +107,10 @@
                                         <tbody>
                                             <?php foreach ($data_details as $row) : ?>
                                                 <tr>
-                                                    <td><?= $row->material_code ?></td>
-                                                    <td><?= $row->material_name ?></td>
-                                                    <td><?= $row->material_spesifikasi  ?></td>
-                                                    <td><?= ($row->status == '0') ? 'Not Setup' : 'Setup' ?></td>
+                                                    <td class="align-middle"><?= $row->material_code ?></td>
+                                                    <td class="align-middle"><?= $row->material_name ?></td>
+                                                    <td class="align-middle"><?= $row->material_spesifikasi  ?></td>
+                                                    <td class="align-middle text-center"><a href="" class="text-primary text-decoration-none fw-bolder link-opacity-100-hover">Generate</a></td>
                                                 </tr>
                                             <?php endforeach; ?>
                                         </tbody>

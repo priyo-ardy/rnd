@@ -5,5 +5,7 @@ window.onload = () => {
 };
 
 function loadProjectDetails() {
-  $("#tblPartList").DataTable();
+  $("#tblPartList").DataTable({
+    pageLength: "50",
+  });
 }
