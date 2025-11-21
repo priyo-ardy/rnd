@@ -37,4 +37,20 @@ class MasterModel extends Model
             ->get()
             ->getResultArray();
     }
+
+    public function getListData($table, $column_order, $order_method)
+    {
+        return $this->db->table($table)
+            ->orderBy($column_order, $order_method)
+            ->get()
+            ->getResultArray();
+    }
+
+    function checkData($table, $column, $column_value)
+    {
+        return $this->db->table($table)
+            ->where($column, $column_value)
+            ->get()
+            ->getResultObject();
+    }
 }

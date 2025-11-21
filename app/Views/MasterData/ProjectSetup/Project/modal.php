@@ -16,3 +16,24 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="modalGenerate" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="modalGenerateLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Generate APQP Data</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="modal_token" id="modal_token" class="form-control rounded-0 bg-secondary-subtle" readonly>
+                <p>
+                    Are you sure you want to generate APQP data for all part numbers in this project?
+                </p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn rounded-0 btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i>&ensp;Close</button>
+                <button type="button" id="btnModalGenerate" class="btn rounded-0 btn-primary"><i class="bi bi-gear-wide-connected"></i>&ensp;Generate</button>
+            </div>
+        </div>
+    </div>
+</div>

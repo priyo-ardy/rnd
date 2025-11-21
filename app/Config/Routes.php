@@ -151,5 +151,9 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
         $routes->get('add', 'MasterData\ProjectSetup\Project\Project::addData');
         $routes->post('save', 'MasterData\ProjectSetup\Project\Project::saveData');
         $routes->get('show/(:any)', 'MasterData\ProjectSetup\Project\Project::showData/$1');
+        $routes->post('generate_apqp', 'MasterData\ProjectSetup\Project\Project::generateAPQP');
+        $routes->post('get_apqp', 'MasterData\ProjectSetup\Project\Project::getApqp');
+        $routes->post('get_approver', 'MasterData\ProjectSetup\Project\Project::getApprover');
+        $routes->post('get_document', 'MasterData\ProjectSetup\Project\Project::getDocument');
     });
 });

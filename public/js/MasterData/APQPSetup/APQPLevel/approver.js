@@ -19,11 +19,10 @@ function showApprover(token) {
       JSON.stringify({ apqp_level: token })
     )
       .then((result) => {
-        console.log(result.data.length);
         if (result.data.length > 0) {
           approvalList(result.data);
         } else {
-          firstRow();
+          firstRowApprover();
         }
         inputModal.token.value = token;
         $("#modalApprover").modal("show");
@@ -59,7 +58,7 @@ function approvalList(approver) {
   });
 }
 
-function firstRow() {
+function firstRowApprover() {
   const tableBody = document.getElementById("listApprover");
   tableBody.innerHTML = "";
   const row = `
@@ -72,7 +71,7 @@ function firstRow() {
             <div class="invalid-feedback"></div>
         </td>
         <td class="text-center align-middle">
-            <button type="button" class="btn btn-sm btn-success rounded-0" onclick="addRow()"><i class="bi bi-plus-circle"></i></button>
+            <button type="button" class="btn btn-sm btn-success rounded-0" onclick="addRowApprover()"><i class="bi bi-plus-circle"></i></button>
         </td>
     </tr>
   `;
@@ -86,9 +85,11 @@ function firstRow() {
     dropdownCssClass: "rounded-0",
     selectionCssClass: "rounded-0",
   });
+
+  console.log(row);
 }
 
-function addRow() {
+function addRowApprover() {
   const tableBody = document.getElementById("listApprover");
   const row = `
     <tr>
@@ -100,7 +101,7 @@ function addRow() {
             <div class="invalid-feedback"></div>
         </td>
         <td class="text-center align-middle">
-            <button type="button" class="btn btn-sm btn-success rounded-0" onclick="addRow()"><i class="bi bi-plus-circle align-middle"></i></button>
+            <button type="button" class="btn btn-sm btn-success rounded-0" onclick="addRowApprover()"><i class="bi bi-plus-circle align-middle"></i></button>
             <button type="button" class="btn btn-sm btn-danger rounded-0" onclick="removeRow(this)"><i class="bi bi-dash-circle align-middle"></i></button>
         </td>
     </tr>

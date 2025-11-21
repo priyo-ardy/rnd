@@ -37,6 +37,9 @@
                             <button type="button" id="btnCancel" class="btn shadow-none rounded-0 btn-light border-0" data-bs-toggle="tooltip" data-bs-placement="top" title="Search">
                                 <i class="bi bi-arrow-clockwise"></i>&ensp;Cancel
                             </button>
+                            <button type="button" id="btnGenerate" class="btn shadow-none rounded-0 btn-light border-0" data-bs-toggle="tooltip" data-bs-placement="top" title="Generate APQP">
+                                <i class="bi bi-gear"></i>&ensp;Generate APQP
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -49,6 +52,9 @@
                             </div>
                             <div class="card-body">
                                 <div class="row mb-3 g-2">
+                                    <div class="form-group col-12">
+                                        <input type="hidden" name="data_token" id="data_token" class="form-control rounded-0 bg-secondary-subtle" readonly value="<?= enkripsi($data_header->id) ?>">
+                                    </div>
                                     <div class="form-group col-xl-12 col-lg-12 col-md-12 col-sm-12 clearfix">
                                         <label class="form-label" for="data_code">Project Code <strong class="text-danger fw-bolder">*</strong></label>
                                         <input type="text" disabled name="data_code" id="data_code" class="form-control rounded-0" maxlength="50" required placeholder="Project Code" autofocus autocomplete="off" value="<?= $data_header->code ?>">
@@ -98,19 +104,21 @@
                                     <table class="table table-striped table-hover table-primary" id="tblPartList">
                                         <thead>
                                             <tr>
-                                                <th class="text-center align-middle bg-secondary-subtle col-2">Part No</th>
-                                                <th class="text-center align-middle bg-secondary-subtle col-3">Part Name</th>
-                                                <th class="text-center align-middle bg-secondary-subtle col-5">Specification</th>
-                                                <th class="text-center align-middle bg-secondary-subtle col-2">Status</th>
+                                                <th class="text-center align-middle bg-secondary-subtle col-3">Part No</th>
+                                                <th class="text-center align-middle bg-secondary-subtle col-2">Part Name</th>
+                                                <th class="text-center align-middle bg-secondary-subtle col-7">Specification</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php foreach ($data_details as $row) : ?>
                                                 <tr>
-                                                    <td class="align-middle"><?= $row->material_code ?></td>
-                                                    <td class="align-middle"><?= $row->material_name ?></td>
+                                                    <td class="align-middle">
+                                                        <a href="#listApqp" class="text-primary fw-bolder text-decoration-none" title="Click to show APQP details" onclick="showApqpData('<?= $data_header->id ?>', '<?= $row->id_material ?>')">
+                                                            <?= $row->material_code ?>
+                                                        </a>
+                                                    </td>
+                                                    <td class=" align-middle"><?= $row->material_name ?></td>
                                                     <td class="align-middle"><?= $row->material_spesifikasi  ?></td>
-                                                    <td class="align-middle text-center"><a href="" class="text-primary text-decoration-none fw-bolder link-opacity-100-hover">Generate</a></td>
                                                 </tr>
                                             <?php endforeach; ?>
                                         </tbody>
@@ -121,7 +129,7 @@
                     </div>
                 </div>
 
-                <div class="row g-2 mb-3">
+                <div class=" row g-2 mb-3">
                     <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3 clearfix">
                         <div class="card card-primary card-outline rounded-0">
                             <div class="card-header rounded-0">
@@ -137,6 +145,7 @@
                                                 <th class="text-center align-middle bg-secondary-subtle">Approver</th>
                                             </tr>
                                         </thead>
+                                        <tbody id="listApqp"></tbody>
                                     </table>
                                 </div>
                             </div>
