@@ -35,7 +35,6 @@ class ProjectApqpTable extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => 50,
                 'null' => false,
-                'unique' => true,
                 'charset' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci'
             ],
@@ -76,24 +75,26 @@ class ProjectApqpTable extends Migration
                 'type' => "VARCHAR",
                 'constraint' => 100,
                 'null' => true,
+                'default',
+                null,
                 'charset' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci'
             ],
             'deleted_at' => [
                 'type' => 'DATETIME',
-                'null' => false,
+                'null' => true,
+                'default' => null,
                 'charset' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci'
             ]
         ]);
 
         $this->forge->addKey('id', true, true);
-        $this->forge->createTable('m_project_apqp', true);
+        $this->forge->addKey('id_project');
+        $this->forge->addKey('id_material');
+        $this->forge->addKey('id_apqp');
 
-        $this->db->query("ALTER TABLE m_project_apqp ADD INDEX (id)");
-        $this->db->query("ALTER TABLE m_project_apqp ADD INDEX (id_project)");
-        $this->db->query("ALTER TABLE m_project_apqp ADD INDEX (id_material)");
-        $this->db->query("ALTER TABLE m_project_apqp ADD INDEX (id_apqp)");
+        $this->forge->createTable('m_project_apqp', true);
     }
 
     public function down()

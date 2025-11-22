@@ -314,7 +314,7 @@ class Project extends BaseController
             return pesan(ResponseInterface::HTTP_METHOD_NOT_ALLOWED, "Request not allowed");
         }
 
-        $this->db->transStart();
+        // $this->db->transStart();
 
         try {
             $json_data = $this->request->getJSON(true);
@@ -418,37 +418,64 @@ class Project extends BaseController
 
             $insert_apqp = $this->projectModel->insertApqp($data_apqp);
             if (!$insert_apqp) {
-                return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Failed to generate APQP');
-            }
-
-            $insert_approver = $this->projectModel->insertApqpApprover($data_approver);
-            if (!$insert_approver) {
-                return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Failed to generate APQP approver');
-            }
-
-            $insert_document = $this->projectModel->insertApqpDocument($data_document);
-            if (!$insert_document) {
-                return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Failed to generate APQP document');
-            }
-
-            $this->db->transComplete();
-
-            if ($this->db->transStatus() === false) {
-                $this->db->transRollback();
                 logFile(
                     'error',
-                    'Failed to generate APQP',
+                    'Failed to insert project APQP data',
                     [
                         'error' => $this->db->error(),
                         'NIK' => $this->NIK
                     ],
                     'Project::generateAPQP'
                 );
-                throw new \Exception('Failed to generate APQP');
                 return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Failed to generate APQP');
             }
 
-            $this->db->transCommit();
+            $insert_approver = $this->projectModel->insertApqpApprover($data_approver);
+            if (!$insert_approver) {
+                logFile(
+                    'error',
+                    'Failed to insert project APQP approver',
+                    [
+                        'error' => $this->db->error(),
+                        'NIK' => $this->NIK
+                    ],
+                    'Project::generateAPQP'
+                );
+                return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Failed to generate APQP approver');
+            }
+
+            $insert_document = $this->projectModel->insertApqpDocument($data_document);
+            if (!$insert_document) {
+                logFile(
+                    'error',
+                    'Failed to insert project APQP document',
+                    [
+                        'error' => $this->db->error(),
+                        'NIK' => $this->NIK
+                    ],
+                    'Project::generateAPQP'
+                );
+                return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Failed to generate APQP document');
+            }
+
+            // $this->db->transComplete();
+
+            // if ($this->db->transStatus() === false) {
+            //     $this->db->transRollback();
+            //     logFile(
+            //         'error',
+            //         'Failed to generate APQP',
+            //         [
+            //             'error' => $this->db->error(),
+            //             'NIK' => $this->NIK
+            //         ],
+            //         'Project::generateAPQP'
+            //     );
+            //     throw new \Exception('Failed to generate APQP');
+            //     return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Failed to generate APQP');
+            // }
+
+            // $this->db->transCommit();
             logFile(
                 'audit',
                 'Generate APQP Success',

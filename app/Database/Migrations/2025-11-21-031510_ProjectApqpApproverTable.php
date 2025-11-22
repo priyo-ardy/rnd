@@ -87,20 +87,19 @@ class ProjectApqpApproverTable extends Migration
             ],
             'deleted_at' => [
                 'type' => 'DATETIME',
-                'null' => false,
+                'null' => true,
+                'default' => null,
                 'charset' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci'
             ],
         ]);
 
         $this->forge->addKey('id', true, true);
+        $this->forge->addKey('id_project');
+        $this->forge->addKey('id_material');
+        $this->forge->addKey('id_apqp');
+        $this->forge->addKey('id_approver');
         $this->forge->createTable('m_project_approver', true);
-
-        $this->db->query("ALTER TABLE m_project_approver ADD INDEX (id)");
-        $this->db->query("ALTER TABLE m_project_approver ADD INDEX (id_project)");
-        $this->db->query("ALTER TABLE m_project_approver ADD INDEX (id_material)");
-        $this->db->query("ALTER TABLE m_project_approver ADD INDEX (id_apqp)");
-        $this->db->query("ALTER TABLE m_project_approver ADD INDEX (id_approver)");
     }
 
     public function down()

@@ -94,22 +94,20 @@ class ProjectApqpDocumentTable extends Migration
             ],
             'deleted_at' => [
                 'type' => 'DATETIME',
-                'null' => false,
+                'null' => true,
+                'default' => null,
                 'charset' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci'
             ],
         ]);
 
-        $this->db->query("DROP TABLE IF EXISTS m_project_document");
         $this->forge->addKey('id', true, true);
+        $this->forge->addKey('id_project');
+        $this->forge->addKey('id_material');
+        $this->forge->addKey('id_apqp');
+        $this->forge->addKey('id_document');
+        $this->forge->addKey('id_uploader');
         $this->forge->createTable('m_project_document', true);
-
-        $this->db->query("ALTER TABLE m_project_document ADD INDEX (id)");
-        $this->db->query("ALTER TABLE m_project_document ADD INDEX (id_project)");
-        $this->db->query("ALTER TABLE m_project_document ADD INDEX (id_material)");
-        $this->db->query("ALTER TABLE m_project_document ADD INDEX (id_apqp)");
-        $this->db->query("ALTER TABLE m_project_document ADD INDEX (id_document)");
-        $this->db->query("ALTER TABLE m_project_document ADD INDEX (id_uploader)");
     }
 
     public function down()
