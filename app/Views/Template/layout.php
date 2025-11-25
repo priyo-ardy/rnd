@@ -55,9 +55,10 @@
         crossorigin="anonymous"
         referrerpolicy="no-referrer" />
     <!-- AdminLTE CSS -->
-    <link
+    <link href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-rc3/dist/css/adminlte.min.css" rel="stylesheet">
+    <!-- <link
         rel="stylesheet"
-        href="<?= base_url() . 'admin/css/adminlte.css'; ?>" />
+        href="<?= base_url() . 'admin/css/adminlte.css'; ?>" /> -->
     <link
         rel="stylesheet"
         href="<?= base_url() . 'css/loading.css' ?>">
@@ -200,8 +201,9 @@
         crossorigin="anonymous"
         referrerpolicy="no-referrer"></script>
     <!-- AdminLTE JS -->
-    <script
-        src="<?= base_url() . 'admin/js/adminlte.js'; ?>"></script>
+    <!-- <script
+        src="<?= base_url() . 'admin/js/adminlte.js'; ?>"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-rc3/dist/js/adminlte.min.js"></script>
 
     <!-- Summernote -->
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
