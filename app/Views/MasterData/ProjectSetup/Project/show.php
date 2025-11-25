@@ -130,7 +130,7 @@
                 </div>
 
                 <div class=" row g-2 mb-3">
-                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3 clearfix">
+                    <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 mb-3 clearfix">
                         <div class="card card-primary card-outline rounded-0">
                             <div class="card-header rounded-0">
                                 <h5 class="card-title">APQP Level</h5>
@@ -151,7 +151,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3 clearfix">
+                    <div class="col-xl-7 col-lg-7 col-md-12 col-sm-12 mb-3 clearfix">
                         <div class="card card-primary card-outline rounded-0">
                             <div class="card-header rounded-0">
                                 <h5 class="card-title">APQP Document</h5>
@@ -161,17 +161,19 @@
                                     <table class="table table-striped table-hover table-primary" id="tblApqpDocument">
                                         <thead>
                                             <tr>
-                                                <th class="text-center align-middle bg-secondary-subtle">No.</th>
-                                                <th class="text-center align-middle bg-secondary-subtle">Document Name</th>
-                                                <th class="text-center align-middle bg-secondary-subtle">Uploader</th>
-                                                <th class="text-center align-middle bg-secondary-subtle">Due Date</th>
-                                                <th class="text-center align-middle bg-secondary-subtle">Remark</th>
+                                                <th class="text-center align-middle bg-secondary-subtle col-3">Document Name</th>
+                                                <th class="text-center align-middle bg-secondary-subtle col-3">Uploader</th>
+                                                <th class="text-center align-middle bg-secondary-subtle col-3">Due Date</th>
+                                                <th class="text-center align-middle bg-secondary-subtle col-3">Action</th>
                                             </tr>
                                         </thead>
+                                        <tbody id="listApqpDocument"></tbody>
                                     </table>
                                 </div>
                             </div>
-                            <div class="card-footer"></div>
+                            <div class="card-footer">
+                                <button type="button" hidden id="btnSaveDocument" class="btn btn-primary rounded-0"><i class="bi bi-floppy"></i>&ensp;Save</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -185,6 +187,13 @@
 <div id="listMaterial" style="display: none;">
     <?php foreach ($material_list as $material) : ?>
         <option value="<?= $material->id ?>"><?= "$material->code - $material->name" ?></option>
+    <?php endforeach; ?>
+</div>
+
+<div id="listUsers" style="display: none;">
+    <option value="">-- Choose --</option>
+    <?php foreach ($user_list as $user): ?>
+        <option value="<?= $user->user_id ?>"><?= "$user->user_name - $user->full_name"  ?></option>
     <?php endforeach; ?>
 </div>
 <?= $this->endSection(); ?>

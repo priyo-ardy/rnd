@@ -74,21 +74,20 @@ class ProjectApqpApproverTable extends Migration
             ],
             'updated_at' => [
                 'type' => 'DATETIME',
-                'null' => false,
+                'null' => true,
                 'charset' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci'
             ],
             'updated_by' => [
                 'type' => "VARCHAR",
                 'constraint' => 100,
-                'null' => false,
+                'null' => true,
                 'charset' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci'
             ],
             'deleted_at' => [
                 'type' => 'DATETIME',
                 'null' => true,
-                'default' => null,
                 'charset' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci'
             ],
