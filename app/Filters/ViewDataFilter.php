@@ -6,6 +6,7 @@ use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use PhpOffice\PhpSpreadsheet\Calculation\Web\Service;
+use Config\Services;
 
 class ViewDataFilter implements FilterInterface
 {
@@ -26,21 +27,24 @@ class ViewDataFilter implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
-        $session = Service('session');
+        // $session = Services::session();
 
         // Pastikan session tersedia
-        if (!$session->has('user_name')) {
-            $session->set('user_name', 'Guest');
-            // return redirect()->to(base_url());
+        if (!session()->has('user_name')) {
+            session()->set('user_name', 'Guest');
         }
+        // if (!$session->has('user_name')) {
+        //     $session->set('user_name', 'Guest');
+        //     // return redirect()->to(base_url());
+        // }
 
         // Perbaiki typo 'user_iamge' menjadi 'user_image'
         $data = [
             'app_ver'       => "1.0.0.dev",
             'app_name'      => "SPK Application",
-            'NIK'           => $session->get('user_name') ?? '0000',
-            'full_name'     => $session->get('full_name') ?? 'Unknown',
-            'user_image'    => $session->get('user_image') ?? 'default.jpg', // Typo diperbaiki
+            'NIK'           => session()->get('user_name') ?? '0000',
+            'full_name'     => session()->get('full_name') ?? 'Unknown',
+            'user_image'    => session()->get('user_image') ?? 'default.jpg', // Typo diperbaiki
             'tanggal'       => date("Y-m-d H:i:s")
         ];
 

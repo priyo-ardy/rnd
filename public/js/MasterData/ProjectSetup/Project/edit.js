@@ -8,10 +8,13 @@ const inputForm = {
   modal_token: document.getElementById("modal_token"),
 };
 
+const formDocument = document.getElementById("formDocument");
+
 const buttons = {
   back: document.getElementById("btnBack"),
   generate: document.getElementById("btnGenerate"),
   modal_generate: document.getElementById("btnModalGenerate"),
+  save_document: document.getElementById("btnSaveDocument"),
 };
 
 window.onload = () => {
@@ -313,6 +316,7 @@ function showDocument(id_project, id_material, id_apqp) {
                 <td class="editableUploader">${item.NIK} - ${item.uploader_name}</td>
                 <td>
                   <input type="date" name="due_date[]" class="form-control rounded-0" required>
+                  <input type="text" name="id_dokumen[]" value="${item.id}" class="form-control rounded-0" readonly>
                 </td>
                 <td class="align-middle text-center">
                   <button type="button" class="btn btn-sm btn-info rounded-0 btn-edit-document" onclick="editDocument(this)"><i class="bi bi-pencil-square"></i>&ensp;Edit</button>
@@ -413,3 +417,5 @@ function cancelDocument(btn) {
 
   row.removeAttribute("data-original-document-value");
 }
+
+buttons.save_document.addEventListener("click", (e) => {});

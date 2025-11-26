@@ -106,7 +106,8 @@
                                             <tr>
                                                 <th class="text-center align-middle bg-secondary-subtle col-3">Part No</th>
                                                 <th class="text-center align-middle bg-secondary-subtle col-2">Part Name</th>
-                                                <th class="text-center align-middle bg-secondary-subtle col-7">Specification</th>
+                                                <th class="text-center align-middle bg-secondary-subtle col-5">Specification</th>
+                                                <th class="text-center align-middle bg-secondary-subtle col-2">Due Date</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -119,6 +120,7 @@
                                                     </td>
                                                     <td class=" align-middle"><?= $row->material_name ?></td>
                                                     <td class="align-middle"><?= $row->material_spesifikasi  ?></td>
+                                                    <td class="align-middle"><?= date("d-M-Y", strtotime($row->due_date)) ?></td>
                                                 </tr>
                                             <?php endforeach; ?>
                                         </tbody>
@@ -153,26 +155,41 @@
                     </div>
                     <div class="col-xl-7 col-lg-7 col-md-12 col-sm-12 mb-3 clearfix">
                         <div class="card card-primary card-outline rounded-0">
-                            <div class="card-header rounded-0">
-                                <h5 class="card-title">APQP Document</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-hover table-primary" id="tblApqpDocument">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-center align-middle bg-secondary-subtle col-3">Document Name</th>
-                                                <th class="text-center align-middle bg-secondary-subtle col-3">Uploader</th>
-                                                <th class="text-center align-middle bg-secondary-subtle col-3">Due Date</th>
-                                                <th class="text-center align-middle bg-secondary-subtle col-3">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="listApqpDocument"></tbody>
-                                    </table>
+                            <form id="formDocument">
+                                <div class="card-header rounded-0">
+                                    <h5 class="card-title">APQP Document</h5>
                                 </div>
-                            </div>
-                            <div class="card-footer">
-                                <button type="button" hidden id="btnSaveDocument" class="btn btn-primary rounded-0"><i class="bi bi-floppy"></i>&ensp;Save</button>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-hover table-primary" id="tblApqpDocument">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center align-middle bg-secondary-subtle col-3">Document Name</th>
+                                                    <th class="text-center align-middle bg-secondary-subtle col-3">Uploader</th>
+                                                    <th class="text-center align-middle bg-secondary-subtle col-3">Due Date</th>
+                                                    <th class="text-center align-middle bg-secondary-subtle col-3">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="listApqpDocument"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <input type="text" class="form-control rounded-0" name="id_project" readonly id="id_project" value="<?= $data_header->id ?>">
+                                    <input type="text" class="form-control rounded-0" name="id_material" readonly id="id_material" value="">
+                                    <input type="text" class="form-control rounded-0" name="id_apqp" readonly id="id_material" value="">
+                                    <button type="button" id="btnSaveDocument" class="btn btn-primary rounded-0"><i class="bi bi-floppy"></i>&ensp;Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-2 mb-3">
+                    <div class="col-12">
+                        <div class="card rounded-0">
+                            <div class="card-body">
+                                <button class="btn btn-success rounded-0 w-100 d-block">Complete & Start Project</button>
                             </div>
                         </div>
                     </div>
