@@ -53,4 +53,12 @@ class MasterModel extends Model
             ->get()
             ->getResultObject();
     }
+
+    public function getDataById($table, $id)
+    {
+        return $this->db->table($table)
+            ->where('id', $id)
+            ->get()
+            ->getFirstRow();
+    }
 }

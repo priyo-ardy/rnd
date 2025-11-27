@@ -494,108 +494,6 @@ class Project extends BaseController
                 }
             }
 
-            // Looping material
-            // foreach ($getMaterialProject as $material) {
-            //     // Looping APQP level
-            //     foreach ($getApqpLevel as $apqpLevel) {
-            //         $data_apqp[] = [
-            //             'id' => generate_uuid(),
-            //             'id_project' => $id_project,
-            //             'id_material' => $material->id_material,
-            //             'id_apqp' => $apqpLevel->id,
-            //             'baris' => $apqpLevel->level,
-            //             'status' => '0',
-            //             'created_at' => date('Y-m-d H:i:s'),
-            //             'created_by' => $this->NIK,
-            //             'updated_at' => date('Y-m-d H:i:s'),
-            //         ];
-
-            //         $getApqpApprover = $this->approverModel->where('id_apqp', $apqpLevel->id)->orderBy('baris', 'ASC')->findAll();
-            //         if (!$getApqpApprover) {
-            //             return pesan(ResponseInterface::HTTP_NOT_FOUND, 'APQP Approver Not Found');
-            //         }
-
-            //         // Looping APQP Approver
-            //         foreach ($getApqpApprover as $apqpApprover) {
-            //             $data_approver[] = [
-            //                 'id' => generate_uuid(),
-            //                 'id_project' => $id_project,
-            //                 'id_material' => $material->id_material,
-            //                 'baris' => $apqpApprover->baris,
-            //                 'id_apqp' => $apqpLevel->id,
-            //                 'id_approver' => $apqpApprover->approver,
-            //                 'status' => '0',
-            //                 'created_at' => date('Y-m-d H:i:s'),
-            //                 'created_by' => $this->NIK,
-            //                 'updated_at' => date('Y-m-d H:i:s'),
-            //             ];
-            //         }
-
-            //         $getApqpDocument = $this->documentModel->where('id_apqp', $apqpLevel->id)->orderBy('baris', 'ASC')->findAll();
-            //         if (!$getApqpDocument) {
-            //             return pesan(ResponseInterface::HTTP_NOT_FOUND, 'APQP Document Not Found');
-            //         }
-            //         // Looping APQP Document
-            //         foreach ($getApqpDocument as $apqpDoc) {
-            //             $data_document[] = [
-            //                 'id' => generate_uuid(),
-            //                 'id_project' => $id_project,
-            //                 'id_material' => $material->id_material,
-            //                 'id_apqp' => $apqpLevel->id,
-            //                 'baris' => $apqpDoc->baris,
-            //                 'id_document' => $apqpDoc->id,
-            //                 'id_uploader' => $apqpDoc->uploader,
-            //                 'status' => '0',
-            //                 'created_at' => date('Y-m-d H:i:s'),
-            //                 'created_by' => $this->NIK,
-            //                 'updated_at' => date('Y-m-d H:i:s'),
-            //             ];
-            //         }
-            //     }
-            // }
-
-            // $insert_apqp = $this->projectModel->insertApqp($data_apqp);
-            // if (!$insert_apqp) {
-            //     logFile(
-            //         'error',
-            //         'Failed to insert project APQP data',
-            //         [
-            //             'error' => $this->db->error(),
-            //             'NIK' => $this->NIK
-            //         ],
-            //         'Project::generateAPQP'
-            //     );
-            //     return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Failed to generate APQP');
-            // }
-
-            // $insert_approver = $this->projectModel->insertApqpApprover($data_approver);
-            // if (!$insert_approver) {
-            //     logFile(
-            //         'error',
-            //         'Failed to insert project APQP approver',
-            //         [
-            //             'error' => $this->db->error(),
-            //             'NIK' => $this->NIK
-            //         ],
-            //         'Project::generateAPQP'
-            //     );
-            //     return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Failed to generate APQP approver');
-            // }
-
-            // $insert_document = $this->projectModel->insertApqpDocument($data_document);
-            // if (!$insert_document) {
-            //     logFile(
-            //         'error',
-            //         'Failed to insert project APQP document',
-            //         [
-            //             'error' => $this->db->error(),
-            //             'NIK' => $this->NIK
-            //         ],
-            //         'Project::generateAPQP'
-            //     );
-            //     return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Failed to generate APQP document');
-            // }
-
             $this->db->transComplete();
 
             if ($this->db->transStatus() === false) {
@@ -672,6 +570,7 @@ class Project extends BaseController
             $id_material = trim($json_data['id_material']);
 
             $getData = $this->projectModel->getApqp($id_project, $id_material);
+            $getMaterial = $this->masterModel->getDataById('m_material', $id_material);
             if (!$getData) {
                 return pesan(ResponseInterface::HTTP_NOT_FOUND, 'APQP Data is not setup for this part no');
             }
@@ -1172,6 +1071,7 @@ class Project extends BaseController
             return pesan(ResponseInterface::HTTP_METHOD_NOT_ALLOWED, 'Request method not allowed');
         }
 
+        $this->db->transStart();
         try {
             $json_data = $this->request->getJSON(true);
 
@@ -1190,6 +1090,15 @@ class Project extends BaseController
             if ($cekData) {
                 return pesan(ResponseInterface::HTTP_BAD_REQUEST, "Failed to start the project, there is still document due date data that has not been filled in, please check again.");
             }
+
+            $cekProjectStatus = $this->projectModel->cekProjectStatus($id_project);
+            if ($cekProjectStatus) {
+                return pesan(ResponseInterface::HTTP_CREATED, 'Project already started');
+            }
+
+            //Update status project menjadi 1
+            // Masukkan data kedalam table t_project_upload
+            // Masukkan data approver kedalam table t_project_approver
         } catch (\Exception $e) {
             logFile(
                 'error',

@@ -70,6 +70,7 @@ function showApqpData(id_project, id_material) {
       JSON.stringify({ id_project: id_project, id_material: id_material })
     )
       .then((result) => {
+        listApqp.innerHTML = "";
         document.getElementById("id_material").value = id_material;
         if (result.data.length > 0) {
           result.data.forEach((item) => {
