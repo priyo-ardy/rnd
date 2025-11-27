@@ -1,3 +1,4 @@
+const formDocument = document.getElementById("formDocument");
 const inputForm = {
   token: document.getElementById("data_token"),
   code: document.getElementById("data_code"),
@@ -8,13 +9,12 @@ const inputForm = {
   modal_token: document.getElementById("modal_token"),
 };
 
-const formDocument = document.getElementById("formDocument");
-
 const buttons = {
   back: document.getElementById("btnBack"),
   generate: document.getElementById("btnGenerate"),
   modal_generate: document.getElementById("btnModalGenerate"),
   save_document: document.getElementById("btnSaveDocument"),
+  start_project: document.getElementById("btnStartProject"),
 };
 
 window.onload = () => {
@@ -70,6 +70,7 @@ function showApqpData(id_project, id_material) {
       JSON.stringify({ id_project: id_project, id_material: id_material })
     )
       .then((result) => {
+        document.getElementById("id_material").value = id_material;
         if (result.data.length > 0) {
           result.data.forEach((item) => {
             const row = `
@@ -171,10 +172,8 @@ function editApprover(button, id) {
     selectElement.innerHTML = document.getElementById("listUsers").innerHTML;
 
     for (let i = 0; i < selectElement.options.length; i++) {
-      // console.log(selectElement.options[i].text.trim());
       if (selectElement.options[i].text.trim() === currentValue) {
         selectElement.options[i].selected = true;
-        console.log(currentValue);
         break; // Berhenti loop jika sudah ketemu (Best Practice)
       }
     }
@@ -306,8 +305,8 @@ function showDocument(id_project, id_material, id_apqp) {
       })
     )
       .then((result) => {
-        console.log(result.data);
         tableBody.innerHTML = "";
+        document.getElementById("id_apqp").value = id_apqp;
         if (result.data.length > 0) {
           result.data.forEach((item) => {
             const row = `
@@ -315,8 +314,8 @@ function showDocument(id_project, id_material, id_apqp) {
                 <td>${item.document_name}</td>
                 <td class="editableUploader">${item.NIK} - ${item.uploader_name}</td>
                 <td>
-                  <input type="date" name="due_date[]" class="form-control rounded-0" required>
-                  <input type="text" name="id_dokumen[]" value="${item.id}" class="form-control rounded-0" readonly>
+                  <input type="date" name="due_date[]" class="form-control rounded-0" required value="${item.due_date}">
+                  <input type="hidden" name="id_dokumen[]" value="${item.id}" class="form-control rounded-0" readonly>
                 </td>
                 <td class="align-middle text-center">
                   <button type="button" class="btn btn-sm btn-info rounded-0 btn-edit-document" onclick="editDocument(this)"><i class="bi bi-pencil-square"></i>&ensp;Edit</button>
@@ -418,4 +417,70 @@ function cancelDocument(btn) {
   row.removeAttribute("data-original-document-value");
 }
 
-buttons.save_document.addEventListener("click", (e) => {});
+buttons.save_document.addEventListener("click", (e) => {
+  const id_project = document.getElementById("id_project").value;
+  const id_material = document.getElementById("id_material").value;
+  const id_apqp = document.getElementById("id_apqp").value;
+
+  if (validasiDueDate()) {
+    try {
+      loading();
+      fetchData(
+        baseurl + "/project/update_document",
+        "POST",
+        new FormData(formDocument)
+      )
+        .then((result) => {
+          pesanSukses(result.message);
+          showDocument(id_project, id_material, id_apqp);
+          hideLoading();
+        })
+        .catch((err) => {
+          pesanError(err.message);
+          hideLoading();
+        });
+    } catch (e) {
+      pesanError(e.message);
+      hideLoading();
+    }
+  }
+});
+
+function validasiDueDate() {
+  const dueDate = document.querySelectorAll("input[name='due_date[]']");
+  let isValid = true;
+
+  if (dueDate.length > 0) {
+    dueDate.forEach((element) => {
+      if (element.value == "") {
+        element.classList.add("is-invalid");
+        isValid = false;
+      } else {
+        element.classList.remove("is-invalid");
+      }
+    });
+  }
+
+  return isValid;
+}
+
+buttons.start_project.addEventListener("click", (e) => {
+  try {
+    loading();
+    fetchData(
+      baseurl + "/project/start_project",
+      "POST",
+      JSON.stringify({ token: inputForm.token.value })
+    )
+      .then((result) => {
+        hideLoading();
+      })
+      .catch((err) => {
+        pesanError(err.message);
+        hideLoading();
+      });
+  } catch (e) {
+    pesanError(e.message);
+    hideLoading();
+  }
+});

@@ -59,6 +59,12 @@ class ProjectApqpDocumentTable extends Migration
                 'charset' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci'
             ],
+            'due_date' => [
+                'type' => 'DATE',
+                'null' => false,
+                'charset' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ],
             'status' => [
                 'type' => "VARCHAR",
                 'constraint' => 1,

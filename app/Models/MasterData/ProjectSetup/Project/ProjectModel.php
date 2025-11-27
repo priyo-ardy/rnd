@@ -95,4 +95,18 @@ class ProjectModel extends Model
             ->get()
             ->getResultArray();
     }
+
+    function updateDokumen($id_dokumen, $data)
+    {
+        return $this->db->table('m_project_document')->update($data, ['id' => $id_dokumen]);
+    }
+
+    function cekData($id_project)
+    {
+        return $this->db->table('m_project_document')
+            ->where('id_project', $id_project)
+            ->where('due_date', null)
+            ->get()
+            ->getResultObject();
+    }
 }

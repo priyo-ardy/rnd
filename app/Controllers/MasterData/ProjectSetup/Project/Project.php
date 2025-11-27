@@ -991,4 +991,220 @@ class Project extends BaseController
             return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Failed to get Document<br>' . $e->getMessage());
         }
     }
+
+    function updateDocument()
+    {
+        if ($this->request->getMethod() !== 'POST') {
+            logFile(
+                'security',
+                'Request method not allowed',
+                [
+                    'route' => '/project/update_document',
+                    'method' => $this->request->getMethod(),
+                    'expected' => 'POST',
+                    'NIK' => session('user_name')
+                ],
+                'Project::updateDocument'
+            );
+
+            return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Request method not allowed');
+        }
+
+        $this->db->transStart();
+
+        try {
+            $id_project = trim($this->request->getPost('id_project'));
+            $id_material = trim($this->request->getPost('id_material'));
+            $id_apqp = trim($this->request->getPost('id_apqp'));
+            $id_dokumen = $this->request->getPost('id_dokumen');
+            $due_date = $this->request->getPost('due_date');
+            $error = [];
+
+            $rules = [
+                'id_project' => [
+                    'label' => 'Project ID',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'The {field} is required'
+                    ]
+                ],
+                'id_material' => [
+                    'label' => 'Material ID',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'The {field} is required'
+                    ]
+                ],
+                'id_apqp' => [
+                    'label' => 'APQP ID',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'The {field} is required'
+                    ]
+                ],
+                'id_dokumen.*' => [
+                    'label' => 'Document ID',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'The {field} is required'
+                    ]
+                ],
+                'due_date.*' => [
+                    'label' => 'Due Date',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'The {field} is required'
+                    ]
+                ],
+            ];
+
+            $this->validasi->setRules($rules);
+            if (!$this->validasi->withRequest($this->request)->run()) {
+                $pesanError = implode('<br>', $this->validasi->getErrors());
+
+                logFile(
+                    'error',
+                    'Validation error',
+                    [
+                        'message' => $pesanError,
+                        'NIK' => $this->NIK
+                    ],
+                    'Project::updateDocument'
+                );
+
+                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Failed to update Document', $this->validasi->getErrors());
+            }
+
+            for ($i = 0; $i < count($id_dokumen); $i++) {
+                $data = [
+                    'due_date' => $due_date[$i],
+                    'updated_by' => $this->NIK,
+                ];
+
+                $update_dokumen = $this->projectModel->updateDokumen($id_dokumen[$i], $data);
+                if (!$update_dokumen) {
+                    $error[] = [
+                        'message' => 'Failed to update Document for document at row ' . ($i + 1)
+                    ];
+                }
+            }
+
+            if (count($error) > 0) {
+                $error_message = implode('<br>', array_column($error, 'message'));
+
+                logFile(
+                    'error',
+                    "Failed to update document data",
+                    [
+                        'message' => $this->db->error(),
+                        'NIK' => $this->NIK
+                    ],
+                    'Project::updateDocument'
+                );
+
+                throw new \Exception($error_message);
+            }
+
+            $this->db->transComplete();
+            if ($this->db->transStatus() === false) {
+                $this->db->transRollback();
+
+                logFile(
+                    'error',
+                    'Failed to update document data',
+                    [
+                        'message' => $this->db->error(),
+                        'NIK' => $this->NIK
+                    ],
+                    'Project::updateDocument'
+                );
+
+                throw new \Exception('Failed to update document data');
+            }
+
+            $this->db->transCommit();
+            logFile(
+                'audit',
+                'Success to update document data',
+                [
+                    'id_project' => $id_project,
+                    'id_material' => $id_material,
+                    'id_apqp' => $id_apqp,
+                    'NIK' => $this->NIK
+                ],
+                'Project::updateDocument'
+            );
+
+            return pesan(ResponseInterface::HTTP_OK, 'Success to update Document');
+        } catch (\Exception $e) {
+            logFile(
+                'error',
+                'Unexpected error',
+                [
+                    'message' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                    'NIK' => $this->NIK
+                ],
+                'Project::updateDocument'
+            );
+
+            return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Failed to update Document<br>' . $e->getMessage());
+        }
+    }
+
+    function startProject()
+    {
+        if ($this->request->getMethod() !== 'POST') {
+            logFile(
+                'security',
+                'Request method not allowed',
+                [
+                    'route' => '/project/start_project',
+                    'method' => $this->request->getMethod(),
+                    'expected' => 'POST',
+                    'NIK' => session('user_name')
+                ],
+                'Project::startProject'
+            );
+
+            return pesan(ResponseInterface::HTTP_METHOD_NOT_ALLOWED, 'Request method not allowed');
+        }
+
+        try {
+            $json_data = $this->request->getJSON(true);
+
+            if (!is_array($json_data)) {
+                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Invalid JSON request');
+            }
+
+            if (!isset(($json_data['token']))) {
+                return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Project token is not available on JSON request');
+            }
+
+            $token = trim($json_data['token']);
+            $id_project = dekripsi($token);
+
+            $cekData = $this->projectModel->cekData($id_project); //Cek apakah masih ada data dokumen yang belum diisi due datenya
+            if ($cekData) {
+                return pesan(ResponseInterface::HTTP_BAD_REQUEST, "Failed to start the project, there is still document due date data that has not been filled in, please check again.");
+            }
+        } catch (\Exception $e) {
+            logFile(
+                'error',
+                'Unexpected error',
+                [
+                    'message' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                    'NIK' => $this->NIK
+                ],
+                'Project::startProject'
+            );
+
+            return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Failed to start Project<br>' . $e->getMessage());
+        }
+    }
 }

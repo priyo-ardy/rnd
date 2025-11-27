@@ -155,8 +155,10 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
         $routes->post('get_apqp', 'MasterData\ProjectSetup\Project\Project::getApqp');
         $routes->post('get_approver', 'MasterData\ProjectSetup\Project\Project::getApprover');
         $routes->post('get_document', 'MasterData\ProjectSetup\Project\Project::getDocument');
+        $routes->post('update_document', 'MasterData\ProjectSetup\Project\Project::updateDocument');
         $routes->post('update_approver', 'MasterData\ProjectSetup\Project\Project::updateApprover');
         $routes->post('delete_approver', 'MasterData\ProjectSetup\Project\Project::deleteApprover');
         $routes->post('delete_approver', 'MasterData\ProjectSetup\Project\Project::deleteApprover');
+        $routes->post('start_project', 'MasterData\ProjectSetup\Project\Project::startProject');
     });
 });
