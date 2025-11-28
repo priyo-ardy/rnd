@@ -575,7 +575,15 @@ class Project extends BaseController
                 return pesan(ResponseInterface::HTTP_NOT_FOUND, 'APQP Data is not setup for this part no');
             }
 
-            return pesan(ResponseInterface::HTTP_OK, 'Success to get APQP', $getData);
+            $data = [
+                'header' => [
+                    'material_code' => $getMaterial->code,
+                    'material_name' => $getMaterial->name
+                ],
+                'details' => $getData
+            ];
+
+            return pesan(ResponseInterface::HTTP_OK, 'Success to get APQP', $data);
         } catch (\Exception $e) {
             logFile(
                 'error',
@@ -859,6 +867,7 @@ class Project extends BaseController
             $id_apqp = trim($json_data['id_apqp']);
 
             $getDocumentList = $this->projectModel->getDocumentList($id_project, $id_material, $id_apqp);
+            $getApqp = $this->masterModel->getDataById('m_apqp_level', $id_apqp);
             if (!$getDocumentList) {
                 logFile(
                     'error',
@@ -872,7 +881,14 @@ class Project extends BaseController
                 return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Document data not found');
             }
 
-            return pesan(ResponseInterface::HTTP_OK, 'Success to get Document', $getDocumentList);
+            $data = [
+                'header' => [
+                    'apqp_name' => $getApqp->name
+                ],
+                'details' => $getDocumentList
+            ];
+
+            return pesan(ResponseInterface::HTTP_OK, 'Success to get Document', $data);
         } catch (\Exception $e) {
             logFile(
                 'error',

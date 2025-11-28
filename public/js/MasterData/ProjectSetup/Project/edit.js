@@ -71,14 +71,22 @@ function showApqpData(id_project, id_material) {
     )
       .then((result) => {
         listApqp.innerHTML = "";
+        document.getElementById("listApqpDocument").innerHTML = "";
+        document.getElementById(
+          "kode_material"
+        ).innerHTML = `(${result.data.header.material_code} - ${result.data.header.material_name})`;
+        console.log(document.getElementById("nama_apqp"));
+        // if (document.getElementById("nama_apqp").innerHTML !== null) {
+        //   document.getElementById("nama_apqp").innerHTML = "";
+        // }
         document.getElementById("id_material").value = id_material;
-        if (result.data.length > 0) {
-          result.data.forEach((item) => {
+        if (result.data.details.length > 0) {
+          result.data.details.forEach((item) => {
             const row = `
               <tr>
                 <td class="text-center">Stage - ${item.baris}</td>
                 <td>
-                  <a href="#" class="text-primary fw-bolder text-decoration-none" onclick="showDocument('${item.id_project}', '${item.id_material}', '${item.id_apqp}')">${item.apqp_level_name}</a>
+                  <a href="#listApqpDocument" class="text-primary fw-bolder text-decoration-none" onclick="showDocument('${item.id_project}', '${item.id_material}', '${item.id_apqp}')">${item.apqp_level_name}</a>
                 </td>
                 <td>
                   <a href="#" class="text-primary fw-bolder text-decoration-none" title="Click to show Approver details" onclick="showApproverData('${item.id_project}', '${item.id_material}', '${item.id_apqp}')"><i class="bi bi-info-circle"></i>
@@ -307,9 +315,12 @@ function showDocument(id_project, id_material, id_apqp) {
     )
       .then((result) => {
         tableBody.innerHTML = "";
+        document.getElementById(
+          "nama_qpqp"
+        ).innerHTML = `(${result.data.header.apqp_name})`;
         document.getElementById("id_apqp").value = id_apqp;
-        if (result.data.length > 0) {
-          result.data.forEach((item) => {
+        if (result.data.details.length > 0) {
+          result.data.details.forEach((item) => {
             const row = `
               <tr>
                 <td>${item.document_name}</td>

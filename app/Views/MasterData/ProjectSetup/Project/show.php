@@ -137,7 +137,7 @@
                 <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 mb-3 clearfix">
                     <div class="card card-primary card-outline rounded-0">
                         <div class="card-header rounded-0">
-                            <h5 class="card-title">APQP Level</h5>
+                            <h5 class="card-title">APQP Stage <span id="kode_material" class="text-primary fw-bolder"></span></h5>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -149,7 +149,8 @@
                                             <th class="text-center align-middle bg-secondary-subtle">Approver</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="listApqp"></tbody>
+                                    <tbody id="listApqp">
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -159,7 +160,7 @@
                     <div class="card card-primary card-outline rounded-0">
                         <form id="formDocument">
                             <div class="card-header rounded-0">
-                                <h5 class="card-title">APQP Document</h5>
+                                <h5 class="card-title">APQP Document <span id="nama_qpqp" class="text-primary fw-bolder"></span></h5>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
