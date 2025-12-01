@@ -30,9 +30,9 @@ class ViewDataFilter implements FilterInterface
         // $session = Services::session();
 
         // Pastikan session tersedia
-        if (!session()->has('user_name')) {
-            session()->set('user_name', 'Guest');
-        }
+        // if (!session()->has('user_name')) {
+        //     session()->set('user_name', 'Guest');
+        // }
         // if (!$session->has('user_name')) {
         //     $session->set('user_name', 'Guest');
         //     // return redirect()->to(base_url());
@@ -41,7 +41,7 @@ class ViewDataFilter implements FilterInterface
         // Perbaiki typo 'user_iamge' menjadi 'user_image'
         $data = [
             'app_ver'       => "1.0.0.dev",
-            'app_name'      => "SPK Application",
+            'app_name'      => "APQP Application",
             'NIK'           => session()->get('user_name') ?? '0000',
             'full_name'     => session()->get('full_name') ?? 'Unknown',
             'user_image'    => session()->get('user_image') ?? 'default.jpg', // Typo diperbaiki
@@ -73,5 +73,16 @@ class ViewDataFilter implements FilterInterface
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
     {
         //
+
+        // $data = [
+        //     'NIK'           => session()->get('user_name') ?? '0000',
+        //     'full_name'     => session()->get('full_name') ?? 'Unknown',
+        //     'user_image'    => session()->get('user_image') ?? 'default.jpg', // Typo diperbaiki
+        // ];
+
+        // $view = service('renderer');
+        // foreach ($data as $key => $value) {
+        //     $view->setVar($key, $value);
+        // }
     }
 }
