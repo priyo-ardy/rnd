@@ -72,6 +72,20 @@ class ProjectApqpDocumentTable extends Migration
                 'charset' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci'
             ],
+            'file_name' => [
+                'type' => "VARCHAR",
+                'constraint' => 255,
+                'null' => true,
+                'charset' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ],
+            'upload_date' => [
+                'type' => 'DATETIME',
+                'null' => true,
+                'default' => null,
+                'charset' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ],
             'created_at' => [
                 'type' => 'DATETIME',
                 'null' => false,

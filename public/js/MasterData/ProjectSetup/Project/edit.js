@@ -17,6 +17,11 @@ const buttons = {
   start_project: document.getElementById("btnStartProject"),
 };
 
+buttons.back.addEventListener("click", () => {
+  loading();
+  window.location.replace(baseurl + "/project");
+});
+
 window.onload = () => {
   $(".summernote").summernote("disable");
 
@@ -485,6 +490,7 @@ buttons.start_project.addEventListener("click", (e) => {
       JSON.stringify({ token: inputForm.token.value })
     )
       .then((result) => {
+        pesanSukses(result.message);
         hideLoading();
       })
       .catch((err) => {

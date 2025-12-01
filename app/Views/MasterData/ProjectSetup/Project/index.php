@@ -73,55 +73,63 @@
             </div> -->
 
             <div class="row mb-3 g-2">
-                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3 clearfix">
-                    <div class="card rounded-0 card-primary">
-                        <div class="card-header rounded-0 fw-bolder">150B</div>
-                        <div class="card-body">
-                            <ul class="list-unstyled mb-0">
+                <?php foreach ($data as $item): ?>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3 clearfix">
+                        <div class="card rounded-0 card-primary">
+                            <div class="card-header rounded-0 fw-bolder"><?= $item->code  ?></div>
+                            <div class="card-body">
+                                <ul class="list-unstyled mb-0">
 
-                                <li class="row mb-2">
-                                    <div class="col-3">Project Name</div>
-                                    <div class="col-1 text-center">:</div>
-                                    <div class="col-8 fw-bold">Alpha Project</div>
-                                </li>
+                                    <li class="row mb-2">
+                                        <div class="col-3">Project Name</div>
+                                        <div class="col-1 text-center">:</div>
+                                        <div class="col-8 fw-bold"><?= $item->name ?></div>
+                                    </li>
 
-                                <li class="row mb-2">
-                                    <div class="col-3">Customer</div>
-                                    <div class="col-1 text-center">:</div>
-                                    <div class="col-8 fw-bold">PT. Maju Jaya</div>
-                                </li>
+                                    <li class="row mb-2">
+                                        <div class="col-3">Customer</div>
+                                        <div class="col-1 text-center">:</div>
+                                        <div class="col-8 fw-bold"><?= $item->customer_name ?></div>
+                                    </li>
 
-                                <li class="row mb-2">
-                                    <div class="col-3">Project Type</div>
-                                    <div class="col-1 text-center">:</div>
-                                    <div class="col-8 fw-bold">New Project</div>
-                                </li>
+                                    <li class="row mb-2">
+                                        <div class="col-3">Project Type</div>
+                                        <div class="col-1 text-center">:</div>
+                                        <div class="col-8 fw-bold"><?= $item->type_of_project ?></div>
+                                    </li>
 
-                                <li class="row mb-2">
-                                    <div class="col-3">Project Status</div>
-                                    <div class="col-1 text-center">:</div>
-                                    <div class="col-8 fw-bold">On Progress</div>
-                                </li>
+                                    <li class="row mb-2">
+                                        <div class="col-3">Project Status</div>
+                                        <div class="col-1 text-center">:</div>
+                                        <div class="col-8 fw-bold"><?= $item->status_name ?></div>
+                                    </li>
 
-                                <li class="row mb-2">
-                                    <div class="col-3">Total Part No</div>
-                                    <div class="col-1 text-center">:</div>
-                                    <div class="col-8 fw-bold">10 Part No</div>
-                                </li>
+                                    <li class="row mb-2">
+                                        <div class="col-3">Total Part No</div>
+                                        <div class="col-1 text-center">:</div>
+                                        <div class="col-8 fw-bold"><?= $item->total_part_no  ?> Part No</div>
+                                    </li>
 
-                                <li class="row mb-2">
-                                    <div class="col-3">APQP Progress</div>
-                                    <div class="col-1 text-center">:</div>
-                                    <div class="col-8 fw-bold">10%</div>
-                                </li>
+                                    <li class="row mb-2">
+                                        <div class="col-3">APQP Progress</div>
+                                        <div class="col-1 text-center">:</div>
+                                        <div class="col-8 fw-bold"><?= ($item->progress > 0) ? ($item->progress / $item->total_document) * 100 : '0' ?> %</div>
+                                    </li>
 
-                            </ul>
-                        </div>
-                        <div class="card-footer bg-transparent border-top-0">
-                            <button type="button" class="btn btn-primary rounded-0 w-100 d-block" title="Show Details"><i class="bi bi-box-arrow-up-right"></i>&ensp;Show Details</button>
+                                    <li class="row mb-2">
+                                        <div class="col-3">Remark</div>
+                                        <div class="col-1 text-center">:</div>
+                                        <div class="col-8 fw-bold"><?= $item->remark ?></div>
+                                    </li>
+
+                                </ul>
+                            </div>
+                            <div class="card-footer bg-transparent border-top-0">
+                                <a href="<?= base_url() . 'project/show/' . enkripsi($item->id)  ?> ?>" onclick="loading()" class="btn btn-primary rounded-0 w-100 d-block" title="Show Details"><i class="bi bi-box-arrow-up-right"></i>&ensp;Show Details</a>
+                            </div>
                         </div>
                     </div>
-                </div>
+                <?php endforeach; ?>
             </div>
         </div>
 </main>

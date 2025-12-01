@@ -49,7 +49,7 @@ class ViewDataFilter implements FilterInterface
         ];
 
         // Cara 1: Simpan di request property
-        $request->viewData = $data;
+        // $request->viewData = $data;
 
         // Cara 2 (Lebih Direkomendasikan): Langsung set ke View Renderer
         $view = service('renderer');
