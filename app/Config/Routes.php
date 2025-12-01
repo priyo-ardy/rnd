@@ -161,4 +161,9 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
         $routes->post('delete_approver', 'MasterData\ProjectSetup\Project\Project::deleteApprover');
         $routes->post('start_project', 'MasterData\ProjectSetup\Project\Project::startProject');
     });
+
+    // Upload Document
+    $routes->group('/document', static function ($routes) {
+        $routes->get('', 'Transaction\Document\UploadDocument::index');
+    });
 });
