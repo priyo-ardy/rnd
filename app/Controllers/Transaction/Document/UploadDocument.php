@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\Transaction\Document\UploadDocumentModel;
 use App\Models\MasterData\ProjectSetup\Project\ProjectDetailModel;
+use App\Models\MasterData\CommonData\CustomerCategory\CustomerCategoryModel;
 use Config\Database;
 use Config\Services;
 
@@ -13,6 +14,7 @@ class UploadDocument extends BaseController
 {
     protected $documentModel;
     protected $detailModel;
+    protected $categoryModel;
     protected $validasi;
     protected $db;
 
@@ -20,6 +22,7 @@ class UploadDocument extends BaseController
     {
         $this->documentModel = new UploadDocumentModel();
         $this->detailModel = new ProjectDetailModel();
+        $this->categoryModel = new CustomerCategoryModel();
         $this->db = Database::connect();
         $this->validasi = Services::validation();
     }
@@ -28,7 +31,7 @@ class UploadDocument extends BaseController
     {
         $data = [
             'title' => 'APQP Document',
-            'project_lists' => $this->documentModel->loadProjectData(),
+            'category_list' => $this->categoryModel->orderBy('code', 'ASC')->findAll(),
             'footer' => [
                 '<script src="' . base_url() . 'js/Transaction/Document/UploadDocument/document.js' . '"></script>'
             ]
