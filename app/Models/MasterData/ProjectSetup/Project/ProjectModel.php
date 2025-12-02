@@ -54,9 +54,11 @@ class ProjectModel extends Model
         $builder->select($subquery_total_part_no . ' AS total_part_no', false);
         $builder->select($subquery_progress . ' AS progress', false);
         $builder->select($subquery_total_document . ' AS total_document', false);
+        $builder->select('mcc.name AS category_name');
 
         // 3. Klausa JOIN
         $builder->join('m_customer mc', 'mph.customer = mc.id', 'left');
+        $builder->join('m_customer_category mcc', 'mph.category = mcc.id', 'left');
 
         // 4. Klausa ORDER BY
         $builder->orderBy('mph.created_at', 'DESC');

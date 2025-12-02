@@ -30,6 +30,13 @@ class ProjectHeaderTable extends Migration
                 'charset' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci'
             ],
+            'category' => [
+                'type' => "VARCHAR",
+                'constraint' => 50,
+                'null' => false,
+                'charset' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ],
             'project_type' => [
                 'type' => "VARCHAR",
                 'constraint' => 1,

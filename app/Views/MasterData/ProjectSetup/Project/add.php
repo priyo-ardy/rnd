@@ -47,17 +47,17 @@
                         </div>
                         <div class="card-body">
                             <div class="row mb-3 g-2">
-                                <div class="form-group col-xl-3 col-lg-3 col-md-6 col-sm-12 mb-3 clearfix">
+                                <div class="form-group col-xl-3 col-lg-3 col-md-6 col-sm-12 clearfix">
                                     <label class="form-label" for="data_code">Project Code <strong class="text-danger fw-bolder">*</strong></label>
                                     <input type="text" name="data_code" id="data_code" class="form-control rounded-0" maxlength="50" required placeholder="Project Code" autofocus autocomplete="off">
                                     <div class="invalid-feedback"></div>
                                 </div>
-                                <div class="form-group col-xl-3 col-lg-3 col-md-6 col-sm-12 mb-3 clearfix">
+                                <div class="form-group col-xl-3 col-lg-3 col-md-6 col-sm-12 clearfix">
                                     <label class="form-label" for="data_name">Project Name <strong class="text-danger fw-bolder">*</strong></label>
                                     <input type="text" name="data_name" id="data_name" class="form-control rounded-0" maxlength="150" required placeholder="Project Name">
                                     <div class="invalid-feedback"></div>
                                 </div>
-                                <div class="form-group  col-xl-3 col-lg-3 col-md-6 col-sm-12 mb-3 clearfix">
+                                <div class="form-group  col-xl-3 col-lg-3 col-md-6 col-sm-12 clearfix">
                                     <label class="form-label" for="data_type">Project Type <strong class="text-danger fw-bolder">*</strong></label>
                                     <select name="data_type" id="data_type" class="form-control select2 select2bs5" required>
                                         <option value="">-- Choose --</option>
@@ -67,7 +67,17 @@
                                     </select>
                                     <div class="invalid-feedback"></div>
                                 </div>
-                                <div class="form-group  col-xl-3 col-lg-3 col-md-6 col-sm-12 mb-3 clearfix">
+                                <div class="form-group col-xl-3 col-lg-3 col-md-6 col-sm-12 clearfix">
+                                    <label class="form-label" for="data_category">Project Category <strong class="text-danger">*</strong></label>
+                                    <select name="data_category" id="data_category" class="form-control select2 select2bs5" required>
+                                        <option value="">-- Choose --</option>
+                                        <?php foreach ($category_list as $category): ?>
+                                            <option value="<?= $category->id ?>"><?= $category->name ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                                <div class=" form-group col-xl-3 col-lg-3 col-md-6 col-sm-12 clearfix">
                                     <label class="form-label" for="data_customer">Customer <strong class="text-danger fw-bolder">*</strong></label>
                                     <select name="data_customer" id="data_customer" class="form-control select2 select2bs5" required>
                                         <option value="">-- Choose --</option>
@@ -77,7 +87,7 @@
                                     </select>
                                     <div class="invalid-feedback"></div>
                                 </div>
-                                <div class="form-group col-12 clearfix">
+                                <div class="form-group col-xl-9 col-lg-9 col-md-12 col-sm-12 clearfix">
                                     <label class="form-label" for="data_remark">Remark</label>
                                     <textarea name="data_remark" id="data_remark" class="form-control rounded-0 summernote" placeholder="Additional Information"></textarea>
                                 </div>

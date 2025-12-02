@@ -12,6 +12,7 @@ use App\Models\MasterData\CommonData\ProductionRoutes\ProductionRoutesModel;
 use App\Models\MasterData\APQPSetup\APQPLevel\APQPLevelModel;
 use App\Models\MasterData\APQPSetup\APQPDocument\APQPDocumentModel;
 use App\Models\MasterData\APQPSetup\APQPApprover\APQPApproverModel;
+use App\Models\MasterData\CommonData\CustomerCategory\CustomerCategoryModel;
 use App\Models\Auth\AuthModel;
 use App\Models\Master\MasterModel;
 use App\Models\DataTable\DataTableModel;
@@ -32,6 +33,7 @@ class Project extends BaseController
     protected $documentModel;
     protected $authModel;
     protected $dataTable;
+    protected $categoryModel;
     protected $validasi;
     protected $db;
 
@@ -47,6 +49,7 @@ class Project extends BaseController
         $this->approverModel = new APQPApproverModel();
         $this->documentModel = new APQPDocumentModel();
         $this->authModel = new AuthModel();
+        $this->categoryModel = new CustomerCategoryModel();
         $this->validasi = Services::validation();
         $this->db = Database::connect();
     }
@@ -69,7 +72,8 @@ class Project extends BaseController
         $data = [
             'title' => "Create a New Project",
             'customer_list' => $this->customerModel->orderBy('name', 'ASC')->findAll(),
-            'material_list' => $this->materialModel->where('kategori', 'd7e6cc88-39c0-4fd7-8acc-1c545108fcb2')->orderBy('code', 'ASC')->findAll(),
+            'material_list' => $this->materialModel->getMaterialList(), //where('kategori', 'd7e6cc88-39c0-4fd7-8acc-1c545108fcb2')->orderBy('code', 'ASC')->findAll(),
+            'category_list' => $this->categoryModel->orderBy('code', 'ASC')->findAll(),
             'footer' => [
                 '<script src="' . base_url() . 'js/MasterData/ProjectSetup/Project/add.js' . '"></script>'
             ]
@@ -116,6 +120,13 @@ class Project extends BaseController
                         'required' => '{field} is required',
                         'min_length' => '{field} must be at least {param} characters',
                         'max_length' => '{field} must be at most {param} characters',
+                    ]
+                ],
+                'data_category' => [
+                    'label' => 'Project category',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '{field} is required',
                     ]
                 ],
                 'data_type' => [
@@ -170,6 +181,7 @@ class Project extends BaseController
             $id_header = generate_uuid();
             $code = trim($this->request->getPost('data_code'));
             $name = trim($this->request->getPost('data_name'));
+            $category = trim($this->request->getPost('data_category'));
             $type = trim($this->request->getPost('data_type'));
             $customer = trim($this->request->getPost('data_customer'));
             $remark = trim($this->request->getPost('data_remark'));
@@ -199,6 +211,7 @@ class Project extends BaseController
                 'id' => $id_header,
                 'code' => strtoupper($code),
                 'name' => ucwords($name),
+                'category' => $category,
                 'project_type' => $type,
                 'status' => '0',
                 'customer' => $customer,
@@ -292,6 +305,7 @@ class Project extends BaseController
             'data_details' => $data_details,
             'material_list' => $this->materialModel->where('kategori', 'd7e6cc88-39c0-4fd7-8acc-1c545108fcb2')->orderBy('code', 'ASC')->findAll(),
             'customer_list' => $this->customerModel->orderBy('name', 'ASC')->findAll(),
+            'category_list' => $this->categoryModel->orderBy('code', 'ASC')->findAll(),
             'user_list' => $this->authModel->orderBy('user_name', 'ASC')->findAll(),
             'footer' => [
                 '<script src="' . base_url() . 'js/MasterData/ProjectSetup/Project/edit.js' . '"></script>'

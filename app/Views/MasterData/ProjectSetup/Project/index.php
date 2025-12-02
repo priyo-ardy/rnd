@@ -93,6 +93,12 @@
                                     </li>
 
                                     <li class="row mb-2">
+                                        <div class="col-3">Category</div>
+                                        <div class="col-1 text-center">:</div>
+                                        <div class="col-8 fw-bold"><?= $item->category_name ?></div>
+                                    </li>
+
+                                    <li class="row mb-2">
                                         <div class="col-3">Project Type</div>
                                         <div class="col-1 text-center">:</div>
                                         <div class="col-8 fw-bold"><?= $item->type_of_project ?></div>

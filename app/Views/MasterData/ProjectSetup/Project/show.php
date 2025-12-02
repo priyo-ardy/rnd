@@ -77,6 +77,16 @@
                                         <div class="invalid-feedback"></div>
                                     </div>
                                     <div class="form-group  col-xl-12 col-lg-12 col-md-12 col-sm-12 clearfix">
+                                        <label class="form-label" for="data_category">Project Category <strong class="text-danger">*</strong></label>
+                                        <select name="data_category" disabled id="data_category" class="form-control select2 select2bs5" required>
+                                            <option value="">-- Choose --</option>
+                                            <?php foreach ($category_list as $category): ?>
+                                                <option <?= ($data_header->category == $category->id) ? 'selected' : '' ?> value="<?= $category->id ?>"><?= $category->name ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="form-group  col-xl-12 col-lg-12 col-md-12 col-sm-12 clearfix">
                                         <label class="form-label" for="data_customer">Customer <strong class="text-danger fw-bolder">*</strong></label>
                                         <select name="data_customer" disabled id="data_customer" class="form-control select2 select2bs5" required>
                                             <option value="">-- Choose --</option>
