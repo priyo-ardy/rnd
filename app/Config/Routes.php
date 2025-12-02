@@ -18,6 +18,18 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     // Dashboard
     $routes->get('/dashboard', 'Dashboard\Dashboard::index');
 
+    // Customer Category
+    $routes->group('/customer_category', static function ($routes) {
+        $routes->get('', 'MasterData\CommonData\CustomerCategory\CustomerCategory::index');
+        $routes->post('table', 'MasterData\CommonData\CustomerCategory\CustomerCategory::loadTable');
+        $routes->post('save', 'MasterData\CommonData\CustomerCategory\CustomerCategory::saveData');
+        $routes->post('edit', 'MasterData\CommonData\CustomerCategory\CustomerCategory::getData');
+        $routes->post('update', 'MasterData\CommonData\CustomerCategory\CustomerCategory::updateData');
+        $routes->post('delete', 'MasterData\CommonData\CustomerCategory\CustomerCategory::deleteData');
+        $routes->get('export', 'MasterData\CommonData\CustomerCategory\CustomerCategory::exportData');
+        $routes->get('seed', 'MasterData\CommonData\CustomerCategory\CustomerCategory::seedData');
+    });
+
     // Master Data Customer
     $routes->group('/customer', static function ($routes) {
         $routes->get('', 'MasterData\CommonData\Customer\Customer::index');
@@ -165,5 +177,6 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     // Upload Document
     $routes->group('/document', static function ($routes) {
         $routes->get('', 'Transaction\Document\UploadDocument::index');
+        $routes->get('detail/(:any)', 'Transaction\Document\UploadDocument::getDetail/$1');
     });
 });

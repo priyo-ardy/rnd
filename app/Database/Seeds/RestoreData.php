@@ -9,6 +9,7 @@ class RestoreData extends Seeder
     public function run()
     {
         $this->call('AuthData');
+        $this->call('CustomerCategoryData');
         $this->call('CustomerData');
         $this->call('MaterialCategoryData');
         $this->call('MaterialData');
