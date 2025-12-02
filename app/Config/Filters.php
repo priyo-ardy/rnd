@@ -15,6 +15,7 @@ use CodeIgniter\Filters\SecureHeaders;
 use App\Filters\ViewDataFilter;
 use App\Filters\AuthFilter;
 use App\Filters\UserActivityLogger;
+use App\Filters\RateLimitFilter;
 
 class Filters extends BaseFilters
 {
@@ -39,7 +40,8 @@ class Filters extends BaseFilters
         'performance'   => PerformanceMetrics::class,
         'viewdata'      => ViewDataFilter::class,
         'auth'          => AuthFilter::class,
-        'logger'        => UserActivityLogger::class
+        'logger'        => UserActivityLogger::class,
+        'ratelimit'     => RateLimitFilter::class
     ];
 
     /**
