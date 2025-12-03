@@ -11,11 +11,10 @@
     <meta name="title" content="Schlemmer Automotive Indonesia WebApp" />
     <meta name="author" content="Ardy Priyo Sudiyantoko" />
 
+
     <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
-        integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q="
-        crossorigin="anonymous" />
+        href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-pro@5.2.5/400.min.css"
+        rel="stylesheet">
     <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
@@ -30,23 +29,22 @@
     <!-- Bootstrap Icons -->
     <link
         rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-        integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI="
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
         crossorigin="anonymous" />
     <!-- Select2 CSS -->
     <link
-        href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"
+        href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
         rel="stylesheet" />
     <!-- Select2 Bootstrap 5 Theme -->
     <link
-        href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme/dist/select2-bootstrap-5-theme.min.css"
+        href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css"
         rel="stylesheet" />
     <!-- SweetAlert2 -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.3/dist/sweetalert2.min.css" rel="stylesheet">
     <!-- Datatable CSS -->
     <link
         rel="stylesheet"
-        href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css" />
+        href="https://cdn.datatables.net/2.3.5/css/dataTables.dataTables.min.css" />
     <!-- Font Awesome -->
     <link
         rel="stylesheet"
@@ -193,7 +191,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.3/dist/sweetalert2.all.min.js"></script>
     <!-- Datatable -->
     <script
-        src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
+        src="https://cdn.datatables.net/2.3.5/js/dataTables.min.js"></script>
     <!-- Font awesome -->
     <script
         src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/js/all.min.js"
