@@ -25,7 +25,7 @@
                     <a href="<?= base_url() . 'document' ?>" class="nav-link" onclick="loading();">
                         <i class="nav-icon bi bi-folder2-open"></i>
                         <p>
-                            Upload Document
+                            List of Project
                         </p>
                     </a>
                 </li>
@@ -137,7 +137,7 @@
                             <a href="<?= base_url() . 'project'  ?>" class="nav-link">
                                 <i class="bi bi-arrow-right-circle"></i>
                                 <p>
-                                    Project List
+                                    Project Setup
                                 </p>
                             </a>
                         </li>

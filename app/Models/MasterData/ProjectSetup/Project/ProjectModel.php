@@ -22,7 +22,7 @@ class ProjectModel extends Model
     protected $updatedField  = 'updated_at';
     protected $deletedField  = 'deleted_at';
 
-    function loadProjectData()
+    function loadProjectData(string $category = null)
     {
         // $this->db->table($this->table) secara otomatis memulai builder untuk tabel ini
         $builder = $this->db->table($this->table . ' mph');
@@ -61,6 +61,9 @@ class ProjectModel extends Model
         $builder->join('m_customer_category mcc', 'mph.category = mcc.id', 'left');
 
         // 4. Klausa ORDER BY
+        if ($category != null) {
+            $builder->where('mph.category', $category);
+        }
         $builder->orderBy('mph.created_at', 'DESC');
 
         // 5. Eksekusi dan kembalikan hasilnya
@@ -282,5 +285,32 @@ class ProjectModel extends Model
 
             return false;
         }
+    }
+
+    function getApqpByMaterial($id_material)
+    {
+        return $this->db->table('m_project_apqp mpa')
+            ->select('mpa.*, mal.name as apqp_level_name', true)
+            ->join('m_apqp_level mal', 'mpa.id_apqp = mal.id', 'left')
+            ->where('mpa.id_material', $id_material)
+            ->orderBy('mal.level', 'ASC')
+            ->get()
+            ->getResultObject();
+    }
+
+    function getDocumentByMaterial($id_material, $id_apqp = [])
+    {
+        $builder = $this->db->table('m_project_document mpd')
+            ->select('mpd.*, mad.nama_dokumen as document_name', true)
+            ->join('m_apqp_document mad', 'mpd.id_document = mad.id', 'left')
+            ->where('mpd.id_material', $id_material)
+            ->orderBy('mpd.baris', 'ASC');
+
+        if (!empty($id_apqp)) {
+            $builder->whereIn('mpd.id_apqp', $id_apqp);
+        }
+
+        return $builder->get()
+            ->getResultObject();
     }
 }

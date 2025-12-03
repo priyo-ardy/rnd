@@ -177,6 +177,8 @@ $routes->group('', ['filter' => ['auth', 'ratelimit:100,60']], static function (
     // Upload Document
     $routes->group('/document', static function ($routes) {
         $routes->get('', 'Transaction\Document\UploadDocument::index');
-        $routes->get('detail/(:any)', 'Transaction\Document\UploadDocument::getDetail/$1');
+        $routes->get('project/(:any)', 'Transaction\Document\UploadDocument::getProject/$1');
+        $routes->get('part/(:any)', 'Transaction\Document\UploadDocument::getPartList/$1');
+        $routes->get('upload/(:any)', 'Transaction\Document\UploadDocument::uploadDocument/$1');
     });
 });

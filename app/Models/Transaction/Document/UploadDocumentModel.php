@@ -82,4 +82,68 @@ class UploadDocumentModel extends Model
 
         return $builder->get()->getResultObject();
     }
+
+    function loadProjectByCategory()
+    {
+        // 1. Panggil koneksi database
+        $db = \Config\Database::connect();
+
+        // --- SUBQUERY A: Menghitung Total Project ---
+        $subProject = $db->table('m_project_header mph')
+            ->select('mph.category, COUNT(mph.id) as total_project')
+            ->groupBy('mph.category')
+            ->getCompiledSelect();
+
+        // --- SUBQUERY B: Menghitung Project Details (PN) ---
+        $subDetails = $db->table('m_project_details mpd')
+            ->select('mph.category, COUNT(mpd.id) as total_pn')
+            ->join('m_project_header mph', 'mpd.id_project = mph.id')
+            ->groupBy('mph.category')
+            ->getCompiledSelect();
+
+        // --- SUBQUERY C: Menghitung Statistik Dokumen (Complex Logic) ---
+        // Note: Kita set parameter kedua select() menjadi `false` agar CI4 tidak menimpa tanda kurung dengan backticks.
+        $subDocs = $db->table('m_project_document mpd')
+            ->select('mph.category')
+            ->select('COUNT(mpd.id) as total_task')
+            ->select("SUM(CASE WHEN mpd.file_name <> '' THEN 1 ELSE 0 END) as task_close", false)
+            ->select("SUM(CASE WHEN mpd.file_name = '' THEN 1 ELSE 0 END) as task_progress", false)
+            ->select("SUM(CASE 
+                WHEN (mpd.file_name = '' OR mpd.file_name IS NULL) 
+                AND mpd.due_date < CURDATE() THEN 1 
+                ELSE 0 
+              END) as task_overdue", false)
+            ->join('m_project_header mph', 'mpd.id_project = mph.id')
+            ->where('mph.status', '1')
+            ->whereNotIn('mpd.status', ['2', '3', '4'])
+            ->groupBy('mph.category')
+            ->getCompiledSelect();
+
+        // --- MAIN QUERY: Menggabungkan Semuanya ---
+        $builder = $db->table('m_customer_category mcc');
+
+        $builder->select('mcc.*');
+        // Gunakan COALESCE agar null menjadi 0
+        $builder->select('COALESCE(proj.total_project, 0) as total_project');
+        $builder->select('COALESCE(det.total_pn, 0) as total_pn');
+        $builder->select('COALESCE(doc.total_task, 0) as total_task');
+        $builder->select('COALESCE(doc.task_close, 0) as task_close');
+        $builder->select('COALESCE(doc.task_progress, 0) as task_progress');
+        $builder->select('COALESCE(doc.task_overdue, 0) as task_overdue');
+
+        // Lakukan Join dengan Subquery yang sudah di-compile di atas
+        $builder->join("($subProject) proj", 'mcc.id = proj.category', 'left');
+        $builder->join("($subDetails) det", 'mcc.id = det.category', 'left');
+        $builder->join("($subDocs) doc", 'mcc.id = doc.category', 'left');
+
+        $builder->orderBy('mcc.code', 'ASC');
+
+        // Eksekusi
+        $results = $builder->get()->getResult();
+
+        // Untuk debugging, jika ingin melihat query asli yang dihasilkan:
+        // echo $db->getLastQuery();
+
+        return $results;
+    }
 }
