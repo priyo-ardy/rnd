@@ -102,6 +102,7 @@ class UploadDocument extends BaseController
 
             $data = [
                 'title' => 'Project Details',
+                'header' => $this->projectModel->getProjectData($id_project),
                 'part_list' => $this->detailModel->getProjectDetails($id_project),
                 'footer' => []
             ];
@@ -161,6 +162,45 @@ class UploadDocument extends BaseController
                     'NIK' => session('user_name')
                 ],
                 'UploadDocument::getDetail'
+            );
+
+            return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Unexpected Error' . $e->getMessage());
+        }
+    }
+
+    function uploadFile()
+    {
+        if ($this->request->getMethod() !== 'POST') {
+            logFile(
+                'security',
+                'Request method not allowed',
+                [
+                    'route' => '/document/upload_file',
+                    'method' => $this->request->getMethod(),
+                    'expected' => 'POST',
+                    'NIK' => session('user_name')
+                ],
+                'UploadDocument::uploadFile'
+            );
+
+            return pesan(ResponseInterface::HTTP_METHOD_NOT_ALLOWED, 'Request method not allowed');
+        }
+
+        try {
+            $files = $this->request->getFile('document');
+            $id_dokumen = $this->request->getPost('document_token');
+        } catch (\Exception $e) {
+            logFile(
+                'error',
+                'Failed to upload document ffile',
+                [
+                    'message' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                    'NIK' => session('user_name')
+                ],
+                'UploadDocument::uploadFile'
             );
 
             return pesan(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR, 'Unexpected Error' . $e->getMessage());

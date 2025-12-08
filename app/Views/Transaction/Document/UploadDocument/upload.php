@@ -49,7 +49,8 @@
                                                     <tr>
                                                         <td><?= $item->document_name ?></td>
                                                         <td>
-                                                            <input type="file" name="document_[]" class="form-control form-control-sm rounded-0">
+                                                            <input type="file" name="document[]" class="form-control form-control-sm rounded-0" accept=".pdf,.xlsx,.xls,.csv,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                                                            <input type="hidden" name="document_token[]" class="form-control form-control-sm rounded-0" readonly value="<?= $item->id ?>">
                                                         </td>
                                                         <td></td>
                                                         <td class="text-center">

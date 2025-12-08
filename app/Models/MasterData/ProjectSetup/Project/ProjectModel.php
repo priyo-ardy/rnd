@@ -22,6 +22,14 @@ class ProjectModel extends Model
     protected $updatedField  = 'updated_at';
     protected $deletedField  = 'deleted_at';
 
+    function getProjectData($id_project)
+    {
+        return $this->where('m_project_header.id', $id_project)
+            ->select('m_project_header.*, m_customer_category.name as category_name')
+            ->join('m_customer_category', 'm_project_header.category = m_customer_category.id', 'left')
+            ->first();
+    }
+
     function loadProjectData(string $category = null)
     {
         // $this->db->table($this->table) secara otomatis memulai builder untuk tabel ini
