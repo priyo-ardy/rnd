@@ -55,6 +55,7 @@ class Project extends BaseController
     {
         $data = [
             'title' => "Project List",
+            // 'data' => $this->projectModel->loadData(),
             'footer' => [
                 '<script src="' . base_url() . 'js/MasterData/ProjectSetup/Project/project.js' . '"></script>'
             ]

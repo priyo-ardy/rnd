@@ -169,6 +169,7 @@ class MaterialTable extends Migration
             ],
         ]);
 
+        $this->db->query("DROP TABLE IF EXISTS m_material");
         $this->forge->addKey(['id', 'code'], true, true);
         $this->forge->createTable('m_material');
 

@@ -21,6 +21,11 @@ class ProjectModel extends Model
     protected $updatedField  = 'updated_at';
     protected $deletedField  = 'deleted_at';
 
+    // public function loadData()
+    // {
+    //     $this->db->select('m_project_header.*')
+    //         ->join('m_')
+    // }
     public function insertApqp(array $data)
     {
         return $this->db->table('m_project_apqp')->insertBatch($data);
