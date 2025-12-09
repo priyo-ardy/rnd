@@ -102,7 +102,7 @@ class ProjectHeaderTable extends Migration
         ]);
 
         $this->forge->addKey(['id', 'code'], true, true);
-        $this->forge->createTable('m_project_header');
+        $this->forge->createTable('m_project_header', true);
 
         $this->db->query("ALTER TABLE m_project_header ADD INDEX (id)");
         $this->db->query("ALTER TABLE m_project_header ADD INDEX (code)");
@@ -111,6 +111,6 @@ class ProjectHeaderTable extends Migration
 
     public function down()
     {
-        $this->forge->dropTable('m_project_header');
+        $this->forge->dropTable('m_project_header', true);
     }
 }

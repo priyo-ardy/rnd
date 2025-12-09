@@ -64,14 +64,13 @@ class EmailQueue extends Migration
         ]);
 
         $this->forge->addKey('id', true);
+        $this->forge->addKey('status');
 
-        $this->forge->createTable('q_email_queue');
-        $this->db->query("ALTER TABLE q_email_queue ADD INDEX(id)");
-        $this->db->query("ALTER TABLE q_email_queue ADD INDEX(status)");
+        $this->forge->createTable('q_email_queue', true);
     }
 
     public function down()
     {
-        $this->forge->dropTable('q_email_queue');
+        $this->forge->dropTable('q_email_queue', true);
     }
 }

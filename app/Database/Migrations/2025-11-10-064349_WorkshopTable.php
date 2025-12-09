@@ -74,13 +74,13 @@ class WorkshopTable extends Migration
 
         $this->forge->addKey(['id', 'code'], true, true);
 
-        $this->forge->createTable('m_workshop');
+        $this->forge->createTable('m_workshop', true);
         $this->db->query("ALTER TABLE `m_workshop` ADD INDEX (id)");
         $this->db->query("ALTER TABLE `m_workshop` ADD INDEX (code)");
     }
 
     public function down()
     {
-        $this->forge->dropTable('m_workshop');
+        $this->forge->dropTable('m_workshop', true);
     }
 }

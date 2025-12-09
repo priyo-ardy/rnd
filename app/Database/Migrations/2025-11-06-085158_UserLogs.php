@@ -64,16 +64,15 @@ class UserLogs extends Migration
         ]);
 
         $this->forge->addKey('id', true, true);
+        $this->forge->addKey('level');
+        $this->forge->addKey('source');
+        $this->forge->addKey('created_at');
 
-        $this->forge->createTable('logfile');
-        $this->db->query('ALTER TABLE logfile ADD INDEX (id)');
-        $this->db->query('ALTER TABLE logfile ADD INDEX (level)');
-        $this->db->query('ALTER TABLE logfile ADD INDEX (source)');
-        $this->db->query('ALTER TABLE logfile ADD INDEX (created_at)');
+        $this->forge->createTable('logfile', true);
     }
 
     public function down()
     {
-        $this->forge->dropTable('logfile');
+        $this->forge->dropTable('logfile', true);
     }
 }
