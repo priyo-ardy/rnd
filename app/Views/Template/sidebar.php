@@ -22,23 +22,20 @@
                 </li>
                 <li class="nav-header">TRANSACTION</li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="<?= base_url() . 'document' ?>" class="nav-link" onclick="loading();">
                         <i class="nav-icon bi bi-folder2-open"></i>
                         <p>
-                            SPK
-                            <i class="nav-arrow bi bi-chevron-right"></i>
+                            List of Project
                         </p>
                     </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="<?= base_url() . 'spk' ?>" class="nav-link">
-                                <i class="nav-icon bi bi-arrow-right-circle"></i>
-                                <p>
-                                    List of SPK
-                                </p>
-                            </a>
-                        </li>
-                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon bi bi-vector-pen"></i>
+                        <p>
+                            Approval
+                        </p>
+                    </a>
                 </li>
                 <li class="nav-header">MASTER DATA</li>
                 <li class="nav-item">
@@ -50,6 +47,14 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="<?= base_url('customer_category') ?> " class="nav-link" onclick="loading()">
+                                <i class="nav-icon bi bi-arrow-right-circle"></i>
+                                <p>
+                                    Customer Category
+                                </p>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a href="<?= base_url('customer') ?>" class="nav-link" onclick="loading()">
                                 <i class="nav-icon bi bi-arrow-right-circle"></i>
@@ -132,7 +137,7 @@
                             <a href="<?= base_url() . 'project'  ?>" class="nav-link">
                                 <i class="bi bi-arrow-right-circle"></i>
                                 <p>
-                                    Project List
+                                    Project Setup
                                 </p>
                             </a>
                         </li>

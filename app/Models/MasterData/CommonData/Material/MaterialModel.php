@@ -36,4 +36,17 @@ class MaterialModel extends Model
         $this->limit(1);
         return $this->first();
     }
+
+    public function getMaterialList()
+    {
+        $usedMaterialIds = $this->db->table('m_project_details')->select('id_material')->get()->getResultArray();
+        $usedIds = array_column($usedMaterialIds, 'id_material');
+
+        return $this->builder()
+            ->where('kategori', 'd7e6cc88-39c0-4fd7-8acc-1c545108fcb2')
+            ->whereNotIn('id', $usedIds)
+            ->orderBy('code', 'asc')
+            ->get()
+            ->getResultObject();
+    }
 }

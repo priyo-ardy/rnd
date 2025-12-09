@@ -60,7 +60,7 @@
                             <div class="card-body">
                                 <div class="row mb-3 g-2">
                                     <div class="form-group col-12">
-                                        <input type="text" name="data_token" id="data_token" required class="form-control rounded-0 bg-secondary-subtle" readonly value="<?= enkripsi($data->id) ?>">
+                                        <input type="hidden" name="data_token" id="data_token" required class="form-control rounded-0 bg-secondary-subtle" readonly value="<?= enkripsi($data->id) ?>">
                                     </div>
                                 </div>
                                 <div class="row mb-3 g-2">

@@ -5,18 +5,30 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-$routes->get('/', 'Auth\Auth::index');
-$routes->post('/login', 'Auth\Auth::processLogin');
-$routes->get('/forgot-password', 'Auth\Auth::forgotPassword');
-$routes->post('reset', 'Auth\Auth::resetPassword');
-$routes->get('kirim-email', 'Test\Email\Email::sendTest');
-$routes->get('test-email', 'Test\Email\Email::testConnection');
+$routes->get('/', 'Auth\Auth::index', ['filter' => 'ratelimit:30,60']);
+$routes->post('/login', 'Auth\Auth::processLogin', ['filter' => 'ratelimit:5,60']);
+$routes->get('/forgot-password', 'Auth\Auth::forgotPassword', ['filter' => 'ratelimit:10,60']);
+$routes->post('reset', 'Auth\Auth::resetPassword', ['filter' => 'ratelimit:5,60']);
+$routes->get('kirim-email', 'Test\Email\Email::sendTest', ['filter' => 'ratelimit:5,60']);
+$routes->get('test-email', 'Test\Email\Email::testConnection', ['filter' => 'ratelimit:5,60']);
 $routes->get('logout', 'Auth\Auth::logOut');
 
 // Routes with auth filter
-$routes->group('', ['filter' => 'auth'], static function ($routes) {
+$routes->group('', ['filter' => ['auth', 'ratelimit:100,60']], static function ($routes) {
     // Dashboard
     $routes->get('/dashboard', 'Dashboard\Dashboard::index');
+
+    // Customer Category
+    $routes->group('/customer_category', static function ($routes) {
+        $routes->get('', 'MasterData\CommonData\CustomerCategory\CustomerCategory::index');
+        $routes->post('table', 'MasterData\CommonData\CustomerCategory\CustomerCategory::loadTable');
+        $routes->post('save', 'MasterData\CommonData\CustomerCategory\CustomerCategory::saveData');
+        $routes->post('edit', 'MasterData\CommonData\CustomerCategory\CustomerCategory::getData');
+        $routes->post('update', 'MasterData\CommonData\CustomerCategory\CustomerCategory::updateData');
+        $routes->post('delete', 'MasterData\CommonData\CustomerCategory\CustomerCategory::deleteData');
+        $routes->get('export', 'MasterData\CommonData\CustomerCategory\CustomerCategory::exportData');
+        $routes->get('seed', 'MasterData\CommonData\CustomerCategory\CustomerCategory::seedData');
+    });
 
     // Master Data Customer
     $routes->group('/customer', static function ($routes) {
@@ -160,5 +172,13 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
         $routes->post('delete_approver', 'MasterData\ProjectSetup\Project\Project::deleteApprover');
         $routes->post('delete_approver', 'MasterData\ProjectSetup\Project\Project::deleteApprover');
         $routes->post('start_project', 'MasterData\ProjectSetup\Project\Project::startProject');
+    });
+
+    // Upload Document
+    $routes->group('/document', static function ($routes) {
+        $routes->get('', 'Transaction\Document\UploadDocument::index');
+        $routes->get('project/(:any)', 'Transaction\Document\UploadDocument::getProject/$1');
+        $routes->get('part/(:any)', 'Transaction\Document\UploadDocument::getPartList/$1');
+        $routes->get('upload/(:any)', 'Transaction\Document\UploadDocument::uploadDocument/$1');
     });
 });

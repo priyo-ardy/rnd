@@ -59,6 +59,14 @@ class ProjectApqpApproverTable extends Migration
                 'charset' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci'
             ],
+            'approve' => [
+                'type' => "VARCHAR",
+                'constraint' => 1,
+                'null' => false,
+                'default' => '0',
+                'charset' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ],
             'created_at' => [
                 'type' => 'DATETIME',
                 'null' => false,

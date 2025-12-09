@@ -11,10 +11,21 @@ const formData = document.getElementById("formData");
 const inputForm = {
   code: document.getElementById("data_code"),
   name: document.getElementById("data_name"),
+  category: document.getElementById("data_category"),
   type: document.getElementById("data_type"),
   customer: document.getElementById("data_customer"),
   remark: document.getElementById("data_remark"),
 };
+
+buttons.back.addEventListener("click", () => {
+  loading();
+  window.location.replace(baseurl + "/project");
+});
+
+buttons.cancel.addEventListener("click", () => {
+  loading();
+  window.location.reload();
+});
 
 function addRow() {
   const tableBody = document.getElementById("partList");
@@ -150,6 +161,19 @@ function validasi() {
     inputForm.name.classList.remove("is-invalid");
     inputForm.name.parentNode.querySelector(".invalid-feedback").textContent =
       "";
+  }
+
+  if (inputForm.category.value === "") {
+    inputForm.category.classList.add("is-invalid");
+    inputForm.category.parentNode.querySelector(
+      ".invalid-feedback"
+    ).textContent = "This field is required";
+    isValid = false;
+  } else {
+    inputForm.category.classList.remove("is-invalid");
+    inputForm.category.parentNode.querySelector(
+      ".invalid-feedback"
+    ).textContent = "";
   }
 
   if (inputForm.type.value === "") {
