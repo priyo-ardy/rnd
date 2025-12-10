@@ -137,12 +137,8 @@ class CustomerTable extends Migration
         ]);
 
         $this->forge->addKey(['id', 'code'], true, true);
+        $this->forge->addKey(['email_hash', 'phone_hash']);
         $this->forge->createTable('m_customer', true);
-
-        $this->db->query('ALTER TABLE m_customer ADD INDEX (id)');
-        $this->db->query('ALTER TABLE m_customer ADD INDEX (code)');
-        $this->db->query('ALTER TABLE m_customer ADD INDEX (email_hash)');
-        $this->db->query('ALTER TABLE m_customer ADD INDEX (phone_hash)');
     }
 
     public function down()

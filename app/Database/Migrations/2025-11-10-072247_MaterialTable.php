@@ -169,8 +169,9 @@ class MaterialTable extends Migration
             ],
         ]);
 
+        $this->db->query("DROP TABLE IF EXISTS m_material");
         $this->forge->addKey(['id', 'code'], true, true);
-        $this->forge->createTable('m_material');
+        $this->forge->createTable('m_material', true);
 
         $this->db->query("ALTER TABLE m_material ADD INDEX (id)");
         $this->db->query("ALTER TABLE m_material ADD INDEX (code)");
@@ -180,6 +181,6 @@ class MaterialTable extends Migration
 
     public function down()
     {
-        $this->forge->dropTable('m_material');
+        $this->forge->dropTable('m_material', true);
     }
 }
