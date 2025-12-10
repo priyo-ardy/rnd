@@ -69,7 +69,7 @@ class ProjectDetailModel extends Model
                 left join m_material mm on mpd.id_material = mm.id
             where 
                 mpd.id_project = ?
-            order by overdue desc
+            order by overdue desc 
 
         ";
 
