@@ -1,0 +1,18 @@
+=== Queue Status ===
+Time: Wed Dec 10 09:00:01 AM WIB 2025
+
+1. Failed Jobs:
+
+CodeIgniter v4.6.3 Command Line Tool - Server Time: 2025-12-10 09:00:01 UTC+07:00
+
+Command "queue:failed" not found.
+
+
+2. Pending Jobs:
+
+3. Log Files:
+-rw-rw-r-- 1 appserver appserver 138187 Dec 10 09:00 /home/appserver/ci4-app/rnd/logs/queue-default.log
+-rw-rw-r-- 1 appserver appserver  69160 Dec 10 09:00 /home/appserver/ci4-app/rnd/logs/queue-email.log
+-rw-rw-r-- 1 appserver appserver   2142 Dec 10 09:00 /home/appserver/ci4-app/rnd/logs/queue-failed.log
+-rw-rw-r-- 1 appserver appserver    532 Dec  9 15:40 /home/appserver/ci4-app/rnd/logs/queue.log
+-rw-rw-r-- 1 appserver appserver    228 Dec 10 09:00 /home/appserver/ci4-app/rnd/logs/queue-status.log
