@@ -53,7 +53,7 @@
         crossorigin="anonymous"
         referrerpolicy="no-referrer" />
     <!-- AdminLTE CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-rc3/dist/css/adminlte.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-rc6/dist/css/adminlte.min.css" rel="stylesheet">
     <!-- <link
         rel="stylesheet"
         href="<?= base_url() . 'admin/css/adminlte.css'; ?>" /> -->

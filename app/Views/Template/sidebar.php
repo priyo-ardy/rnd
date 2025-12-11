@@ -143,6 +143,25 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon bi bi-clipboard-data"></i>
+                        <p>
+                            Document Flow
+                        </p>
+                        <i class="nav-arrow bi bi-chevron-right"></i>
+                    </a>
+                    <ul class="nav-treeview">
+                        <li class="nav-item">
+                            <a href="<?= base_url() . 'document-flow' ?>" class="nav-link">
+                                <i class="bi bi-arrow-right-circle"></i>
+                                <p>
+                                    Setup Document Flow
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="nav-header">APP SETUP</li>
                 <li class="nav-item">
                     <a href="#" class="nav-link">

@@ -174,6 +174,13 @@ $routes->group('', ['filter' => ['auth', 'ratelimit:100,60']], static function (
         $routes->post('start_project', 'MasterData\ProjectSetup\Project\Project::startProject');
     });
 
+    // Setup Document Flow
+    $routes->group('/document-flow', static function ($routes) {
+        $routes->get('', 'MasterData\ProjectSetup\DocumentFlow\DocumentFlow::index');
+        $routes->post('save-flow', 'MasterData\ProjectSetup\DocumentFlow\DocumentFlow::saveFlowLevel');
+        $routes->get('get-flow-level', 'MasterData\ProjectSetup\DocumentFlow\DocumentFlow::getFlowLevel');
+    });
+
     // Upload Document
     $routes->group('/document', static function ($routes) {
         $routes->get('', 'Transaction\Document\UploadDocument::index');
