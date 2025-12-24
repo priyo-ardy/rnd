@@ -21,7 +21,11 @@ function getFlowLevel() {
       if (result.data.length > 0) {
         result.data.forEach((item) => {
           const list = `
-            <li class="list-group-item">${item.name}</li>
+            <li class="list-group-item">
+              <a href="" onclick="getDocumentStage('${item.id}')" class="text-primary text-decoration-none link-underline-opacity-100-hover">
+                ${item.name}
+              </a>
+            </li>
           `;
 
           listLevel.insertAdjacentHTML("beforeend", list);
@@ -70,3 +74,50 @@ buttonsFlow.saveFlow.addEventListener("click", () => {
     }
   }
 });
+
+function getDocumentStage(token) {
+  document.getElementById("level_token").value = token;
+  const tableBody = document.getElementById("listDocument");
+  try {
+    loading();
+    fetchData(
+      baseurl + "/document-flow/get-document-list",
+      "POST",
+      JSON.stringify({ token: token })
+    )
+      .then((result) => {
+        hideLoading();
+        console.log(result.data);
+      })
+      .catch((err) => {
+        const row = `
+          <tr>
+            <td class="align-middle">
+              <select name="document[]" class="form-control select2 select2bs5" required>
+                <option value="">-- Choose Document --</option>
+              </select>
+            </td>
+            <td class="align-middle">
+              <input type="number" name="sequence[]" class="form-control rounded-0" placeholder="Sequence" required step="1">
+            </td>
+            <td class="align-middle text-center">
+              <button type="button" class="btn btn-primary rounded-0 btn-sm">Add</button>
+            </td>
+          </tr>
+        `;
+
+        tableBody.insertAdjacentHTML("beforeend", row);
+
+        $(".select2bs5").select2({
+          theme: "bootstrap-5",
+          dropdownCssClass: "rounded-0",
+          selectionCssClass: "rounded-0",
+        });
+
+        hideLoading();
+      });
+  } catch (e) {
+    pesanError(e.message);
+    hideLoading();
+  }
+}

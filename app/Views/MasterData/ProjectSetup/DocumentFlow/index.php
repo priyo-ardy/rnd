@@ -36,7 +36,11 @@
                             <div>
                                 <ul class="list-group list-group-flush" id="listLevel">
                                     <?php foreach ($flow_level as $row): ?>
-                                        <li class="list-group-item"><?= $row->name ?></li>
+                                        <li class="list-group-item">
+                                            <a href="#" onclick="getDocumentStage('<?= $row->id ?>')" class="text-primary text-decoration-none link-underline-opacity-100-hover">
+                                                <?= $row->name ?>
+                                            </a>
+                                        </li>
                                     <?php endforeach; ?>
                                 </ul>
                             </div>
@@ -49,12 +53,28 @@
                         <div class="card-header rounded-0">
                             <h3 class="card-title">Document List</h3>
                             <div class="card-tools">
-                                <button type="button" class="btn btn-tool text-black" data-lte-toggle="card-collapse" title="Add Document">
+                                <button type="button" class="btn btn-tool text-black" title="Add Document">
                                     <i class="bi bi-plus-circle"></i>&ensp;Add Document
                                 </button>
                             </div>
                         </div>
                         <div class="card-body">
+
+                            <div class="form-group col-12 mb-3">
+                                <input type="text" name="token" id="level_token" class="form-control rounded-0 bg-secondary-subtle" readonly>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center align-middle bg-secondary-subtle col-8">Document Name</th>
+                                            <th class="text-center align-middle bg-secondary-subtle col-2">Sequence</th>
+                                            <th class="text-center align-middle bg-secondary-subtle col-2">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="listDocument"></tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

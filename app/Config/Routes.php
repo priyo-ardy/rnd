@@ -179,6 +179,7 @@ $routes->group('', ['filter' => ['auth', 'ratelimit:100,60']], static function (
         $routes->get('', 'MasterData\ProjectSetup\DocumentFlow\DocumentFlow::index');
         $routes->post('save-flow', 'MasterData\ProjectSetup\DocumentFlow\DocumentFlow::saveFlowLevel');
         $routes->get('get-flow-level', 'MasterData\ProjectSetup\DocumentFlow\DocumentFlow::getFlowLevel');
+        $routes->post('get-document-list', 'MasterData\ProjectSetup\DocumentFlow\DocumentFlow::getDocumentList');
     });
 
     // Upload Document

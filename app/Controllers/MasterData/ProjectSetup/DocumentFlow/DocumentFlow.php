@@ -5,17 +5,20 @@ namespace App\Controllers\MasterData\ProjectSetup\DocumentFlow;
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\MasterData\ProjectSetup\DocumentFlow\DocumentFlowModel;
+use App\Models\MasterData\ProjectSetup\DocumentFlow\FlowDetailsModel;
 use Config\Database;
 use Config\Services;
 
 class DocumentFlow extends BaseController
 {
     protected $flowModel;
+    protected $detailMoldel;
     protected $db;
 
     public function __construct()
     {
         $this->flowModel = new DocumentFlowModel();
+        $this->detailMoldel = new FlowDetailsModel();
         $this->db = Database::connect();
     }
 
@@ -122,9 +125,27 @@ class DocumentFlow extends BaseController
     function getFlowLevel()
     {
         $data = $this->flowModel->getFlowLevel();
-        if (empty($data)) {
+        return pesan(ResponseInterface::HTTP_OK, 'Success', $data);
+    }
+
+    function getDocumentList()
+    {
+        $json_data = $this->request->getJSON(true);
+
+        if (empty($json_data)) {
+            return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Invalid JSON data');
         }
 
-        return pesan(ResponseInterface::HTTP_OK, 'Success', $data);
+        if (!isset($json_data['token'])) {
+            return pesan(ResponseInterface::HTTP_BAD_REQUEST, 'Token is not available in JSON data');
+        }
+
+        $id_flow_level = $json_data['token'];
+        $get_document = $this->detailMoldel->getDocumentList($id_flow_level);
+        if (empty($get_document) || !$get_document) {
+            return pesan(ResponseInterface::HTTP_NOT_FOUND, 'Document not found');
+        }
+
+        return pesan(ResponseInterface::HTTP_OK, "Document Found", $get_document);
     }
 }
